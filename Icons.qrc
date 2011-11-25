@@ -1,0 +1,22 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>block.png</file>
+        <file>cupboard.png</file>
+        <file>download.png</file>
+        <file>gear.png</file>
+        <file>gears.png</file>
+        <file>lock.png</file>
+        <file>magnifier.png</file>
+        <file>refresh.png</file>
+        <file>tick.png</file>
+        <file alias="directory">advanced_directory.png</file>
+        <file>file.png</file>
+        <file>filetype_pdf.png</file>
+        <file>filetype_rar.png</file>
+        <file>filetype_zip.png</file>
+        <file>25_folder.png</file>
+        <file>library.png</file>
+        <file>library_32x32.ico</file>
+        <file alias="drive">drive.png</file>
+    </qresource>
+</RCC>
