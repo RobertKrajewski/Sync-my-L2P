@@ -1,22 +1,22 @@
 <RCC>
     <qresource prefix="/icons">
-        <file>block.png</file>
-        <file>cupboard.png</file>
-        <file>download.png</file>
-        <file>gear.png</file>
-        <file>gears.png</file>
-        <file>lock.png</file>
-        <file>magnifier.png</file>
-        <file>refresh.png</file>
-        <file>tick.png</file>
-        <file alias="directory">advanced_directory.png</file>
-        <file>file.png</file>
-        <file>filetype_pdf.png</file>
-        <file>filetype_rar.png</file>
-        <file>filetype_zip.png</file>
-        <file>25_folder.png</file>
-        <file>library.png</file>
-        <file>library_32x32.ico</file>
-        <file alias="drive">drive.png</file>
+        <file>Icons/block.png</file>
+        <file>Icons/cupboard.png</file>
+        <file>Icons/download.png</file>
+        <file>Icons/gear.png</file>
+        <file>Icons/gears.png</file>
+        <file>Icons/lock.png</file>
+        <file>Icons/magnifier.png</file>
+        <file>Icons/refresh.png</file>
+        <file>Icons/tick.png</file>
+        <file alias="directory">Icons/advanced_directory.png</file>
+        <file>Icons/file.png</file>
+        <file>Icons/filetype_pdf.png</file>
+        <file>Icons/filetype_rar.png</file>
+        <file>Icons/filetype_zip.png</file>
+        <file>Icons/25_folder.png</file>
+        <file>Icons/library.png</file>
+        <file>Icons/library_32x32.ico</file>
+        <file alias="drive">Icons/drive.png</file>
     </qresource>
 </RCC>
