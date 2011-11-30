@@ -20,17 +20,17 @@ enum MyItemType
 
 enum MyItemDataRole
 {
-    sizeRole    = 32,
-    urlRole     = 33,
-    dateRole    = 34,
-    includeRole = 35
+    sizeRole            = 32,
+    urlRole             = 33,
+    dateRole            = 34,
+    includeRole         = 35,
+    synchronisedRole    = 36
 };
 
 class Strukturelement : public QStandardItem
 {
 public:
     Strukturelement(QString name, QUrl url, MyItemType typeEX);
-    qint32 getSize() const;
 
     int type() const;
 
@@ -40,11 +40,12 @@ public:
     QVariant data(int role = Qt::UserRole + 1) const;
 
 protected:
-    bool        einschliessen;
     qint32      size;
     QUrl        url;
     QDateTime   zeit;
     MyItemType  typeEX;
+    bool        included;
+    bool        synchronised;
 
 };
 

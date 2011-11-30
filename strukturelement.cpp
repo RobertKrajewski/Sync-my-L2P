@@ -2,21 +2,17 @@
 #include "datei.h"
 
 Strukturelement::Strukturelement(QString name, QUrl url, MyItemType type)
-    :QStandardItem(name), einschliessen(true), url(url), typeEX(type)
+    :QStandardItem(name), included(true), url(url), typeEX(type)
 {
+    synchronised = false;
     size = 0;
-}
-
-qint32 Strukturelement::getSize() const
-{
-    return size;
 }
 
 QVariant Strukturelement::data(int role) const
 {
     if (role == includeRole)
     {
-        return einschliessen;
+        return included;
     }
     else if (role == urlRole)
     {
@@ -29,6 +25,10 @@ QVariant Strukturelement::data(int role) const
     else if (role == dateRole)
     {
         return zeit;
+    }
+    else if (role == synchronisedRole)
+    {
+        return synchronised;
     }
     else if (role == Qt::StatusTipRole)
     {
@@ -61,8 +61,11 @@ QVariant Strukturelement::data(int role) const
     }
     else if(role == Qt::ForegroundRole)
     {
-        if (einschliessen)
-            return QBrush(Qt::black);
+        if (included)
+            if (synchronised)
+                return QBrush(Qt::darkGreen);
+            else
+                return QBrush(Qt::black);
         else
             return QBrush(Qt::red);
     }
@@ -88,7 +91,7 @@ void Strukturelement::setData(const QVariant &value, int role)
 {
     if (role == includeRole)
     {
-        this->einschliessen = value.toBool();
+        this->included = value.toBool();
     }
     else if (role == urlRole)
     {
@@ -101,6 +104,10 @@ void Strukturelement::setData(const QVariant &value, int role)
     else if (role == dateRole)
     {
         this->zeit = value.toDateTime();
+    }
+    else if (role == synchronisedRole)
+    {
+        this->synchronised = value.toBool();
     }
     else
     {

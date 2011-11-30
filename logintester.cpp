@@ -1,8 +1,8 @@
 #include "logintester.h"
 #include "ui_logintester.h"
 
-LoginTester::LoginTester(QString Benutzername,
-                         QString Passwort,
+LoginTester::LoginTester(QString username,
+                         QString password,
                          int maxcount,
                          QWidget *parent) :
     QDialog(parent, Qt::FramelessWindowHint),
@@ -11,15 +11,21 @@ LoginTester::LoginTester(QString Benutzername,
     ui->setupUi(this);
     ui->button->hide();
 
-    counter = 0;
-    this->maxcount      = maxcount;
-    this->Benutzername  = Benutzername;
-    this->Passwort      = Passwort;
+    // Initialisieren der Variablen
+    tryCounter = 0;
+    this->maxTries      = maxcount;
+    this->username      = username;
+    this->password      = password;
+
+    // Initialisieren des NetworkManagers und der Slots
     manager = new QNetworkAccessManager(qApp);
 
-    QObject::connect(manager, SIGNAL(authenticationRequired(QNetworkReply*, QAuthenticator*)), this, SLOT(authenticate(QNetworkReply*, QAuthenticator*)));
-    QObject::connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(finish(QNetworkReply*)));
-    QTimer::singleShot(100, this, SLOT(start()));
+    QObject::connect(manager, SIGNAL(authenticationRequired(QNetworkReply*, QAuthenticator*)), this, SLOT(authenticationSlot(QNetworkReply*, QAuthenticator*)));
+    QObject::connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(finishedSlot(QNetworkReply*)));
+
+    // Starte den Login nach 100ms
+    // Bei 0ms wird der Shot unter Mac nicht ausgeführt!?
+    QTimer::singleShot(100, this, SLOT(startSlot()));
 }
 
 LoginTester::~LoginTester()
@@ -27,26 +33,28 @@ LoginTester::~LoginTester()
     delete ui;
 }
 
-void LoginTester::authenticate(QNetworkReply* , QAuthenticator* authenticator)
+void LoginTester::authenticationSlot(QNetworkReply* , QAuthenticator* authenticator)
 {
-    if (counter < maxcount)
+    // Logindaten nur ausfüllen, falls nicht mehr als die maximale Anzahl an Versuchen durchgeführt wurden
+    if (tryCounter < maxTries)
     {
-        authenticator->setUser(Benutzername);
-        authenticator->setPassword(Passwort);
+        authenticator->setUser(username);
+        authenticator->setPassword(password);
     }
-    counter++;
+    tryCounter++;
 }
 
-void LoginTester::start()
+void LoginTester::startSlot()
 {
-   manager->get(QNetworkRequest(QUrl("https://www2.elearning.rwth-aachen.de/foyer/summary/default.aspx")));
+    // Aufruf der L2P-Startseite zum Test der Logindaten
+    manager->get(QNetworkRequest(QUrl("https://www2.elearning.rwth-aachen.de/foyer/summary/default.aspx")));
 }
 
-void LoginTester::finish(QNetworkReply* reply)
+void LoginTester::finishedSlot(QNetworkReply* reply)
 {
+    // Fehlerbehandlung
     if (reply->error())
     {
-        //ui->button->setText("Login fehlgeschlagen");
         QMessageBox messageBox;
         messageBox.setText("Login fehlgeschlagen");
         messageBox.setInformativeText(reply->errorString());
@@ -54,10 +62,7 @@ void LoginTester::finish(QNetworkReply* reply)
         messageBox.setStandardButtons(QMessageBox::Ok);
         messageBox.exec();
         reject();
-        //QObject::connect(ui->button, SIGNAL(clicked()), this, SLOT(reject()));
     }
     else
         accept();
-//        QObject::connect(ui->button, SIGNAL(clicked()), this, SLOT(accept()));
-//    ui->button->show();
 }

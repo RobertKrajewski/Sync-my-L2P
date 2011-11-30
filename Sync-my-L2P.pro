@@ -19,8 +19,7 @@ HEADERS += \
 FORMS += \
     hauptfenster.ui \
     logintester.ui \
-    dateidownloader.ui \
-    syncfinisheddialog.ui
+    dateidownloader.ui
 
 RESOURCES += \
     Icons.qrc

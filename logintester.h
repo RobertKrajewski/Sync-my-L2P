@@ -21,9 +21,9 @@ class LoginTester : public QDialog
     Q_OBJECT
 
 public:
-    explicit LoginTester(QString Benutername,
-                         QString Passwort,
-                         int maxcount,
+    explicit LoginTester(QString username,
+                         QString password,
+                         int maxTries,
                          QWidget *parent = 0);
     ~LoginTester();
 
@@ -31,16 +31,16 @@ private:
     Ui::LoginTester *ui;
     QNetworkAccessManager* manager;
 
-    int counter;
-    int maxcount;
+    int tryCounter;
+    int maxTries;
 
-    QString Benutzername;
-    QString Passwort;
+    QString username;
+    QString password;
 
 private slots:
-    void authenticate(QNetworkReply*, QAuthenticator*);
-    void finish(QNetworkReply*);
-    void start(void);
+    void authenticationSlot(QNetworkReply*, QAuthenticator*);
+    void finishedSlot(QNetworkReply*);
+    void startSlot(void);
 };
 
 #endif // LOGINTESTER_H
