@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>698</width>
-    <height>480</height>
+    <height>482</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -21,7 +21,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="Icons.qrc">
-    <normaloff>:/icons/magnifier.png</normaloff>:/icons/magnifier.png</iconset>
+    <normaloff>:/Icons/Icons/magnifier.png</normaloff>:/Icons/Icons/magnifier.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -36,10 +36,16 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
+      <property name="iconSize">
+       <size>
+        <width>16</width>
+        <height>16</height>
+       </size>
+      </property>
       <widget class="QWidget" name="Dateibrowser">
        <attribute name="icon">
         <iconset resource="Icons.qrc">
-         <normaloff>:/icons/cupboard.png</normaloff>:/icons/cupboard.png</iconset>
+         <normaloff>:/Icons/Icons/cupboard.png</normaloff>:/Icons/Icons/cupboard.png</iconset>
        </attribute>
        <attribute name="title">
         <string>Dateibrowser</string>
@@ -121,7 +127,13 @@
                </property>
                <property name="icon">
                 <iconset resource="Icons.qrc">
-                 <normaloff>:/icons/refresh.png</normaloff>:/icons/refresh.png</iconset>
+                 <normaloff>:/Icons/Icons/refresh.png</normaloff>:/Icons/Icons/refresh.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
                </property>
               </widget>
              </item>
@@ -164,7 +176,13 @@
                </property>
                <property name="icon">
                 <iconset resource="Icons.qrc">
-                 <normaloff>:/icons/drive</normaloff>:/icons/drive</iconset>
+                 <normaloff>:/Icons/drive</normaloff>:/Icons/drive</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
                </property>
               </widget>
              </item>
@@ -288,7 +306,13 @@
                </property>
                <property name="icon">
                 <iconset resource="Icons.qrc">
-                 <normaloff>:/icons/block.png</normaloff>:/icons/block.png</iconset>
+                 <normaloff>:/Icons/Icons/block.png</normaloff>:/Icons/Icons/block.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
                </property>
               </widget>
              </item>
@@ -305,7 +329,13 @@
                </property>
                <property name="icon">
                 <iconset resource="Icons.qrc">
-                 <normaloff>:/icons/tick.png</normaloff>:/icons/tick.png</iconset>
+                 <normaloff>:/Icons/Icons/tick.png</normaloff>:/Icons/Icons/tick.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
                </property>
               </widget>
              </item>
@@ -328,7 +358,13 @@
                </property>
                <property name="icon">
                 <iconset resource="Icons.qrc">
-                 <normaloff>:/icons/download.png</normaloff>:/icons/download.png</iconset>
+                 <normaloff>:/Icons/Icons/download.png</normaloff>:/Icons/Icons/download.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
                </property>
               </widget>
              </item>
@@ -348,7 +384,7 @@
        </property>
        <attribute name="icon">
         <iconset resource="Icons.qrc">
-         <normaloff>:/icons/gear.png</normaloff>:/icons/gear.png</iconset>
+         <normaloff>:/Icons/Icons/gear.png</normaloff>:/Icons/Icons/gear.png</iconset>
        </attribute>
        <attribute name="title">
         <string>Einstellungen</string>
@@ -474,7 +510,13 @@
              </property>
              <property name="icon">
               <iconset resource="Icons.qrc">
-               <normaloff>:/icons/lock.png</normaloff>:/icons/lock.png</iconset>
+               <normaloff>:/Icons/Icons/lock.png</normaloff>:/Icons/Icons/lock.png</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>16</width>
+               <height>16</height>
+              </size>
              </property>
             </widget>
            </item>

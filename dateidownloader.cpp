@@ -1,17 +1,18 @@
 #include "dateidownloader.h"
 #include "ui_dateidownloader.h"
 
-DateiDownloader::DateiDownloader(QString benutzername,
-                                 QString passwort,
-                                 int anzahlItems,
+DateiDownloader::DateiDownloader(QString username,
+                                 QString password,
+                                 int itemNumber,
                                  QWidget *parent) :
     QDialog(parent, Qt::FramelessWindowHint),
     ui(new Ui::DateiDownloader),
-    benutzername(benutzername),
-    passwort(passwort),
-    anzahlItems(anzahlItems)
+    username(username),
+    password(password),
+    itemNumber(itemNumber)
 {
     ui->setupUi(this);
+
     manager = new QNetworkAccessManager(this);
 
     QObject::connect(manager, SIGNAL(authenticationRequired(QNetworkReply*, QAuthenticator*))
@@ -31,23 +32,27 @@ DateiDownloader::~DateiDownloader()
 
 void DateiDownloader::authenticate(QNetworkReply* , QAuthenticator* authenticator)
 {
-    authenticator->setUser(benutzername);
-    authenticator->setPassword(passwort);
+    authenticator->setUser(username);
+    authenticator->setPassword(password);
 }
 
 int DateiDownloader::startNextDownload(QString dateiname, QString veranstaltung, QString verzeichnisPfad, QUrl url, int itemNummer)
 {
     // Anpassen der Labels
-    ui->progressLabel->setText(QString("Datei %1/%2").arg(itemNummer).arg(anzahlItems));
+    // Aktualisieren der Itemnummer
+    ui->progressLabel->setText(QString("Datei %1/%2").arg(itemNummer).arg(itemNumber));
+    // Aktualisieren des Veranstaltungsnamen
     ui->veranstaltungLabel->setText(veranstaltung);
+    // Aktualisieren des Dateinamens
     ui->dateinameLabel->setText(dateiname);
 
     // Erstellen des Outputstreams
     output.setFileName(verzeichnisPfad);
 
-    // Öffnen des Outputstreams
+    // Öffnen des Ausgabestreams
     if(!output.open(QIODevice::WriteOnly))
     {
+        // Fehlerbehandlung
         QMessageBox messageBox;
         messageBox.setText("Fehler beim Öffnen mit Schreibberechtigung.");
         messageBox.setInformativeText(dateiname);
@@ -62,18 +67,20 @@ int DateiDownloader::startNextDownload(QString dateiname, QString veranstaltung,
     QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(readyReadSlot()));
     QObject::connect(reply, SIGNAL(finished()), this, SLOT(finishedSlot()));
 
-    // Schleife, die läuft, bis der Download abgeschlossen ist
+    // Starten der Schleife, die vor sich hinläuft, bis der Download abgeschlossen ist
     return(loop.exec());
 }
 
 void DateiDownloader::downloadProgressSlot(qint64 bytesReceived, qint64 bytesTotal)
 {
+    // Aktualisieren der Progressbar anhand der Größe der empfangenen Bytes
     if(bytesTotal)
     {
         ui->progressBar->setMaximum(bytesTotal);
         ui->progressBar->setValue(bytesReceived);
 
     }
+    // Sonderfall: Unbekannte Größe
     else
     {
         ui->progressBar->setMaximum(0);
@@ -83,6 +90,7 @@ void DateiDownloader::downloadProgressSlot(qint64 bytesReceived, qint64 bytesTot
 
 void DateiDownloader::readyReadSlot()
 {
+    // Schreiben der runtergeladenen Bytes in die Datei
     if (output.write(reply->readAll()) == -1)
     {
         QMessageBox messageBox;
@@ -96,6 +104,7 @@ void DateiDownloader::readyReadSlot()
 
 void DateiDownloader::finishedSlot()
 {
+    // Entleeren und Schließen des Ausgabestreams
     output.flush();
     output.close();
 
@@ -103,8 +112,11 @@ void DateiDownloader::finishedSlot()
     QObject::disconnect(reply, SIGNAL(readyRead()), this, SLOT(readyReadSlot()));
     QObject::disconnect(reply, SIGNAL(finished()), this, SLOT(finishedSlot()));
 
+    // Freigabe des Speichers
     reply->deleteLater();
 
+
+    // Fehlerbehandlung
     if(reply->error())
     {
         QMessageBox messageBox;
@@ -116,14 +128,17 @@ void DateiDownloader::finishedSlot()
         output.remove();
         loop.exit(0);
     }
+    // Kein Fehler
     else
-    loop.exit(1);
+        loop.exit(1);
 }
 
 void DateiDownloader::keyPressEvent(QKeyEvent *event)
 {
+    // Abfangen der Escapetaste
     if(event->key() == Qt::Key_Escape)
     {
+        // Abbrechen des Synchronisation
         event->accept();
         reply->abort();
     }

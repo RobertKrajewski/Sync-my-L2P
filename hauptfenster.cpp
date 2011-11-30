@@ -14,6 +14,12 @@ Hauptfenster::Hauptfenster(QWidget *parent) :
     // Laden von gespeicherten Einstellungen
     QSettings einstellungen("Robert K.", "L2P-Tool++");
 
+    // Hinzufügen der Daten zur Baumansicht
+    proxymodel.setDynamicSortFilter(true);
+    proxymodel.setSourceModel(&veranstaltungen);
+    ui->treeView->setModel(&proxymodel);
+    //ui->treeView->setModel(&veranstaltungen);
+
     // Laden der Logindaten
     if (einstellungen.value("login/save").toBool())
     {
@@ -44,11 +50,7 @@ Hauptfenster::Hauptfenster(QWidget *parent) :
     QObject::connect(manager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*))
                      ,this, SLOT(authentifizieren(QNetworkReply*, QAuthenticator*)));
 
-    // Hinzufügen der Daten zur Baumansicht
-    proxymodel.setDynamicSortFilter(true);
-    proxymodel.setSourceModel(&veranstaltungen);
-    ui->treeView->setModel(&proxymodel);
-    //ui->treeView->setModel(&veranstaltungen);
+
 
     // Starten der Darstellung des Fensters
     this->show();
@@ -154,7 +156,7 @@ void Hauptfenster::veranstaltungenAbgerufen(QNetworkReply* reply)
             // Erstellen der neuen Veranstaltung
             neueVeranstaltung = new Strukturelement(veranstaltungName, QUrl(StammURL % urlRaum), courseItem);// % "/materials/documents/"));
             //neueVeranstaltung = new Strukturelement(veranstaltungName, QUrl(StammURL % urlRaum % "/materials/structured/"));
-            neueVeranstaltung->setIcon(QIcon(":/icons/directory"));
+            neueVeranstaltung->setIcon(QIcon(":/Icons/directory"));
 
             // Hinzufügen der Veranstaltung zur Liste
             veranstaltungen.appendRow(neueVeranstaltung);
@@ -359,19 +361,19 @@ void Hauptfenster::dateienAbgerufen(QNetworkReply* reply)
                         // Hinzufügen des endungsabhängigen Icons
                         // PDF
                         if (name.contains(QRegExp(".pdf$", Qt::CaseInsensitive)))
-                            neueDatei->setData(QIcon(":/icons/filetype_pdf.png"), Qt::DecorationRole);
+                            neueDatei->setData(QIcon(":/Icons/Icons/filetype_pdf.png"), Qt::DecorationRole);
 
                         // ZIP
                         else if (name.contains(QRegExp(".zip$", Qt::CaseInsensitive)))
-                            neueDatei->setData(QIcon(":/icons/filetype_zip.png"), Qt::DecorationRole);
+                            neueDatei->setData(QIcon(":/Icons/Icons/filetype_zip.png"), Qt::DecorationRole);
 
                         // RAR
                         else if (name.contains(QRegExp(".rar$", Qt::CaseInsensitive)))
-                            neueDatei->setData(QIcon(":/icons/filetype_rar.png"), Qt::DecorationRole);
+                            neueDatei->setData(QIcon(":/Icons/Icons/filetype_rar.png"), Qt::DecorationRole);
 
                         // Sonstige
                         else
-                            neueDatei->setData(QIcon(":/icons/file.png"), Qt::DecorationRole);
+                            neueDatei->setData(QIcon(":/Icons/Icons/file.png"), Qt::DecorationRole);
 
                         // Hinzufügen zum aktuellen Ordner
                         aktuellerOrdner->appendRow(neueDatei);
@@ -384,7 +386,7 @@ void Hauptfenster::dateienAbgerufen(QNetworkReply* reply)
                         Strukturelement* neuerOrdner = new Strukturelement(name, url, directoryItem);
 
                         // Setzen des Zeichens
-                        neuerOrdner->setData(QIcon(":/icons/25_folder.png"), Qt::DecorationRole);
+                        neuerOrdner->setData(QIcon(":/Icons/Icons/25_folder.png"), Qt::DecorationRole);
 
                         // Hinzufügen zum aktuellen Ordner
                         aktuellerOrdner->appendRow(neuerOrdner);
@@ -738,7 +740,7 @@ void Hauptfenster::on_synchronisieren_clicked()
                 neueVeranstaltung = true;
             }
             // 1. Fall: Ordner
-            if((**iterator).getSize() == 0)
+            if((**iterator).type() != fileItem)
             {
                 if(!verzeichnis.exists((**iterator).text()))
                 {
@@ -768,7 +770,7 @@ void Hauptfenster::on_synchronisieren_clicked()
                 //counter++;
                 if (!verzeichnis.exists((**iterator).text()) ||
                         (QFileInfo(verzeichnis, (**iterator).text()).size()
-                         != (*((Datei*)(*iterator))).getSize()))
+                         != (*((Datei*)(*iterator))).data(sizeRole).toInt()))
                 {
                     if (!loader->startNextDownload((**iterator).text(),
                                                   veranstaltungName,
@@ -777,6 +779,7 @@ void Hauptfenster::on_synchronisieren_clicked()
                                                   changedCounter+1))
                         break;
                     changedCounter++;
+                    (**iterator).setData(true, synchronisedRole);
                     downloadedItems.append((**iterator).text());
                 }
             }
@@ -810,7 +813,7 @@ void Hauptfenster::getStrukturelementeListe(Strukturelement* aktuellesElement, Q
 {
     if(!onlyIncluded || (onlyIncluded && aktuellesElement->data(includeRole).toBool()))
     {
-        if ((ui->maxSizeCheckBox->isChecked() && aktuellesElement->getSize() < (ui->maxSizeBox->value() * 1024 * 1024))
+        if ((ui->maxSizeCheckBox->isChecked() && aktuellesElement->data(sizeRole).toInt() < (ui->maxSizeBox->value() * 1024 * 1024))
                 || !ui->maxSizeCheckBox->isChecked())
         liste.append(aktuellesElement);
         if(aktuellesElement->hasChildren())
@@ -821,11 +824,11 @@ void Hauptfenster::getStrukturelementeListe(Strukturelement* aktuellesElement, Q
 
 int Hauptfenster::getFileCount(QLinkedList<Strukturelement*>& liste)
 {
-    // Zählen aller Dateien einer Liste mit einer Größe > 0
+    // Zählen aller Dateien einer Liste
     int fileCounter = 0;
     for(QLinkedList<Strukturelement*>::iterator iterator = liste.begin(); iterator != liste.end(); iterator++)
     {
-        if ((**iterator).getSize())
+        if ((**iterator).type() == fileItem)
             fileCounter++;
     }
     return fileCounter;
@@ -881,7 +884,7 @@ void Hauptfenster::on_collapseButton_clicked()
 void Hauptfenster::on_treeView_doubleClicked(const QModelIndex &index)
 {
     Strukturelement* element = (Strukturelement*) veranstaltungen.itemFromIndex(proxymodel.mapToSource(index));
-    if(element->getSize())
+    if(element->type() == fileItem)
         if(!QDesktopServices::openUrl(QUrl(getStrukturelementPfad(element), QUrl::TolerantMode)))
         {
             QDesktopServices::openUrl(element->data(urlRole).toUrl());

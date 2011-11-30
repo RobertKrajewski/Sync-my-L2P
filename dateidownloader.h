@@ -23,15 +23,14 @@ class DateiDownloader : public QDialog
     Q_OBJECT
 
 public:
-    explicit DateiDownloader(QString benutzername,
-                             QString passwort,
-                             int anzahlItems,
+    explicit DateiDownloader(QString username,
+                             QString password,
+                             int itemNumber,
                              QWidget *parent= 0);
     ~DateiDownloader();
     int startNextDownload(QString, QString, QString, QUrl, int);
 
 private:
-
     void keyPressEvent(QKeyEvent *);
     Ui::DateiDownloader *ui;
     QNetworkAccessManager* manager;
@@ -39,10 +38,10 @@ private:
 
     QEventLoop loop;
 
-    QString benutzername;
-    QString passwort;
+    QString username;
+    QString password;
 
-    int anzahlItems;
+    int itemNumber;
 
     QFile output;
 

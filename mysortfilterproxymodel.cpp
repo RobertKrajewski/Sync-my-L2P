@@ -19,11 +19,12 @@ void MySortFilterProxyModel::setMaximumSizeFilter(const bool filter)
 
 bool MySortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-   QStandardItemModel* source = (QStandardItemModel*) sourceModel();
-   QModelIndex index = source->index(sourceRow, 0, sourceParent);
-   Strukturelement* item = (Strukturelement*)source->itemFromIndex(index);
+    // Holen des Items
+    QStandardItemModel* source = (QStandardItemModel*) sourceModel();
+    QModelIndex index = source->index(sourceRow, 0, sourceParent);
+    Strukturelement* item = (Strukturelement*)source->itemFromIndex(index);
 
-   if (maxSizeFilter)
-       return (item->getSize() <= maxSize);
-   return true;
+    if (maxSizeFilter)
+        return (source->data(index, sizeRole).toInt() <= maxSize);
+    return true;
 }
