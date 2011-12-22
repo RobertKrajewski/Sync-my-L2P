@@ -30,7 +30,7 @@ public:
      bool sizeInRange(const qint32 size) const;
 
      qint32 maxSize;
-     bool maxSizeFilter;
+     bool   maxSizeFilter;
 
 //     QDate minDate;
 //     QDate maxDate;

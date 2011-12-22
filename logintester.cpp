@@ -41,6 +41,8 @@ void LoginTester::authenticationSlot(QNetworkReply* , QAuthenticator* authentica
         authenticator->setUser(username);
         authenticator->setPassword(password);
     }
+
+    // Erhöhen des Zählers nach jedem Versuch
     tryCounter++;
 }
 

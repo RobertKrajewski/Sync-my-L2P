@@ -41,10 +41,10 @@ public:
 
 protected:
     qint32      size;
+    bool        included;
     QUrl        url;
     QDateTime   zeit;
     MyItemType  typeEX;
-    bool        included;
     bool        synchronised;
 
 };
