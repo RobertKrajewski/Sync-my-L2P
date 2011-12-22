@@ -32,23 +32,23 @@ QVariant Strukturelement::data(int role) const
     }
     else if (role == Qt::StatusTipRole)
     {
-        QString tooltip;
+        QString statustip;
 
         if (typeEX == fileItem)
         {
-            tooltip.append(text() % " - ");
+            statustip.append(text() % " - ");
             if (size > 1048576)
-                tooltip.append(QString::number(size/1048576.0,'f',2) % " MB");
+                statustip.append(QString::number(size/1048576.0,'f',2) % " MB");
             else if(size > 1024)
-                 tooltip.append(QString::number(size/1024.0,'f',2) % " KB");
+                 statustip.append(QString::number(size/1024.0,'f',2) % " KB");
             else
-                 tooltip.append(QString::number(size) % " Byte");
+                 statustip.append(QString::number(size) % " Byte");
 
-            tooltip.append(" - " % ((Datei*)this)->GetZeit().toString("ddd dd.MM.yy hh:mm"));
+            statustip.append(" - " % ((Datei*)this)->GetZeit().toString("ddd dd.MM.yy hh:mm"));
 
-            return tooltip;
+            return statustip;
         }
-        return tooltip;
+        return statustip;
     }
     else if (role == Qt::FontRole)
     {

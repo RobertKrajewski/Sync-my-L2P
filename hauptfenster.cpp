@@ -15,9 +15,9 @@ Hauptfenster::Hauptfenster(QWidget *parent) :
     QSettings einstellungen("Robert K.", "L2P-Tool++");
 
     // Hinzufügen der Daten zur Baumansicht
-    proxymodel.setDynamicSortFilter(true);
-    proxymodel.setSourceModel(&veranstaltungen);
-    ui->treeView->setModel(&proxymodel);
+    proxyModel.setDynamicSortFilter(true);
+    proxyModel.setSourceModel(&itemModel);
+    ui->treeView->setModel(&proxyModel);
     //ui->treeView->setModel(&veranstaltungen);
 
     // Laden der Logindaten
@@ -35,12 +35,41 @@ Hauptfenster::Hauptfenster(QWidget *parent) :
         ui->directoryOpen->setEnabled(true);
 
     // Laden der gesetzten Filter und sonstigen Einstellungen
+    // Falls die Einstellungen nicht vorhanden sein sollten, setze Defaultwert
     ui->autoSyncCheck->setChecked(einstellungen.value("autoSync").toBool());
-    ui->documentsCheck->setChecked(einstellungen.value("documents").toBool());
-    ui->structeredDocumentsCheck->setChecked(einstellungen.value("structuredDocuments").toBool());
-    ui->exercisesCheck->setChecked(einstellungen.value("exercises").toBool());
-    ui->maxSizeCheckBox->setChecked(einstellungen.value("maxSizeCB").toBool());
-    ui->maxSizeBox->setValue(einstellungen.value("maxSizeB").toInt());
+
+    if (einstellungen.contains("documents"))
+        ui->documentsCheck->setChecked(einstellungen.value("documents").toBool());
+    else
+        ui->documentsCheck->setChecked(true);
+
+
+    if (einstellungen.contains("structuredDocuments"))
+        ui->structeredDocumentsCheck->setChecked(einstellungen.value("structuredDocuments").toBool());
+    else
+        ui->structeredDocumentsCheck->setChecked(true);
+
+
+    if (einstellungen.contains("exercises"))
+        ui->exercisesCheck->setChecked(einstellungen.value("exercises").toBool());
+    else
+        ui->exercisesCheck->setChecked(true);
+
+
+    if (einstellungen.contains("maxSizeCB"))
+    {
+        ui->maxSizeCheckBox->setChecked(einstellungen.value("maxSizeCB").toBool());
+        proxyModel.setMaximumSizeFilter(einstellungen.value("maxSizeCB").toBool());
+    }
+
+
+    if (einstellungen.contains("maxSizeB"))
+    {
+        ui->maxSizeBox->setValue(einstellungen.value("maxSizeB").toInt());
+        proxyModel.setMaximumSize(einstellungen.value("maxSizeB").toInt());
+    }
+    else
+        ui->maxSizeBox->setValue(10);
 
     // Variable für das automatische Synchronisieren beim Programmstart
     autoSynchronize = false;
@@ -96,7 +125,7 @@ Hauptfenster::~Hauptfenster()
 void Hauptfenster::on_Aktualisieren_clicked()
 {
     // Löschen der alten Veranstaltungsliste
-    veranstaltungen.clear();
+    itemModel.clear();
 
     // Zurücksetzen der freigeschalteten Schaltflächen
     ui->Aktualisieren->     setEnabled(false);
@@ -128,7 +157,7 @@ void Hauptfenster::veranstaltungenAbgerufen(QNetworkReply* reply)
         QString replyText = reply->readAll();
 
         // Erstellen eines RegExps für das Herausfiltern der Veranstaltungen
-        QString regPattern = "<td class=\"ms-vb2\"><a href=\"(/(?:ws|ss)\\d{2}/\\d{2}(?:ws|ss)-\\d{5})\">(.{,150})</a></td><td";
+        QString regPattern = "<td class=\"ms-vb2\"><a href=\"(/(?:ws|ss)\\d{2}/\\d{2}(?:ws|ss)-\\d{5})\">(.{,230})</a></td><td";
         QRegExp* regExp = new QRegExp(regPattern, Qt::CaseSensitive);
 
         // Erstellen eines RegExps  für unzulässige Buchstaben im Veranstaltungsnamen
@@ -159,7 +188,7 @@ void Hauptfenster::veranstaltungenAbgerufen(QNetworkReply* reply)
             neueVeranstaltung->setIcon(QIcon(":/Icons/directory"));
 
             // Hinzufügen der Veranstaltung zur Liste
-            veranstaltungen.appendRow(neueVeranstaltung);
+            itemModel.appendRow(neueVeranstaltung);
 
             // Weitersetzen der Suchposition hinter den letzten Fund
             altePosition = neuePosition + regExp->matchedLength();
@@ -192,7 +221,7 @@ void Hauptfenster::veranstaltungenAbgerufen(QNetworkReply* reply)
     if (replies.isEmpty())
     {
         // Veranstaltungen alphabetisch sortieren
-        veranstaltungen.sort(0);
+        itemModel.sort(0);
 
         QObject::disconnect(manager, SIGNAL(finished(QNetworkReply*)),
                             this, SLOT(veranstaltungenAbgerufen(QNetworkReply*)));
@@ -218,7 +247,7 @@ void Hauptfenster::dateienAktualisieren()
                      this, SLOT(dateienAbgerufen(QNetworkReply*)));
 
     // Durchlaufen aller Veranstaltungen
-    int rowCount = veranstaltungen.rowCount();
+    int rowCount = itemModel.rowCount();
     Strukturelement* aktuelleStruktur = 0;
 
     // Übungsbetrieb Lösungen
@@ -230,7 +259,7 @@ void Hauptfenster::dateienAktualisieren()
     for(int i= 0; i < rowCount; i++)
     {
         // Holen der aktuellen Veranstaltung
-        aktuelleStruktur = (Strukturelement*) veranstaltungen.item(i);
+        aktuelleStruktur = (Strukturelement*) itemModel.item(i);
 
         // Löschen aller Dateien
         if(aktuelleStruktur->rowCount() > 0)
@@ -315,10 +344,10 @@ void Hauptfenster::dateienAbgerufen(QNetworkReply* reply)
         Reader.addData(replyText);
 
         // Vorbereitung der Daten für die Elemente
-        QString currentTag;
+        QString currentXmlTag;
         QUrl    url;
         QString name;
-        QString zeit;
+        QString time;
         qint32  size = 0;
 
         // Prüfen auf das Ende
@@ -331,7 +360,7 @@ void Hauptfenster::dateienAbgerufen(QNetworkReply* reply)
             if(Reader.isStartElement())
             {
                 // Speichern des Namens
-                currentTag = Reader.name().toString();
+                currentXmlTag = Reader.name().toString();
             }
 
             // 2. Fall: Schließendes Element mit Namen Response </Response>
@@ -356,27 +385,38 @@ void Hauptfenster::dateienAbgerufen(QNetworkReply* reply)
                     if (size)
                     {
                         // Erstellen einer neuen Datei
-                        Datei* neueDatei = new Datei(name, url, zeit, size);
+                        Datei* newFile = new Datei(name, url, time, size);
 
                         // Hinzufügen des endungsabhängigen Icons
                         // PDF
                         if (name.contains(QRegExp(".pdf$", Qt::CaseInsensitive)))
-                            neueDatei->setData(QIcon(":/Icons/Icons/filetype_pdf.png"), Qt::DecorationRole);
+                            newFile->setData(QIcon(":/Icons/Icons/filetype_pdf.png"), Qt::DecorationRole);
 
                         // ZIP
                         else if (name.contains(QRegExp(".zip$", Qt::CaseInsensitive)))
-                            neueDatei->setData(QIcon(":/Icons/Icons/filetype_zip.png"), Qt::DecorationRole);
+                            newFile->setData(QIcon(":/Icons/Icons/filetype_zip.png"), Qt::DecorationRole);
 
                         // RAR
                         else if (name.contains(QRegExp(".rar$", Qt::CaseInsensitive)))
-                            neueDatei->setData(QIcon(":/Icons/Icons/filetype_rar.png"), Qt::DecorationRole);
+                            newFile->setData(QIcon(":/Icons/Icons/filetype_rar.png"), Qt::DecorationRole);
 
                         // Sonstige
                         else
-                            neueDatei->setData(QIcon(":/Icons/Icons/file.png"), Qt::DecorationRole);
+                            newFile->setData(QIcon(":/Icons/Icons/file.png"), Qt::DecorationRole);
+
+
+                        QString path;
+                        path.append(getStrukturelementPfad(aktuellerOrdner) %"/");
+                        path.append(name);
+                        path.remove(0,8);
+
+                        if(QFile::exists(path))
+                        {
+                            newFile->setData(true, synchronisedRole);
+                        }
 
                         // Hinzufügen zum aktuellen Ordner
-                        aktuellerOrdner->appendRow(neueDatei);
+                        aktuellerOrdner->appendRow(newFile);
                     }
                     // 2. Fall: Ordner/Veranstaltung
                     // Ausschließen der Ordnernamen "documents" und "structured"
@@ -400,27 +440,27 @@ void Hauptfenster::dateienAbgerufen(QNetworkReply* reply)
                 url.clear();
                 name.clear();
                 size = 0;
-                zeit.clear();
+                time.clear();
             }
 
             // Einlesen der Elementeigenschaften
             else if (Reader.isCharacters() && !Reader.isWhitespace())
             {
                 // URL
-                if(currentTag == "href")
+                if(currentXmlTag == "href")
                     url.setUrl(QString::fromUtf8(Reader.text().toString().toLatin1()));
 
                 // Name
-                else if (currentTag == "displayname")
+                else if (currentXmlTag == "displayname")
                     name = QString::fromUtf8(Reader.text().toString().toLatin1());
 
                 // Größe
-                else if (currentTag == "getcontentlength")
+                else if (currentXmlTag == "getcontentlength")
                     size = Reader.text().toString().toInt();
 
                 // Modifizierungsdatum
-                else if (currentTag == "getlastmodified")
-                    zeit = QString::fromUtf8(Reader.text().toString().toLatin1());
+                else if (currentXmlTag == "getlastmodified")
+                    time = QString::fromUtf8(Reader.text().toString().toLatin1());
             }
         }
 
@@ -478,7 +518,7 @@ void Hauptfenster::dateienAbgerufen(QNetworkReply* reply)
 void Hauptfenster::on_ausschliessen_clicked()
 {
     // Holen der ausgewählten Dateien
-    QModelIndexList ausgewaehlt = proxymodel.mapSelectionToSource(ui->treeView->selectionModel()->selection()).indexes();
+    QModelIndexList ausgewaehlt = proxyModel.mapSelectionToSource(ui->treeView->selectionModel()->selection()).indexes();
 
     // Iteration über alle Elemente
     Strukturelement* aktuelleStruktur = 0;
@@ -495,7 +535,7 @@ void Hauptfenster::on_ausschliessen_clicked()
 
         // Prüfen, ob alle Geschwisterelemente ausgeschlossen sind
         // => Ausschließen des Vaterlements
-        if(aktuelleStruktur != veranstaltungen.invisibleRootItem())
+        if(aktuelleStruktur != itemModel.invisibleRootItem())
         {
             bool siblingsExcluded = true;
 
@@ -519,7 +559,7 @@ void Hauptfenster::on_ausschliessen_clicked()
     }
 
     // Aktualisieren der Ansicht
-    ui->treeView->dataChanged(veranstaltungen.index(0,0),veranstaltungen.index(veranstaltungen.rowCount(),0));
+    ui->treeView->dataChanged(itemModel.index(0,0),itemModel.index(itemModel.rowCount(),0));
 }
 
 void Hauptfenster::ausschliessen(Strukturelement* aktuelleStruktur)
@@ -537,7 +577,7 @@ void Hauptfenster::ausschliessen(Strukturelement* aktuelleStruktur)
 void Hauptfenster::on_einbinden_clicked()
 {
     // Bestimmen der ausgewählten Items
-    QModelIndexList selectedItemsList =  proxymodel.mapSelectionToSource(ui->treeView->selectionModel()->selection()).indexes();
+    QModelIndexList selectedItemsList =  proxyModel.mapSelectionToSource(ui->treeView->selectionModel()->selection()).indexes();
 
     // Variablen zur Speicherung von Pointern aus Performancegründen vor der Schleife
     Strukturelement* aktuelleStruktur = 0;
@@ -562,7 +602,7 @@ void Hauptfenster::on_einbinden_clicked()
     }
 
     // Aktualisierung der Ansicht
-    ui->treeView->dataChanged(veranstaltungen.index(0,0),veranstaltungen.index(veranstaltungen.rowCount(),0));
+    ui->treeView->dataChanged(itemModel.index(0,0),itemModel.index(itemModel.rowCount(),0));
 }
 
 void Hauptfenster::einbinden(Strukturelement* aktuelleStruktur)
@@ -701,9 +741,9 @@ void Hauptfenster::on_synchronisieren_clicked()
 
     // Hinzufügen aller eingebundenen Elemente einer Liste
     QLinkedList<Strukturelement*> liste;
-    for(int i=0; i < veranstaltungen.rowCount(); i++)
+    for(int i=0; i < itemModel.rowCount(); i++)
     {
-        getStrukturelementeListe((Strukturelement*)veranstaltungen.item(i,0), liste, true);
+        getStrukturelementeListe((Strukturelement*)itemModel.item(i,0), liste, true);
     }
 
     if(!liste.isEmpty()){
@@ -883,7 +923,7 @@ void Hauptfenster::on_collapseButton_clicked()
 
 void Hauptfenster::on_treeView_doubleClicked(const QModelIndex &index)
 {
-    Strukturelement* element = (Strukturelement*) veranstaltungen.itemFromIndex(proxymodel.mapToSource(index));
+    Strukturelement* element = (Strukturelement*) itemModel.itemFromIndex(proxyModel.mapToSource(index));
     if(element->type() == fileItem)
         if(!QDesktopServices::openUrl(QUrl(getStrukturelementPfad(element), QUrl::TolerantMode)))
         {
@@ -891,21 +931,21 @@ void Hauptfenster::on_treeView_doubleClicked(const QModelIndex &index)
         }
 }
 
-QString Hauptfenster::getStrukturelementPfad(Strukturelement* element)
+QString Hauptfenster::getStrukturelementPfad(Strukturelement* item)
 {
     QString path;
-    path.append(element->text());
-    Strukturelement* parent = element;
+    path.append(item->text());
+    Strukturelement* parent = item;
     while ((parent = (Strukturelement*) parent->parent()) != 0)
-        path.push_front(parent->text()%"/");
-    path.push_front("file:///" % ui->VerzeichnisFeld->text()%"/");
+        path.push_front(parent->text() % "/");
+    path.push_front("file:///" % ui->VerzeichnisFeld->text() % "/");
     return path;
 }
 
 void Hauptfenster::on_treeView_customContextMenuRequested(const QPoint &pos)
 {
     // Bestimmung des Elements, auf das geklickt wurde
-    Strukturelement* RightClickedItem = (Strukturelement*) veranstaltungen.itemFromIndex(proxymodel.mapToSource(ui->treeView->indexAt(pos)));
+    Strukturelement* RightClickedItem = (Strukturelement*) itemModel.itemFromIndex(proxyModel.mapToSource(ui->treeView->indexAt(pos)));
 
     // Überprüfung, ob überhaupt auf ein Element geklickt wurde (oder ins Leere)
     if (RightClickedItem == 0)
@@ -942,35 +982,36 @@ void Hauptfenster::on_treeView_customContextMenuRequested(const QPoint &pos)
 
 void Hauptfenster::openCourse()
 {
+    // Öffnen der URL des mit der rechten Maustaste geklickten Items
     QDesktopServices::openUrl(lastRightClickItem->data(urlRole).toUrl());
 }
 
 void Hauptfenster::openItem()
 {
-        if(!QDesktopServices::openUrl(QUrl(getStrukturelementPfad(lastRightClickItem), QUrl::TolerantMode)))
-        {
-            QDesktopServices::openUrl(lastRightClickItem->data(urlRole).toUrl());
-        }
+    // Öffnen der Datei auf der Festplatte des mit der rechten Maustaste geklickten Items
+    if(!QDesktopServices::openUrl(QUrl(getStrukturelementPfad(lastRightClickItem), QUrl::TolerantMode)))
+    {
+        // Öffnen der Datei im L2P des mit der rechten Maustaste geklickten Items
+        QDesktopServices::openUrl(lastRightClickItem->data(urlRole).toUrl());
+    }
 }
 
 void Hauptfenster::copyURL()
 {
-    // Holen der Zwischenablage
+    // Holen der globalen Zwischenablage
     QClipboard *clipboard = QApplication::clipboard();
 
-    // Kopieren in die Zwischenablage
+    // Kopieren der URL des mit der rechten Maustaste geklickten Items in die Zwischenablage
     clipboard->setText(lastRightClickItem->data(urlRole).toUrl().toString());
 }
 
 
-
-
-void Hauptfenster::on_maxSizeBox_valueChanged(int arg1)
+void Hauptfenster::on_maxSizeBox_valueChanged(int newMaximumSize)
 {
-    proxymodel.setMaximumSize(arg1);
+    proxyModel.setMaximumSize(newMaximumSize);
 }
 
 void Hauptfenster::on_maxSizeCheckBox_toggled(bool checked)
 {
-    proxymodel.setMaximumSizeFilter(checked);
+    proxyModel.setMaximumSizeFilter(checked);
 }

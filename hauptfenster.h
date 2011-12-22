@@ -55,21 +55,23 @@ private:
     void einbinden(Strukturelement*);
     void aktiviereLoginButton(void);
     void getStrukturelementeListe(Strukturelement*, QLinkedList<Strukturelement*>&, bool);
+    void unknownError();
 
     QString getStrukturelementPfad(Strukturelement*);
     int getFileCount(QLinkedList<Strukturelement*>& liste);
-    Ui::Hauptfenster *ui;
+
+    Ui::Hauptfenster*      ui;
     QNetworkAccessManager* manager;
-    MySortFilterProxyModel proxymodel;
-    QStandardItemModel veranstaltungen;
-    Strukturelement* iter;
-    QFile output;
+    MySortFilterProxyModel proxyModel;
+    QStandardItemModel     itemModel;
+    Strukturelement*       iter;
+    QFile                  output;
     QMap<QNetworkReply*, Strukturelement*> replies;
-    void unknownError();
+
 
     Strukturelement* lastRightClickItem;
+    bool             autoSynchronize;
 
-    bool autoSynchronize;
 
 signals:
     void downloadFortschritt(int);

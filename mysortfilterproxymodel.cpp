@@ -3,6 +3,8 @@
 MySortFilterProxyModel::MySortFilterProxyModel(QObject *parent)
     :QSortFilterProxyModel(parent)
 {
+    maxSizeFilter = false;
+    maxSize = 0;
 }
 
 void MySortFilterProxyModel::setMaximumSize(const qint32 size)
@@ -22,8 +24,9 @@ bool MySortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &
     // Holen des Items
     QStandardItemModel* source = (QStandardItemModel*) sourceModel();
     QModelIndex index = source->index(sourceRow, 0, sourceParent);
-    Strukturelement* item = (Strukturelement*)source->itemFromIndex(index);
+    //Strukturelement* item = (Strukturelement*)source->itemFromIndex(index);
 
+    // Prüfen der Filterbedingungen
     if (maxSizeFilter)
         return (source->data(index, sizeRole).toInt() <= maxSize);
     return true;
