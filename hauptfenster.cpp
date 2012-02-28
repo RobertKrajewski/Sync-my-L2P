@@ -272,7 +272,7 @@ void Hauptfenster::dateienAktualisieren()
             QNetworkRequest request(QUrl(aktuelleStruktur->data(urlRole).toUrl().toString() % "/materials/documents/"));
             request.setRawHeader("Depth", "infinity");
             request.setRawHeader("Content-Type", "text/xml; charset=\"utf-8\"");
-            request.setRawHeader("Content-Length", "xxxx");
+            request.setRawHeader("Content-Length", "0");
 
             // Einfügen und Absenden des Requests
             replies.insert(manager->sendCustomRequest(request, "PROPFIND"), aktuelleStruktur);
@@ -285,7 +285,7 @@ void Hauptfenster::dateienAktualisieren()
             QNetworkRequest request2(QUrl(aktuelleStruktur->data(urlRole).toUrl().toString() % "/materials/structured/"));
             request2.setRawHeader("Depth", "infinity");
             request2.setRawHeader("Content-Type", "text/xml; charset=\"utf-8\"");
-            request2.setRawHeader("Content-Length", "xxxx");
+            request2.setRawHeader("Content-Length", "0");
 
             // Einfügen in die Map und Absenden des Requests
             replies.insert(manager->sendCustomRequest(request2, "PROPFIND"), aktuelleStruktur);
@@ -297,7 +297,7 @@ void Hauptfenster::dateienAktualisieren()
             QNetworkRequest request(QUrl(aktuelleStruktur->data(urlRole).toUrl().toString() % "/exerciseCourse/SampleSolutions/"));
             request.setRawHeader("Depth", "infinity");
             request.setRawHeader("Content-Type", "text/xml; charset=\"utf-8\"");
-            request.setRawHeader("Content-Length", "xxxx");
+            request.setRawHeader("Content-Length", "0");
 
             // Einfügen und Absenden des Requests
             replies.insert(manager->sendCustomRequest(request, "PROPFIND"), aktuelleStruktur);
@@ -306,7 +306,7 @@ void Hauptfenster::dateienAktualisieren()
             QNetworkRequest request2(QUrl(aktuelleStruktur->data(urlRole).toUrl().toString() % "/exerciseCourse/AssignmentDocuments/"));
             request2.setRawHeader("Depth", "infinity");
             request2.setRawHeader("Content-Type", "text/xml; charset=\"utf-8\"");
-            request2.setRawHeader("Content-Length", "xxxx");
+            request2.setRawHeader("Content-Length", "0");
 
             // Einfügen und Absenden des Requests
             replies.insert(manager->sendCustomRequest(request2, "PROPFIND"), aktuelleStruktur);
