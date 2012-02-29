@@ -1,3 +1,20 @@
+/****************************************************************************
+** This file is part of Sync-my-L2P.
+**
+** Sync-my-L2P is free software: you can redistribute it and/or modify
+** it under the terms of the GNU Lesser General Public License as published by
+** the Free Software Foundation, either version 3 of the License, or
+** (at your option) any later version.
+**
+** Sync-my-L2P is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU Lesser General Public License for more details.
+**
+** You should have received a copy of the GNU Lesser General Public License
+** along with Sync-my-L2P.  If not, see <http://www.gnu.org/licenses/>.
+****************************************************************************/
+
 #include "hauptfenster.h"
 #include "ui_hauptfenster.h"
 
@@ -141,7 +158,8 @@ void Hauptfenster::on_Aktualisieren_clicked()
                      this, SLOT(veranstaltungenAbgerufen(QNetworkReply*)));
 
     // Starten der Anfrage
-    replies.insert(manager->get(QNetworkRequest(QUrl(StammURL % "/foyer/summary/default.aspx"))), 0);
+    QNetworkReply* reply = manager->get(QNetworkRequest(QUrl(StammURL % "/foyer/summary/default.aspx")));
+    replies.insert(reply, 0);
 
     // Starten einer zweiten Anfrage für ältere Semester, falls eingestellt
     if(ui->alteSemesterCheck->isChecked())
@@ -273,6 +291,11 @@ void Hauptfenster::dateienAktualisieren()
             request.setRawHeader("Depth", "infinity");
             request.setRawHeader("Content-Type", "text/xml; charset=\"utf-8\"");
             request.setRawHeader("Content-Length", "0");
+            QList<QByteArray> HeaderList = request.rawHeaderList();
+            foreach(QByteArray Header, HeaderList)
+            {
+               qDebug(Header);
+            }
 
             // Einfügen und Absenden des Requests
             replies.insert(manager->sendCustomRequest(request, "PROPFIND"), aktuelleStruktur);
@@ -685,12 +708,12 @@ void Hauptfenster::on_AutoLogin_stateChanged(int checked)
     ui->autoSyncCheck->setChecked(false);
 }
 
-void Hauptfenster::on_BenutzernameFeld_textChanged(const QString &arg1)
+void Hauptfenster::on_BenutzernameFeld_textChanged(const QString)
 {
     aktiviereLoginButton();
 }
 
-void Hauptfenster::on_PasswortFeld_textChanged(const QString &arg1)
+void Hauptfenster::on_PasswortFeld_textChanged(const QString)
 {
     aktiviereLoginButton();
 }
@@ -874,7 +897,7 @@ int Hauptfenster::getFileCount(QLinkedList<Strukturelement*>& liste)
     return fileCounter;
 }
 
-void Hauptfenster::authentifizieren(QNetworkReply* reply, QAuthenticator* auth)
+void Hauptfenster::authentifizieren(QNetworkReply*, QAuthenticator* auth)
 {
     auth->setUser(ui->BenutzernameFeld->text());
     auth->setPassword(ui->PasswortFeld->text());
