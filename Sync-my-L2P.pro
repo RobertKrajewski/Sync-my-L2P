@@ -29,6 +29,9 @@ RC_FILE += \
 
 ICON = Sync-my-L2P.icns
 
+OTHER_FILES += \
+    COPYING.LESSER
+
 
 
 
