@@ -168,14 +168,20 @@ void Hauptfenster::on_Aktualisieren_clicked()
 
 void Hauptfenster::veranstaltungenAbgerufen(QNetworkReply* reply)
 {
+
     // Prüfen auf Fehler beim Abruf
     if(!reply->error())
     {
         // Auslesen der kompletten Antwort
         QString replyText = reply->readAll();
+        QMessageBox messageBox;
+        messageBox.setText("Inhalt");
+        messageBox.setDetailedText(replyText);
+        messageBox.setStandardButtons(QMessageBox::Ok);
+        messageBox.exec();
 
         // Erstellen eines RegExps für das Herausfiltern der Veranstaltungen
-        QString regPattern = "<td class=\"ms-vb2\"><a href=\"(/(?:ws|ss)\\d{2}/\\d{2}(?:ws|ss)-\\d{5})\">(.{,230})</a></td><td";
+        QString regPattern = "<td class=\"ms-vb2\"><a href=\"(/(?:ws|ss)\\d{2}/\\d{2}(?:ws|ss)-\\d{5})/information/default.aspx\">(.{,230})</a></td><td";
         QRegExp* regExp = new QRegExp(regPattern, Qt::CaseSensitive);
 
         // Erstellen eines RegExps  für unzulässige Buchstaben im Veranstaltungsnamen
