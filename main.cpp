@@ -16,11 +16,11 @@
 ****************************************************************************/
 
 #include <QApplication>
-#include "hauptfenster.h"
+#include "mymainwindow.h"
 
-int main(int argv, char **args)
+int main(int argc, char **argv)
 {
-    QApplication qtApplikation(argv, args);
-    Hauptfenster programm;
+    QApplication qtApplikation(argc, argv);
+    MyMainWindow programm;
     return qtApplikation.exec();
 }

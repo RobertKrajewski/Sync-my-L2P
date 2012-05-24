@@ -15,10 +15,10 @@
 ** along with Sync-my-L2P.  If not, see <http://www.gnu.org/licenses/>.
 ****************************************************************************/
 
-#include "dateidownloader.h"
+#include "filedownloader.h"
 #include "ui_dateidownloader.h"
 
-DateiDownloader::DateiDownloader(QString username,
+FileDownloader::FileDownloader(QString username,
                                  QString password,
                                  int itemNumber,
                                  QWidget *parent) :
@@ -42,18 +42,18 @@ DateiDownloader::DateiDownloader(QString username,
     move((desktopRect.width()-windowRect.width())/2+desktopRect.x(), (desktopRect.height()-windowRect.height())/2+desktopRect.y());
 }
 
-DateiDownloader::~DateiDownloader()
+FileDownloader::~FileDownloader()
 {
     delete ui;
 }
 
-void DateiDownloader::authenticate(QNetworkReply* , QAuthenticator* authenticator)
+void FileDownloader::authenticate(QNetworkReply* , QAuthenticator* authenticator)
 {
     authenticator->setUser(username);
     authenticator->setPassword(password);
 }
 
-int DateiDownloader::startNextDownload(QString filename, QString event, QString verzeichnisPfad, QUrl url, int itemNummer)
+int FileDownloader::startNextDownload(QString dateiname, QString veranstaltung, QString verzeichnisPfad, QUrl url, int itemNummer)
 {
     // Anpassen der Labels
     // Aktualisieren der Itemnummer
@@ -66,12 +66,12 @@ int DateiDownloader::startNextDownload(QString filename, QString event, QString 
     // Erstellen des Outputstreams
     output.setFileName(verzeichnisPfad);
 
-    // Öffnen des Ausgabestreams
+    // Ã–ffnen des Ausgabestreams
     if(!output.open(QIODevice::WriteOnly))
     {
         // Fehlerbehandlung
         QMessageBox messageBox;
-        messageBox.setText("Fehler beim Öffnen mit Schreibberechtigung.");
+        messageBox.setText("Fehler beim Ã–ffnen mit Schreibberechtigung.");
         messageBox.setInformativeText(filename);
         messageBox.setStandardButtons(QMessageBox::Ok);
         messageBox.exec();
@@ -84,20 +84,20 @@ int DateiDownloader::startNextDownload(QString filename, QString event, QString 
     QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(readyReadSlot()));
     QObject::connect(reply, SIGNAL(finished()), this, SLOT(finishedSlot()));
 
-    // Starten der Schleife, die vor sich hinläuft, bis der Download abgeschlossen ist
+    // Starten der Schleife, die vor sich hinlÃ¤uft, bis der Download abgeschlossen ist
     return(loop.exec());
 }
 
-void DateiDownloader::downloadProgressSlot(qint64 bytesReceived, qint64 bytesTotal)
+void FileDownloader::downloadProgressSlot(qint64 bytesReceived, qint64 bytesTotal)
 {
-    // Aktualisieren der Progressbar anhand der Größe der empfangenen Bytes
+    // Aktualisieren der Progressbar anhand der GrÃ¶ÃŸe der empfangenen Bytes
     if(bytesTotal)
     {
         ui->progressBar->setMaximum(bytesTotal);
         ui->progressBar->setValue(bytesReceived);
 
     }
-    // Sonderfall: Unbekannte Größe
+    // Sonderfall: Unbekannte GrÃ¶ÃŸe
     else
     {
         ui->progressBar->setMaximum(0);
@@ -105,7 +105,7 @@ void DateiDownloader::downloadProgressSlot(qint64 bytesReceived, qint64 bytesTot
     }
 }
 
-void DateiDownloader::readyReadSlot()
+void FileDownloader::readyReadSlot()
 {
     // Schreiben der runtergeladenen Bytes in die Datei
     if (output.write(reply->readAll()) == -1)
@@ -119,9 +119,9 @@ void DateiDownloader::readyReadSlot()
     }
 }
 
-void DateiDownloader::finishedSlot()
+void FileDownloader::finishedSlot()
 {
-    // Entleeren und Schließen des Ausgabestreams
+    // Entleeren und SchlieÃŸen des Ausgabestreams
     output.flush();
     output.close();
 
@@ -150,7 +150,7 @@ void DateiDownloader::finishedSlot()
         loop.exit(1);
 }
 
-void DateiDownloader::keyPressEvent(QKeyEvent *event)
+void FileDownloader::keyPressEvent(QKeyEvent *event)
 {
     // Abfangen der Escapetaste
     if(event->key() == Qt::Key_Escape)

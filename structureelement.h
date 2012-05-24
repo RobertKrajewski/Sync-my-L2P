@@ -55,7 +55,7 @@ enum synchroniseStatus
 class Strukturelement : public QStandardItem
 {
 public:
-    Strukturelement(QString name, QUrl url, MyItemType typeEX);
+    Structureelement(QString name, QUrl url, MyItemType typeEX);
 
     int type() const;
 

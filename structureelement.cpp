@@ -15,17 +15,17 @@
 ** along with Sync-my-L2P.  If not, see <http://www.gnu.org/licenses/>.
 ****************************************************************************/
 
-#include "strukturelement.h"
-#include "datei.h"
+#include "structureelement.h"
+#include "myfile.h"
 
-Strukturelement::Strukturelement(QString name, QUrl url, MyItemType type)
+Structureelement::Structureelement(QString name, QUrl url, MyItemType type)
     :QStandardItem(name), included(true), url(url), typeEX(type)
 {
     synchronised = NOT_SYNCHRONISED;
     size = 0;
 }
 
-QVariant Strukturelement::data(int role) const
+QVariant Structureelement::data(int role) const
 {
     if (role == includeRole)
     {
@@ -61,7 +61,7 @@ QVariant Strukturelement::data(int role) const
             else
                  statustip.append(QString::number(size) % " Byte");
 
-            statustip.append(" - " % ((Datei*)this)->GetTime().toString("ddd dd.MM.yy hh:mm"));
+            statustip.append(" - " % ((MyFile*)this)->getTime().toString("ddd dd.MM.yy hh:mm"));
 
             return statustip;
         }
@@ -91,22 +91,22 @@ QVariant Strukturelement::data(int role) const
     return QStandardItem::data(role);
 }
 
-bool Strukturelement::operator< (const QStandardItem& other) const
+bool Structureelement::operator< (const QStandardItem& other) const
 {
-    if ((this->size == 0) && ((((Strukturelement*)(&other))->size) != 0))
+    if ((this->size == 0) && ((((Structureelement*)(&other))->size) != 0))
         return true;
-    else if ((this->size != 0) && ((((Strukturelement*)(&other))->size) == 0))
+    else if ((this->size != 0) && ((((Structureelement*)(&other))->size) == 0))
         return false;
     else
-        return (this->text().toLower() < (((Strukturelement*)(&other))->text()).toLower());
+        return (this->text().toLower() < (((Structureelement*)(&other))->text()).toLower());
 }
 
-int Strukturelement::type() const
+int Structureelement::type() const
 {
     return typeEX;
 }
 
-void Strukturelement::setData(const QVariant &value, int role)
+void Structureelement::setData(const QVariant &value, int role)
 {
     if (role == includeRole)
     {
