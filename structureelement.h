@@ -52,7 +52,7 @@ enum synchroniseStatus
 
 };
 
-class Strukturelement : public QStandardItem
+class Structureelement : public QStandardItem
 {
 public:
     Structureelement(QString name, QUrl url, MyItemType typeEX);

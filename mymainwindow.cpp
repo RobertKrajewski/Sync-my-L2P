@@ -65,7 +65,7 @@ MyMainWindow::MyMainWindow(QWidget *parent) :
 
 
 
-void Hauptfenster::loadSettings()
+void MyMainWindow::loadSettings()
 {
     // Laden von gespeicherten Einstellungen
     QSettings settings("Robert K.", "L2P-Tool++");
@@ -122,7 +122,7 @@ void Hauptfenster::loadSettings()
         ui->maxSizeBox->setValue(10);
 }
 
-Hauptfenster::~Hauptfenster()
+MyMainWindow::~MyMainWindow()
 {
     saveSettings();
     delete ui;
@@ -150,7 +150,6 @@ void MyMainWindow::saveSettings()
     settings.setValue("exercises", ui->exercisesCheck->isChecked());
     settings.setValue("maxSizeCB", ui->maxSizeCheckBox->isChecked());
     settings.setValue("maxSizeB", ui->maxSizeBox->value());
-    delete ui;
 }
 
 void MyMainWindow::on_Aktualisieren_clicked()
@@ -216,7 +215,7 @@ void MyMainWindow::veranstaltungenAbgerufen(QNetworkReply* reply)
 
 
             // Erstellen der neuen Veranstaltung
-            neueVeranstaltung = new Structureelement(veranstaltungName, QUrl(StammURL % urlRaum), courseItem);// % "/materials/documents/"));
+            neueVeranstaltung = new Structureelement(veranstaltungName, QUrl(MainURL % urlRaum), courseItem);// % "/materials/documents/"));
             //neueVeranstaltung = new Strukturelement(veranstaltungName, QUrl(StammURL % urlRaum % "/materials/structured/"));
             neueVeranstaltung->setIcon(QIcon(":/Icons/directory"));
 
@@ -912,7 +911,7 @@ int MyMainWindow::getFileCount(QLinkedList<Structureelement*>& liste)
     return fileCounter;
 }
 
-void MyMainWindow::authentifizieren(QNetworkReply*, QAuthenticator* auth)
+void MyMainWindow::doAuthentification(QNetworkReply*, QAuthenticator* auth)
 {
     auth->setUser(ui->BenutzernameFeld->text());
     auth->setPassword(ui->PasswortFeld->text());

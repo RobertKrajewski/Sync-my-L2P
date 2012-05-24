@@ -53,7 +53,7 @@ void FileDownloader::authenticate(QNetworkReply* , QAuthenticator* authenticator
     authenticator->setPassword(password);
 }
 
-int FileDownloader::startNextDownload(QString dateiname, QString veranstaltung, QString verzeichnisPfad, QUrl url, int itemNummer)
+int FileDownloader::startNextDownload(QString filename, QString event, QString verzeichnisPfad, QUrl url, int itemNummer)
 {
     // Anpassen der Labels
     // Aktualisieren der Itemnummer
