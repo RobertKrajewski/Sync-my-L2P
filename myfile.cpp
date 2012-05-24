@@ -15,27 +15,27 @@
 ** along with Sync-my-L2P.  If not, see <http://www.gnu.org/licenses/>.
 ****************************************************************************/
 
-#include "datei.h"
+#include "myfile.h"
 
-Datei::Datei(QString name, QUrl url, QDateTime zeit, qint32 groesse)
-    :Strukturelement(name, url, fileItem), zeit(zeit)
+MyFile::MyFile(QString name, QUrl url, QDateTime zeit, qint32 size)
+    :Structureelement(name, url, fileItem), time(zeit)
 {
-    this->size = groesse;
+    this->size = size;
 }
 
-Datei::Datei(QString name, QUrl url, QString zeit, qint32 groesse)
-    : Strukturelement(name, url, fileItem), zeit(QDateTime::fromString(zeit, Qt::ISODate))
+MyFile::MyFile(QString name, QUrl url, QString zeit, qint32 size)
+    : Structureelement(name, url, fileItem), time(QDateTime::fromString(zeit, Qt::ISODate))
 {
-    this->size = groesse;
+    this->size = size;
 }
 
-QDateTime Datei::GetZeit() const
+QDateTime MyFile::getTime() const
 {
-    return zeit;
+    return time;
 }
 
 
-qint32 Datei::getSize() const
+qint32 MyFile::getSize() const
 {
     return size;
 }

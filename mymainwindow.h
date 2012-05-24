@@ -47,46 +47,46 @@
 #include <QDesktopWidget>
 #include <QDesktopServices>
 
-#include "datei.h"
+#include "myfile.h"
 
 #include "logintester.h"
-#include "dateidownloader.h"
+#include "filedownloader.h"
 #include "mysortfilterproxymodel.h"
 
 class Veranstaltung;
 
 namespace Ui {
-    class Hauptfenster;
+    class MainWindow;
 }
 
-class Hauptfenster : public QMainWindow
+class MyMainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit Hauptfenster(QWidget *parent = 0);
-    ~Hauptfenster();
+    explicit MyMainWindow(QWidget *parent = 0);
+    ~MyMainWindow();
 
 private:
-    void ausschliessen(Strukturelement*);
-    void einbinden(Strukturelement*);
+    void ausschliessen(Structureelement*);
+    void einbinden(Structureelement*);
     void aktiviereLoginButton(void);
-    void getStrukturelementeListe(Strukturelement*, QLinkedList<Strukturelement*>&, bool);
+    void getStrukturelementeListe(Structureelement*, QLinkedList<Structureelement*>&, bool);
     void unknownError();
 
-    QString getStrukturelementPfad(Strukturelement*);
-    int getFileCount(QLinkedList<Strukturelement*>& liste);
+    QString getStrukturelementPfad(Structureelement*);
+    int getFileCount(QLinkedList<Structureelement*>& liste);
 
-    Ui::Hauptfenster*      ui;
+    Ui::MainWindow*      ui;
     QNetworkAccessManager* manager;
     MySortFilterProxyModel proxyModel;
     QStandardItemModel     itemModel;
-    Strukturelement*       iter;
+    Structureelement*       iter;
     QFile                  output;
-    QMap<QNetworkReply*, Strukturelement*> replies;
+    QMap<QNetworkReply*, Structureelement*> replies;
 
 
-    Strukturelement* lastRightClickItem;
+    Structureelement* lastRightClickItem;
     bool             autoSynchronize;
 
 

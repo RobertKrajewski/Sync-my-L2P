@@ -35,16 +35,16 @@ namespace Ui {
     class DateiDownloader;
 }
 
-class DateiDownloader : public QDialog
+class FileDownloader : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit DateiDownloader(QString username,
+    explicit FileDownloader(QString username,
                              QString password,
                              int itemNumber,
                              QWidget *parent= 0);
-    ~DateiDownloader();
+    ~FileDownloader();
     int startNextDownload(QString, QString, QString, QUrl, int);
 
 private:

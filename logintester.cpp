@@ -39,10 +39,6 @@ LoginTester::LoginTester(QString username,
     // Initialisieren des NetworkManagers und der Slots
     manager = new QNetworkAccessManager(qApp);
 
-//    QSslConfiguration newSslConfiguration = QSslConfiguration::defaultConfiguration();
-//    newSslConfiguration.setProtocol(QSsl::SslV3);
-//    QSslConfiguration::setDefaultConfiguration(newSslConfiguration);
-
     QObject::connect(manager, SIGNAL(authenticationRequired(QNetworkReply*, QAuthenticator*)), this, SLOT(authenticationSlot(QNetworkReply*, QAuthenticator*)));
     QObject::connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(finishedSlot(QNetworkReply*)));
 
@@ -77,7 +73,6 @@ void LoginTester::startSlot()
     QNetworkReply* reply = manager->get(QNetworkRequest(QUrl("https://www2.elearning.rwth-aachen.de/foyer/summary/default.aspx")));
     QObject::connect(reply, SIGNAL(sslErrors(QList<QSslError>)), this, SLOT(sslErrorsSlot(QList<QSslError>)));
     qDebug("Connection started");
-    //reply->ignoreSslErrors();
 }
 
 void LoginTester::sslErrorsSlot(QList<QSslError> sslErrors)
