@@ -44,6 +44,14 @@ enum MyItemDataRole
     synchronisedRole    = 36
 };
 
+enum synchroniseStatus
+{
+    NOT_SYNCHRONISED = 0,
+    SYNCHRONISED     = 1,
+    NOW_SYNCHRONISED = 2
+
+};
+
 class Strukturelement : public QStandardItem
 {
 public:
@@ -60,9 +68,10 @@ protected:
     qint32      size;
     bool        included;
     QUrl        url;
-    QDateTime   zeit;
+    QDateTime   time;
     MyItemType  typeEX;
-    bool        synchronised;
+    enum synchroniseStatus  synchronised;
+
 
 };
 

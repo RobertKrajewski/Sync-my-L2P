@@ -18,6 +18,8 @@
 #include "logintester.h"
 #include "ui_logintester.h"
 #include <QSslConfiguration>
+#include <QSsl>
+#include <QFile>
 
 
 LoginTester::LoginTester(QString username,
@@ -39,9 +41,40 @@ LoginTester::LoginTester(QString username,
     // Initialisieren des NetworkManagers und der Slots
     manager = new QNetworkAccessManager(qApp);
 
-//    QSslConfiguration newSslConfiguration = QSslConfiguration::defaultConfiguration();
-//    newSslConfiguration.setProtocol(QSsl::SslV3);
-//    QSslConfiguration::setDefaultConfiguration(newSslConfiguration);
+    QFile cert(":/certs/l2p");
+    cert.open(QFile::ReadOnly);
+    QList<QSslCertificate> newCertificates = QSslCertificate::fromData(cert.readAll(),QSsl::Der);
+    cert.close();
+    QSslCertificate newCertificate = newCertificates.first();
+
+    QFile cert2(":/certs/utn");
+    cert2.open(QFile::ReadOnly);
+    QList<QSslCertificate> newCertificates2 = QSslCertificate::fromData(cert2.readAll(),QSsl::Der);
+    cert2.close();
+    QSslCertificate newCertificate2 = newCertificates2.first();
+
+    QFile cert3(":/certs/ssl");
+    cert3.open(QFile::ReadOnly);
+    QList<QSslCertificate> newCertificates3 = QSslCertificate::fromData(cert3.readAll(),QSsl::Der);
+    cert3.close();
+    QSslCertificate newCertificate3 = newCertificates3.first();
+
+
+    QSslConfiguration newSslConfiguration = QSslConfiguration::defaultConfiguration();
+    newCertificates = newSslConfiguration.caCertificates();
+    newCertificates.append(newCertificate);
+    newCertificates.append(newCertificate2);
+    newCertificates.append(newCertificate3);
+    newSslConfiguration.setCaCertificates(newCertificates);
+    QSslConfiguration::setDefaultConfiguration(newSslConfiguration);
+
+    QSslConfiguration newSslConfiguration2 = QSslConfiguration::defaultConfiguration();
+    newCertificates2 = newSslConfiguration2.caCertificates();
+    foreach (QSslCertificate c, newCertificates2)
+    {
+        qDebug(c.subjectInfo(QSslCertificate::CommonName).toAscii());
+    }
+
 
     QObject::connect(manager, SIGNAL(authenticationRequired(QNetworkReply*, QAuthenticator*)), this, SLOT(authenticationSlot(QNetworkReply*, QAuthenticator*)));
     QObject::connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(finishedSlot(QNetworkReply*)));
@@ -90,6 +123,10 @@ void LoginTester::sslErrorsSlot(QList<QSslError> sslErrors)
         qDebug(QString(certificate.isNull()?"NULL ":"NOT NULL ").toAscii());
         qDebug(QString(certificate.isValid()?"VALID ":"NOT VALID ").toAscii());
 
+        QMessageBox messageBox;
+        messageBox.setText("Ssl Error");
+        messageBox.setInformativeText(QString("Error: ") + QString::number(error.error())+ QString(" ")+ error.errorString() +"\r\n Zertifikat:"+certificate.subjectInfo(QSslCertificate::CommonName));
+        messageBox.exec();
 
     }
 }
@@ -97,31 +134,33 @@ void LoginTester::sslErrorsSlot(QList<QSslError> sslErrors)
 void LoginTester::finishedSlot(QNetworkReply* reply)
 {
     qDebug(QString(reply->readAll()).toAscii());
+    QSslConfiguration sslConfiguration = reply->sslConfiguration();
+    qDebug(QString("Protocol: " + QString::number(sslConfiguration.protocol())).toAscii());
+    qDebug(QString("Verfiy Depth: " + QString::number(sslConfiguration.peerVerifyDepth())).toAscii());
+    //QSslCertificate localCertificate = sslConfiguration.peerCertificate();
+
+    QList<QSslCertificate> sslCertificateList = sslConfiguration.peerCertificateChain();
+    foreach(QSslCertificate localCertificate, sslCertificateList){
+        qDebug("----------------------------------------------------------");
+        qDebug(QString(localCertificate.isNull()?"NULL ":"NOT NULL ").toAscii());
+        qDebug(QString(localCertificate.isValid()?"VALID ":"NOT VALID ").toAscii());
+        qDebug("\r\nsubjectInfo");
+        qDebug(QString("LocalityName: "+localCertificate.subjectInfo(QSslCertificate::LocalityName)).toAscii());
+        qDebug(QString("CommonName: "+localCertificate.subjectInfo(QSslCertificate::CommonName)).toAscii());
+        qDebug(QString("CountryName: "+localCertificate.subjectInfo(QSslCertificate::CountryName)).toAscii());
+        qDebug(QString("Organization: "+localCertificate.subjectInfo(QSslCertificate::Organization)).toAscii());
+        qDebug(QString("OrganizationalUnitName: "+localCertificate.subjectInfo(QSslCertificate::OrganizationalUnitName)).toAscii());
+        qDebug("\r\nissuerInfo");
+        qDebug(QString("LocalityName: "+localCertificate.issuerInfo(QSslCertificate::LocalityName)).toAscii());
+        qDebug(QString("CommonName: "+localCertificate.issuerInfo(QSslCertificate::CommonName)).toAscii());
+        qDebug(QString("CountryName: "+localCertificate.issuerInfo(QSslCertificate::CountryName)).toAscii());
+        qDebug(QString("Organization: "+localCertificate.issuerInfo(QSslCertificate::Organization)).toAscii());
+        qDebug(QString("OrganizationalUnitName: "+localCertificate.issuerInfo(QSslCertificate::OrganizationalUnitName)).toAscii());
+    }
     // Fehlerbehandlung
     if (reply->error())
     {
-        QSslConfiguration sslConfiguration = reply->sslConfiguration();
-        qDebug(QString("Protocol: " + QString::number(sslConfiguration.protocol())).toAscii());
-        //QSslCertificate localCertificate = sslConfiguration.peerCertificate();
 
-        QList<QSslCertificate> sslCertificateList = sslConfiguration.peerCertificateChain();
-        foreach(QSslCertificate localCertificate, sslCertificateList){
-            qDebug("----------------------------------------------------------");
-            qDebug(QString(localCertificate.isNull()?"NULL ":"NOT NULL ").toAscii());
-            qDebug(QString(localCertificate.isValid()?"VALID ":"NOT VALID ").toAscii());
-            qDebug("\r\nsubjectInfo");
-            qDebug(QString("LocalityName: "+localCertificate.subjectInfo(QSslCertificate::LocalityName)).toAscii());
-            qDebug(QString("CommonName: "+localCertificate.subjectInfo(QSslCertificate::CommonName)).toAscii());
-            qDebug(QString("CountryName: "+localCertificate.subjectInfo(QSslCertificate::CountryName)).toAscii());
-            qDebug(QString("Organization: "+localCertificate.subjectInfo(QSslCertificate::Organization)).toAscii());
-            qDebug(QString("OrganizationalUnitName: "+localCertificate.subjectInfo(QSslCertificate::OrganizationalUnitName)).toAscii());
-            qDebug("\r\nissuerInfo");
-            qDebug(QString("LocalityName: "+localCertificate.issuerInfo(QSslCertificate::LocalityName)).toAscii());
-            qDebug(QString("CommonName: "+localCertificate.issuerInfo(QSslCertificate::CommonName)).toAscii());
-            qDebug(QString("CountryName: "+localCertificate.issuerInfo(QSslCertificate::CountryName)).toAscii());
-            qDebug(QString("Organization: "+localCertificate.issuerInfo(QSslCertificate::Organization)).toAscii());
-            qDebug(QString("OrganizationalUnitName: "+localCertificate.issuerInfo(QSslCertificate::OrganizationalUnitName)).toAscii());
-        }
 
         QMessageBox messageBox;
         messageBox.setText("Login fehlgeschlagen");

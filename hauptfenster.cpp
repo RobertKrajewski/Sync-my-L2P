@@ -19,7 +19,7 @@
 #include "ui_hauptfenster.h"
 
 // Hauptadresse des Sharepointdienstes
-QString StammURL = "https://www2.elearning.rwth-aachen.de";
+QString MainURL = "https://www2.elearning.rwth-aachen.de";
 
 Hauptfenster::Hauptfenster(QWidget *parent) :
     QMainWindow(parent, Qt::CustomizeWindowHint|Qt::WindowTitleHint|Qt::WindowCloseButtonHint
@@ -28,65 +28,13 @@ Hauptfenster::Hauptfenster(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // Laden von gespeicherten Einstellungen
-    QSettings einstellungen("Robert K.", "L2P-Tool++");
-
     // Hinzufügen der Daten zur Baumansicht
     proxyModel.setDynamicSortFilter(true);
     proxyModel.setSourceModel(&itemModel);
     ui->treeView->setModel(&proxyModel);
     //ui->treeView->setModel(&veranstaltungen);
 
-    // Laden der Logindaten
-    if (einstellungen.value("login/save").toBool())
-    {
-        ui->BenutzernameFeld->setText(einstellungen.value("login/benutzername","").toString());
-        ui->PasswortFeld->setText(einstellungen.value("login/passwort","").toString());
-        ui->DatenSpeichern->setChecked(true);
-        ui->AutoLogin->setEnabled(false);
-    }
-
-    // Laden des Downloadverzeichnisses
-    ui->VerzeichnisFeld->setText(einstellungen.value("verzeichnis","").toString());
-    if(!ui->VerzeichnisFeld->text().isEmpty())
-        ui->directoryOpen->setEnabled(true);
-
-    // Laden der gesetzten Filter und sonstigen Einstellungen
-    // Falls die Einstellungen nicht vorhanden sein sollten, setze Defaultwert
-    ui->autoSyncCheck->setChecked(einstellungen.value("autoSync").toBool());
-
-    if (einstellungen.contains("documents"))
-        ui->documentsCheck->setChecked(einstellungen.value("documents").toBool());
-    else
-        ui->documentsCheck->setChecked(true);
-
-
-    if (einstellungen.contains("structuredDocuments"))
-        ui->structeredDocumentsCheck->setChecked(einstellungen.value("structuredDocuments").toBool());
-    else
-        ui->structeredDocumentsCheck->setChecked(true);
-
-
-    if (einstellungen.contains("exercises"))
-        ui->exercisesCheck->setChecked(einstellungen.value("exercises").toBool());
-    else
-        ui->exercisesCheck->setChecked(true);
-
-
-    if (einstellungen.contains("maxSizeCB"))
-    {
-        ui->maxSizeCheckBox->setChecked(einstellungen.value("maxSizeCB").toBool());
-        proxyModel.setMaximumSizeFilter(einstellungen.value("maxSizeCB").toBool());
-    }
-
-
-    if (einstellungen.contains("maxSizeB"))
-    {
-        ui->maxSizeBox->setValue(einstellungen.value("maxSizeB").toInt());
-        proxyModel.setMaximumSize(einstellungen.value("maxSizeB").toInt());
-    }
-    else
-        ui->maxSizeBox->setValue(10);
+    loadSettings();
 
     // Variable für das automatische Synchronisieren beim Programmstart
     autoSynchronize = false;
@@ -94,7 +42,7 @@ Hauptfenster::Hauptfenster(QWidget *parent) :
     // Erzeugen des NetzwerkAccessManagers
     manager = new QNetworkAccessManager(qApp);
     QObject::connect(manager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*))
-                     ,this, SLOT(authentifizieren(QNetworkReply*, QAuthenticator*)));
+                     ,this, SLOT(doAuthentification(QNetworkReply*, QAuthenticator*)));
 
 
 
@@ -107,36 +55,101 @@ Hauptfenster::Hauptfenster(QWidget *parent) :
     move((desktopRect.width()-windowRect.width())/2, (desktopRect.height()-windowRect.height())/2);
 
     // Ausführen des Autologins, falls gewünscht
-    if (einstellungen.value("login/autoLogin").toBool())
+    QSettings settings("Robert K.", "L2P-Tool++");
+    if (settings.value("login/autoLogin").toBool())
     {
         autoSynchronize = ui->autoSyncCheck->isChecked();
         on_Login_clicked();
     }
 }
 
+
+
+void Hauptfenster::loadSettings()
+{
+    // Laden von gespeicherten Einstellungen
+    QSettings settings("Robert K.", "L2P-Tool++");
+
+    // Laden der Logindaten
+    if (settings.value("login/save").toBool())
+    {
+        ui->BenutzernameFeld->setText(settings.value("login/benutzername","").toString());
+        ui->PasswortFeld->setText(settings.value("login/passwort","").toString());
+        ui->DatenSpeichern->setChecked(true);
+        ui->AutoLogin->setEnabled(false);
+    }
+
+    // Laden des Downloadverzeichnisses
+    ui->VerzeichnisFeld->setText(settings.value("verzeichnis","").toString());
+    if(!ui->VerzeichnisFeld->text().isEmpty())
+        ui->directoryOpen->setEnabled(true);
+
+    // Laden der gesetzten Filter und sonstigen Einstellungen
+    // Falls die Einstellungen nicht vorhanden sein sollten, setze Defaultwert
+    ui->autoSyncCheck->setChecked(settings.value("autoSync").toBool());
+
+    if (settings.contains("documents"))
+        ui->documentsCheck->setChecked(settings.value("documents").toBool());
+    else
+        ui->documentsCheck->setChecked(true);
+
+
+    if (settings.contains("structuredDocuments"))
+        ui->structeredDocumentsCheck->setChecked(settings.value("structuredDocuments").toBool());
+    else
+        ui->structeredDocumentsCheck->setChecked(true);
+
+
+    if (settings.contains("exercises"))
+        ui->exercisesCheck->setChecked(settings.value("exercises").toBool());
+    else
+        ui->exercisesCheck->setChecked(true);
+
+
+    if (settings.contains("maxSizeCB"))
+    {
+        ui->maxSizeCheckBox->setChecked(settings.value("maxSizeCB").toBool());
+        proxyModel.setMaximumSizeFilter(settings.value("maxSizeCB").toBool());
+    }
+
+
+    if (settings.contains("maxSizeB"))
+    {
+        ui->maxSizeBox->setValue(settings.value("maxSizeB").toInt());
+        proxyModel.setMaximumSize(settings.value("maxSizeB").toInt());
+    }
+    else
+        ui->maxSizeBox->setValue(10);
+}
+
 Hauptfenster::~Hauptfenster()
 {
+    saveSettings();
+    delete ui;
+}
+
+void Hauptfenster::saveSettings()
+{
     // Speichern aller Einstellungen
-    QSettings einstellungen("Robert K.", "L2P-Tool++");
-    einstellungen.setValue("login/save", ui->DatenSpeichern->isChecked());
+    QSettings settings("Robert K.", "L2P-Tool++");
+    settings.setValue("login/save", ui->DatenSpeichern->isChecked());
     if (ui->DatenSpeichern->isChecked())
     {
-        einstellungen.setValue("login/benutzername", ui->BenutzernameFeld->text());
-        einstellungen.setValue("login/passwort", ui->PasswortFeld->text());
-        einstellungen.setValue("login/autoLogin", ui->AutoLogin->isChecked());
+        settings.setValue("login/benutzername", ui->BenutzernameFeld->text());
+        settings.setValue("login/passwort", ui->PasswortFeld->text());
+        settings.setValue("login/autoLogin", ui->AutoLogin->isChecked());
     }
     else
     {
-        einstellungen.remove("login");
+        settings.remove("login");
     }
-    einstellungen.setValue("verzeichnis", ui->VerzeichnisFeld->text());
-    einstellungen.setValue("autoSync", ui->autoSyncCheck->isChecked());
-    einstellungen.setValue("documents", ui->documentsCheck->isChecked());
-    einstellungen.setValue("structuredDocuments", ui->structeredDocumentsCheck->isChecked());
-    einstellungen.setValue("exercises", ui->exercisesCheck->isChecked());
-    einstellungen.setValue("maxSizeCB", ui->maxSizeCheckBox->isChecked());
-    einstellungen.setValue("maxSizeB", ui->maxSizeBox->value());
-    delete ui;
+    settings.setValue("verzeichnis", ui->VerzeichnisFeld->text());
+    settings.setValue("autoSync", ui->autoSyncCheck->isChecked());
+    settings.setValue("documents", ui->documentsCheck->isChecked());
+    settings.setValue("structuredDocuments", ui->structeredDocumentsCheck->isChecked());
+    settings.setValue("exercises", ui->exercisesCheck->isChecked());
+    settings.setValue("maxSizeCB", ui->maxSizeCheckBox->isChecked());
+    settings.setValue("maxSizeB", ui->maxSizeBox->value());
 }
 
 void Hauptfenster::on_Aktualisieren_clicked()
@@ -158,12 +171,12 @@ void Hauptfenster::on_Aktualisieren_clicked()
                      this, SLOT(veranstaltungenAbgerufen(QNetworkReply*)));
 
     // Starten der Anfrage
-    QNetworkReply* reply = manager->get(QNetworkRequest(QUrl(StammURL % "/foyer/summary/default.aspx")));
+    QNetworkReply* reply = manager->get(QNetworkRequest(QUrl(MainURL % "/foyer/summary/default.aspx")));
     replies.insert(reply, 0);
 
     // Starten einer zweiten Anfrage für ältere Semester, falls eingestellt
     if(ui->alteSemesterCheck->isChecked())
-        replies.insert(manager->get(QNetworkRequest(QUrl(StammURL % "/foyer/archive/default.aspx"))), 0);
+        replies.insert(manager->get(QNetworkRequest(QUrl(MainURL % "/foyer/archive/default.aspx"))), 0);
 }
 
 void Hauptfenster::veranstaltungenAbgerufen(QNetworkReply* reply)
@@ -175,8 +188,8 @@ void Hauptfenster::veranstaltungenAbgerufen(QNetworkReply* reply)
         QString replyText = reply->readAll();
 
         // Erstellen eines RegExps für das Herausfiltern der Veranstaltungen
-        //QString regPattern = "<td class=\"ms-vb2\"><a href=\"(/(?:ws|ss)\\d{2}/\\d{2}(?:ws|ss)-\\d{5})/information/default.aspx\">(.{,230})</a></td><td";
-        QString regPattern = "<td class=\"ms-vb2\"><a href=\"(/(?:ws|ss)\\d{2}/\\d{2}(?:ws|ss)-\\d{5})\">(.{,230})</a></td><td";
+        QString regPattern = "<td class=\"ms-vb2\"><a href=\"(/(?:ws|ss)\\d{2}/\\d{2}(?:ws|ss)-\\d{5})/information/default.aspx\">(.{,230})</a></td><td";
+        //QString regPattern = "<td class=\"ms-vb2\"><a href=\"(/(?:ws|ss)\\d{2}/\\d{2}(?:ws|ss)-\\d{5})\">(.{,230})</a></td><td";
         QRegExp* regExp = new QRegExp(regPattern, Qt::CaseSensitive);
 
         // Erstellen eines RegExps  für unzulässige Buchstaben im Veranstaltungsnamen
@@ -198,11 +211,11 @@ void Hauptfenster::veranstaltungenAbgerufen(QNetworkReply* reply)
             // Anpassen der Encodierung wegen der Umlaute
             urlRaum = QString::fromUtf8(regExp->cap(1).toLatin1());
             veranstaltungName = QString::fromUtf8(regExp->cap(2).toLatin1());
-            veranstaltungName.replace(*escapeRegExp, "");
+            veranstaltungName = veranstaltungName.replace(*escapeRegExp, "").trimmed();
 
 
             // Erstellen der neuen Veranstaltung
-            neueVeranstaltung = new Strukturelement(veranstaltungName, QUrl(StammURL % urlRaum), courseItem);// % "/materials/documents/"));
+            neueVeranstaltung = new Strukturelement(veranstaltungName, QUrl(MainURL % urlRaum), courseItem);// % "/materials/documents/"));
             //neueVeranstaltung = new Strukturelement(veranstaltungName, QUrl(StammURL % urlRaum % "/materials/structured/"));
             neueVeranstaltung->setIcon(QIcon(":/Icons/directory"));
 
@@ -295,7 +308,7 @@ void Hauptfenster::dateienAktualisieren()
             QList<QByteArray> HeaderList = request.rawHeaderList();
             foreach(QByteArray Header, HeaderList)
             {
-               qDebug(Header);
+               //qDebug(Header);
             }
 
             // Einfügen und Absenden des Requests
@@ -436,7 +449,7 @@ void Hauptfenster::dateienAbgerufen(QNetworkReply* reply)
 
                         if(QFile::exists(path))
                         {
-                            newFile->setData(true, synchronisedRole);
+                            newFile->setData(SYNCHRONISED, synchronisedRole);
                         }
 
                         // Hinzufügen zum aktuellen Ordner
@@ -843,7 +856,7 @@ void Hauptfenster::on_synchronisieren_clicked()
                                                   changedCounter+1))
                         break;
                     changedCounter++;
-                    (**iterator).setData(true, synchronisedRole);
+                    (**iterator).setData(NOW_SYNCHRONISED, synchronisedRole);
                     downloadedItems.append((**iterator).text());
                 }
             }
@@ -898,7 +911,7 @@ int Hauptfenster::getFileCount(QLinkedList<Strukturelement*>& liste)
     return fileCounter;
 }
 
-void Hauptfenster::authentifizieren(QNetworkReply*, QAuthenticator* auth)
+void Hauptfenster::doAuthentification(QNetworkReply*, QAuthenticator* auth)
 {
     auth->setUser(ui->BenutzernameFeld->text());
     auth->setPassword(ui->PasswortFeld->text());

@@ -17,21 +17,21 @@
 
 #include "datei.h"
 
-Datei::Datei(QString name, QUrl url, QDateTime zeit, qint32 groesse)
-    :Strukturelement(name, url, fileItem), zeit(zeit)
+Datei::Datei(QString name, QUrl url, QDateTime zeit, qint32 size)
+    :Strukturelement(name, url, fileItem), time(zeit)
 {
-    this->size = groesse;
+    this->size = size;
 }
 
-Datei::Datei(QString name, QUrl url, QString zeit, qint32 groesse)
-    : Strukturelement(name, url, fileItem), zeit(QDateTime::fromString(zeit, Qt::ISODate))
+Datei::Datei(QString name, QUrl url, QString zeit, qint32 size)
+    : Strukturelement(name, url, fileItem), time(QDateTime::fromString(zeit, Qt::ISODate))
 {
-    this->size = groesse;
+    this->size = size;
 }
 
-QDateTime Datei::GetZeit() const
+QDateTime Datei::GetTime() const
 {
-    return zeit;
+    return time;
 }
 
 

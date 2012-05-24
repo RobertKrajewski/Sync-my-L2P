@@ -53,15 +53,15 @@ void DateiDownloader::authenticate(QNetworkReply* , QAuthenticator* authenticato
     authenticator->setPassword(password);
 }
 
-int DateiDownloader::startNextDownload(QString dateiname, QString veranstaltung, QString verzeichnisPfad, QUrl url, int itemNummer)
+int DateiDownloader::startNextDownload(QString filename, QString event, QString verzeichnisPfad, QUrl url, int itemNummer)
 {
     // Anpassen der Labels
     // Aktualisieren der Itemnummer
     ui->progressLabel->setText(QString("Datei %1/%2").arg(itemNummer).arg(itemNumber));
     // Aktualisieren des Veranstaltungsnamen
-    ui->veranstaltungLabel->setText(veranstaltung);
+    ui->veranstaltungLabel->setText(event);
     // Aktualisieren des Dateinamens
-    ui->dateinameLabel->setText(dateiname);
+    ui->dateinameLabel->setText(filename);
 
     // Erstellen des Outputstreams
     output.setFileName(verzeichnisPfad);
@@ -72,7 +72,7 @@ int DateiDownloader::startNextDownload(QString dateiname, QString veranstaltung,
         // Fehlerbehandlung
         QMessageBox messageBox;
         messageBox.setText("Fehler beim Öffnen mit Schreibberechtigung.");
-        messageBox.setInformativeText(dateiname);
+        messageBox.setInformativeText(filename);
         messageBox.setStandardButtons(QMessageBox::Ok);
         messageBox.exec();
         return 0;

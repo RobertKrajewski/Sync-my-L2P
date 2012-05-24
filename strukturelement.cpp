@@ -21,7 +21,7 @@
 Strukturelement::Strukturelement(QString name, QUrl url, MyItemType type)
     :QStandardItem(name), included(true), url(url), typeEX(type)
 {
-    synchronised = false;
+    synchronised = NOT_SYNCHRONISED;
     size = 0;
 }
 
@@ -41,7 +41,7 @@ QVariant Strukturelement::data(int role) const
     }
     else if (role == dateRole)
     {
-        return zeit;
+        return time;
     }
     else if (role == synchronisedRole)
     {
@@ -61,7 +61,7 @@ QVariant Strukturelement::data(int role) const
             else
                  statustip.append(QString::number(size) % " Byte");
 
-            statustip.append(" - " % ((Datei*)this)->GetZeit().toString("ddd dd.MM.yy hh:mm"));
+            statustip.append(" - " % ((Datei*)this)->GetTime().toString("ddd dd.MM.yy hh:mm"));
 
             return statustip;
         }
@@ -79,7 +79,9 @@ QVariant Strukturelement::data(int role) const
     else if(role == Qt::ForegroundRole)
     {
         if (included)
-            if (synchronised)
+            if (synchronised == NOW_SYNCHRONISED)
+                return QBrush(Qt::blue);
+            else if (synchronised == SYNCHRONISED)
                 return QBrush(Qt::darkGreen);
             else
                 return QBrush(Qt::black);
@@ -120,11 +122,11 @@ void Strukturelement::setData(const QVariant &value, int role)
     }
     else if (role == dateRole)
     {
-        this->zeit = value.toDateTime();
+        this->time = value.toDateTime();
     }
     else if (role == synchronisedRole)
     {
-        this->synchronised = value.toBool();
+        this->synchronised = (synchroniseStatus) value.toInt();
     }
     else
     {
