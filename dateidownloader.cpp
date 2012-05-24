@@ -66,12 +66,12 @@ int DateiDownloader::startNextDownload(QString dateiname, QString veranstaltung,
     // Erstellen des Outputstreams
     output.setFileName(verzeichnisPfad);
 
-    // ÷ffnen des Ausgabestreams
+    // √ñffnen des Ausgabestreams
     if(!output.open(QIODevice::WriteOnly))
     {
         // Fehlerbehandlung
         QMessageBox messageBox;
-        messageBox.setText("Fehler beim ÷ffnen mit Schreibberechtigung.");
+        messageBox.setText("Fehler beim √ñffnen mit Schreibberechtigung.");
         messageBox.setInformativeText(dateiname);
         messageBox.setStandardButtons(QMessageBox::Ok);
         messageBox.exec();
@@ -84,20 +84,20 @@ int DateiDownloader::startNextDownload(QString dateiname, QString veranstaltung,
     QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(readyReadSlot()));
     QObject::connect(reply, SIGNAL(finished()), this, SLOT(finishedSlot()));
 
-    // Starten der Schleife, die vor sich hinl‰uft, bis der Download abgeschlossen ist
+    // Starten der Schleife, die vor sich hinl√§uft, bis der Download abgeschlossen ist
     return(loop.exec());
 }
 
 void DateiDownloader::downloadProgressSlot(qint64 bytesReceived, qint64 bytesTotal)
 {
-    // Aktualisieren der Progressbar anhand der Grˆﬂe der empfangenen Bytes
+    // Aktualisieren der Progressbar anhand der Gr√∂√üe der empfangenen Bytes
     if(bytesTotal)
     {
         ui->progressBar->setMaximum(bytesTotal);
         ui->progressBar->setValue(bytesReceived);
 
     }
-    // Sonderfall: Unbekannte Grˆﬂe
+    // Sonderfall: Unbekannte Gr√∂√üe
     else
     {
         ui->progressBar->setMaximum(0);
@@ -121,7 +121,7 @@ void DateiDownloader::readyReadSlot()
 
 void DateiDownloader::finishedSlot()
 {
-    // Entleeren und Schlieﬂen des Ausgabestreams
+    // Entleeren und Schlie√üen des Ausgabestreams
     output.flush();
     output.close();
 
