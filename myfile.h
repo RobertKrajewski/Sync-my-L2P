@@ -17,19 +17,19 @@
 
 #ifndef DATEI_H
 #define DATEI_H
-#include <strukturelement.h>
+#include "structureelement.h"
 
 
-class Datei : public Strukturelement
+class MyFile : public Structureelement
 {
 public:
-    Datei(QString name, QUrl url, QDateTime time, qint32 size);
-    Datei(QString name, QUrl url, QString time, qint32 size);
-    QDateTime GetTime() const;
+    MyFile(QString name, QUrl url, QDateTime time, qint32 size);
+    MyFile(QString name, QUrl url, QString time, qint32 size);
+    QDateTime getTime() const;
     qint32 getSize() const;
 
 private:
-    QDateTime time;
+    QDateTime   time;
 };
 
 #endif // DATEI_H

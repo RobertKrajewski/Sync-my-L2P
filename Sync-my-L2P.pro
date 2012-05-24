@@ -1,19 +1,19 @@
 QT += gui core network
 SOURCES += \
     main.cpp \
-    hauptfenster.cpp \
-    strukturelement.cpp \
-    datei.cpp \
+    mymainwindow.cpp \
+    structureelement.cpp \
+    myfile.cpp \
     logintester.cpp \
-    dateidownloader.cpp \
+    filedownloader.cpp \
     mysortfilterproxymodel.cpp
 
 HEADERS += \
-    hauptfenster.h \
-    strukturelement.h \
-    datei.h \
+    mymainwindow.h \
+    structureelement.h \
+    myfile.h \
     logintester.h \
-    dateidownloader.h \
+    filedownloader.h \
     mysortfilterproxymodel.h
 
 FORMS += \

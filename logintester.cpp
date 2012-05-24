@@ -75,12 +75,11 @@ LoginTester::LoginTester(QString username,
         qDebug(c.subjectInfo(QSslCertificate::CommonName).toAscii());
     }
 
-
     QObject::connect(manager, SIGNAL(authenticationRequired(QNetworkReply*, QAuthenticator*)), this, SLOT(authenticationSlot(QNetworkReply*, QAuthenticator*)));
     QObject::connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(finishedSlot(QNetworkReply*)));
 
     // Starte den Login nach 100ms
-    // Bei 0ms wird der Shot unter Mac nicht ausgeführt!?
+    // Bei 0ms wird der Shot unter Mac nicht ausgefÃ¼hrt!?
     QTimer::singleShot(100, this, SLOT(startSlot()));
 }
 
@@ -92,7 +91,7 @@ LoginTester::~LoginTester()
 void LoginTester::authenticationSlot(QNetworkReply* , QAuthenticator* authenticator)
 {
     qDebug("authenticationSlot call");
-    // Logindaten nur ausfüllen, falls nicht mehr als die maximale Anzahl an Versuchen durchgeführt wurden
+    // Logindaten nur ausfÃ¼llen, falls nicht mehr als die maximale Anzahl an Versuchen durchgefÃ¼hrt wurden
     if (tryCounter < maxTries)
     {
         authenticator->setUser(username);
@@ -100,7 +99,7 @@ void LoginTester::authenticationSlot(QNetworkReply* , QAuthenticator* authentica
 
     }
 
-    // Erhöhen des Zählers nach jedem Versuch
+    // ErhÃ¶hen des ZÃ¤hlers nach jedem Versuch
     tryCounter++;
 }
 
@@ -110,7 +109,6 @@ void LoginTester::startSlot()
     QNetworkReply* reply = manager->get(QNetworkRequest(QUrl("https://www2.elearning.rwth-aachen.de/foyer/summary/default.aspx")));
     QObject::connect(reply, SIGNAL(sslErrors(QList<QSslError>)), this, SLOT(sslErrorsSlot(QList<QSslError>)));
     qDebug("Connection started");
-    //reply->ignoreSslErrors();
 }
 
 void LoginTester::sslErrorsSlot(QList<QSslError> sslErrors)
