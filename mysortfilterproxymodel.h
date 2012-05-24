@@ -20,7 +20,7 @@
 
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
-#include <strukturelement.h>
+#include "structureelement.h"
 
 class MySortFilterProxyModel : public QSortFilterProxyModel
 {

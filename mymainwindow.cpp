@@ -15,16 +15,16 @@
 ** along with Sync-my-L2P.  If not, see <http://www.gnu.org/licenses/>.
 ****************************************************************************/
 
-#include "hauptfenster.h"
+#include "mymainwindow.h"
 #include "ui_hauptfenster.h"
 
 // Hauptadresse des Sharepointdienstes
 QString StammURL = "https://www2.elearning.rwth-aachen.de";
 
-Hauptfenster::Hauptfenster(QWidget *parent) :
+MyMainWindow::MyMainWindow(QWidget *parent) :
     QMainWindow(parent, Qt::CustomizeWindowHint|Qt::WindowTitleHint|Qt::WindowCloseButtonHint
                 | Qt::WindowMinimizeButtonHint),
-    ui(new Ui::Hauptfenster)
+    ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
@@ -114,7 +114,7 @@ Hauptfenster::Hauptfenster(QWidget *parent) :
     }
 }
 
-Hauptfenster::~Hauptfenster()
+MyMainWindow::~MyMainWindow()
 {
     // Speichern aller Einstellungen
     QSettings einstellungen("Robert K.", "L2P-Tool++");
@@ -139,7 +139,7 @@ Hauptfenster::~Hauptfenster()
     delete ui;
 }
 
-void Hauptfenster::on_Aktualisieren_clicked()
+void MyMainWindow::on_Aktualisieren_clicked()
 {
     // Löschen der alten Veranstaltungsliste
     itemModel.clear();
@@ -166,7 +166,7 @@ void Hauptfenster::on_Aktualisieren_clicked()
         replies.insert(manager->get(QNetworkRequest(QUrl(StammURL % "/foyer/archive/default.aspx"))), 0);
 }
 
-void Hauptfenster::veranstaltungenAbgerufen(QNetworkReply* reply)
+void MyMainWindow::veranstaltungenAbgerufen(QNetworkReply* reply)
 {
     // Prüfen auf Fehler beim Abruf
     if(!reply->error())
@@ -188,7 +188,7 @@ void Hauptfenster::veranstaltungenAbgerufen(QNetworkReply* reply)
         int neuePosition = 0;
 
         // neue Veranstaltung sowie Daten
-        Strukturelement* neueVeranstaltung;
+        Structureelement* neueVeranstaltung;
         QString urlRaum;
         QString veranstaltungName;
 
@@ -202,7 +202,7 @@ void Hauptfenster::veranstaltungenAbgerufen(QNetworkReply* reply)
 
 
             // Erstellen der neuen Veranstaltung
-            neueVeranstaltung = new Strukturelement(veranstaltungName, QUrl(StammURL % urlRaum), courseItem);// % "/materials/documents/"));
+            neueVeranstaltung = new Structureelement(veranstaltungName, QUrl(StammURL % urlRaum), courseItem);// % "/materials/documents/"));
             //neueVeranstaltung = new Strukturelement(veranstaltungName, QUrl(StammURL % urlRaum % "/materials/structured/"));
             neueVeranstaltung->setIcon(QIcon(":/Icons/directory"));
 
@@ -250,7 +250,7 @@ void Hauptfenster::veranstaltungenAbgerufen(QNetworkReply* reply)
     }
 }
 
-void Hauptfenster::dateienAktualisieren()
+void MyMainWindow::dateienAktualisieren()
 {
     // Prüfen, ob überhaupt Dokumentorte ausgewählt wurden
     if (!ui->documentsCheck->isChecked() && !ui->structeredDocumentsCheck->isChecked() && !ui->exercisesCheck->isChecked())
@@ -267,7 +267,7 @@ void Hauptfenster::dateienAktualisieren()
 
     // Durchlaufen aller Veranstaltungen
     int rowCount = itemModel.rowCount();
-    Strukturelement* aktuelleStruktur = 0;
+    Structureelement* aktuelleStruktur = 0;
 
     // Übungsbetrieb Lösungen
     // "https://www2.elearning.rwth-aachen.de/ws10/10ws-02568/exerciseCourse/SampleSolutions/"
@@ -278,7 +278,7 @@ void Hauptfenster::dateienAktualisieren()
     for(int i= 0; i < rowCount; i++)
     {
         // Holen der aktuellen Veranstaltung
-        aktuelleStruktur = (Strukturelement*) itemModel.item(i);
+        aktuelleStruktur = (Structureelement*) itemModel.item(i);
 
         // Löschen aller Dateien
         if(aktuelleStruktur->rowCount() > 0)
@@ -354,13 +354,13 @@ void Hauptfenster::dateienAktualisieren()
     }
 }
 
-void Hauptfenster::dateienAbgerufen(QNetworkReply* reply)
+void MyMainWindow::dateienAbgerufen(QNetworkReply* reply)
 {
     // Prüfen auf Fehler
     if (!reply->error())
     {
         // Holen die aktuelle Veranstaltung aus der Map
-        Strukturelement* aktuellerOrdner = replies.value(reply);
+        Structureelement* aktuellerOrdner = replies.value(reply);
 
         // Auslesen der Antwort und Speichern in dem XmlReader
         QString replyText = reply->readAll();
@@ -398,7 +398,7 @@ void Hauptfenster::dateienAbgerufen(QNetworkReply* reply)
                 while(!url.toString().contains((aktuellerOrdner->data(urlRole).toUrl().toString()), Qt::CaseSensitive))//(in = RegExp.indexIn(url.toString())) == -1)
                 {
                     aktuellerOrdner->sortChildren(0, Qt::AscendingOrder);
-                    aktuellerOrdner = (Strukturelement*)aktuellerOrdner->parent();
+                    aktuellerOrdner = (Structureelement*)aktuellerOrdner->parent();
                 }
 
                 // Ignorieren aller Adressen, die "/Forms" enthalten
@@ -409,7 +409,7 @@ void Hauptfenster::dateienAbgerufen(QNetworkReply* reply)
                     if (size)
                     {
                         // Erstellen einer neuen Datei
-                        Datei* newFile = new Datei(name, url, time, size);
+                        MyFile* newFile = new MyFile(name, url, time, size);
 
                         // Hinzufügen des endungsabhängigen Icons
                         // PDF
@@ -447,7 +447,7 @@ void Hauptfenster::dateienAbgerufen(QNetworkReply* reply)
                     else if (name != "documents" && name != "structured" && !url.toString().contains("exerciseCourse"))
                     {
                         // Erstellen eines neuen Ordners
-                        Strukturelement* neuerOrdner = new Strukturelement(name, url, directoryItem);
+                        Structureelement* neuerOrdner = new Structureelement(name, url, directoryItem);
 
                         // Setzen des Zeichens
                         neuerOrdner->setData(QIcon(":/Icons/Icons/25_folder.png"), Qt::DecorationRole);
@@ -539,21 +539,21 @@ void Hauptfenster::dateienAbgerufen(QNetworkReply* reply)
     }
 }
 
-void Hauptfenster::on_ausschliessen_clicked()
+void MyMainWindow::on_ausschliessen_clicked()
 {
     // Holen der ausgewählten Dateien
     QModelIndexList ausgewaehlt = proxyModel.mapSelectionToSource(ui->treeView->selectionModel()->selection()).indexes();
 
     // Iteration über alle Elemente
-    Strukturelement* aktuelleStruktur = 0;
+    Structureelement* aktuelleStruktur = 0;
     QModelIndexList::Iterator iteratorEnd = ausgewaehlt.end();
     for(QModelIndexList::Iterator iter = ausgewaehlt.begin(); iter != iteratorEnd; iter++)
     {
         // Holen des Vaterelements des ausgewählten Strukturelements
-        aktuelleStruktur = (Strukturelement*) iter->internalPointer();
+        aktuelleStruktur = (Structureelement*) iter->internalPointer();
 
         // Ausschließen des ausgewählten Elements
-        Strukturelement* temp = (Strukturelement*)aktuelleStruktur->child(iter->row(),0);
+        Structureelement* temp = (Structureelement*)aktuelleStruktur->child(iter->row(),0);
         ausschliessen(temp);
         //ausschliessen((Strukturelement*)aktuelleStruktur->child(iter->row(),0));
 
@@ -566,7 +566,7 @@ void Hauptfenster::on_ausschliessen_clicked()
             // Prüfung aller Zeilen, ob alle ausgeschlossen
             for (int i=0; i < aktuelleStruktur->rowCount(); i++)
             {
-                if(((Strukturelement*)aktuelleStruktur->child(i,0))->data(includeRole).toBool())
+                if(((Structureelement*)aktuelleStruktur->child(i,0))->data(includeRole).toBool())
                     siblingsExcluded = false;
             }
 
@@ -586,35 +586,35 @@ void Hauptfenster::on_ausschliessen_clicked()
     ui->treeView->dataChanged(itemModel.index(0,0),itemModel.index(itemModel.rowCount(),0));
 }
 
-void Hauptfenster::ausschliessen(Strukturelement* aktuelleStruktur)
+void MyMainWindow::ausschliessen(Structureelement* aktuelleStruktur)
 {
     // Ausschließen aller untergeordneten Elemente
     if(aktuelleStruktur->data(includeRole).toBool()){
         aktuelleStruktur->setData(false, includeRole);
         for(int i = 0; i < aktuelleStruktur->rowCount(); i++)
         {
-            ausschliessen((Strukturelement*)aktuelleStruktur->child(i,0));
+            ausschliessen((Structureelement*)aktuelleStruktur->child(i,0));
         }
     }
 }
 
-void Hauptfenster::on_einbinden_clicked()
+void MyMainWindow::on_einbinden_clicked()
 {
     // Bestimmen der ausgewählten Items
     QModelIndexList selectedItemsList =  proxyModel.mapSelectionToSource(ui->treeView->selectionModel()->selection()).indexes();
 
     // Variablen zur Speicherung von Pointern aus Performancegründen vor der Schleife
-    Strukturelement* aktuelleStruktur = 0;
+    Structureelement* aktuelleStruktur = 0;
     QModelIndexList::Iterator iteratorEnd = selectedItemsList.end();
 
     for(QModelIndexList::Iterator iterator = selectedItemsList.begin(); iterator != iteratorEnd; iterator++)
     {
         // Holen des Pointers auf das ausgewählte Item
-        aktuelleStruktur = (Strukturelement*)((Strukturelement*) iterator->internalPointer())->child(iterator->row(),0);
+        aktuelleStruktur = (Structureelement*)((Structureelement*) iterator->internalPointer())->child(iterator->row(),0);
 
         // Einbinden aller übergeordneter Ordner
-        Strukturelement* parent = aktuelleStruktur;
-        while((parent = (Strukturelement*) parent->parent()) != 0)
+        Structureelement* parent = aktuelleStruktur;
+        while((parent = (Structureelement*) parent->parent()) != 0)
         {
             if (parent->data(includeRole).toBool())
                 break;
@@ -629,7 +629,7 @@ void Hauptfenster::on_einbinden_clicked()
     ui->treeView->dataChanged(itemModel.index(0,0),itemModel.index(itemModel.rowCount(),0));
 }
 
-void Hauptfenster::einbinden(Strukturelement* aktuelleStruktur)
+void MyMainWindow::einbinden(Structureelement* aktuelleStruktur)
 {
     // Einbinden des aktuellen Items
     aktuelleStruktur->setData(true, includeRole);
@@ -638,11 +638,11 @@ void Hauptfenster::einbinden(Strukturelement* aktuelleStruktur)
     int rowCount = aktuelleStruktur->rowCount();
     for(int i = 0; i < rowCount; i++)
     {
-        einbinden((Strukturelement*)aktuelleStruktur->child(i,0));
+        einbinden((Structureelement*)aktuelleStruktur->child(i,0));
     }
 }
 
-void Hauptfenster::on_Login_clicked()
+void MyMainWindow::on_Login_clicked()
 {
     // Erstellen eines Logintesters
     LoginTester* LoginTest = new LoginTester(ui->BenutzernameFeld->text(), ui->PasswortFeld->text(), 2, this);
@@ -685,7 +685,7 @@ void Hauptfenster::on_Login_clicked()
     delete LoginTest;
 }
 
-void Hauptfenster::on_DatenSpeichern_stateChanged(int checked)
+void MyMainWindow::on_DatenSpeichern_stateChanged(int checked)
 {
     // (De-)Aktivierung der Autologin CB
     if(checked)
@@ -697,7 +697,7 @@ void Hauptfenster::on_DatenSpeichern_stateChanged(int checked)
     ui->AutoLogin->setChecked(false);
 }
 
-void Hauptfenster::on_AutoLogin_stateChanged(int checked)
+void MyMainWindow::on_AutoLogin_stateChanged(int checked)
 {
     // (De-)Aktivierung der Autologin CB
     if(checked)
@@ -709,17 +709,17 @@ void Hauptfenster::on_AutoLogin_stateChanged(int checked)
     ui->autoSyncCheck->setChecked(false);
 }
 
-void Hauptfenster::on_BenutzernameFeld_textChanged(const QString)
+void MyMainWindow::on_BenutzernameFeld_textChanged(const QString)
 {
     aktiviereLoginButton();
 }
 
-void Hauptfenster::on_PasswortFeld_textChanged(const QString)
+void MyMainWindow::on_PasswortFeld_textChanged(const QString)
 {
     aktiviereLoginButton();
 }
 
-void Hauptfenster::aktiviereLoginButton()
+void MyMainWindow::aktiviereLoginButton()
 {
     // Löschen der gespeicherten Einstellungen, da neue Benutzerdaten vorliegen
     ui->AutoLogin->setChecked(false);
@@ -737,7 +737,7 @@ void Hauptfenster::aktiviereLoginButton()
     }
 }
 
-void Hauptfenster::on_synchronisieren_clicked()
+void MyMainWindow::on_synchronisieren_clicked()
 {
     ui->centralwidget->setEnabled(false);
     QString directoryPath = ui->VerzeichnisFeld->text();
@@ -764,27 +764,27 @@ void Hauptfenster::on_synchronisieren_clicked()
     }
 
     // Hinzufügen aller eingebundenen Elemente einer Liste
-    QLinkedList<Strukturelement*> liste;
+    QLinkedList<Structureelement*> liste;
     for(int i=0; i < itemModel.rowCount(); i++)
     {
-        getStrukturelementeListe((Strukturelement*)itemModel.item(i,0), liste, true);
+        getStrukturelementeListe((Structureelement*)itemModel.item(i,0), liste, true);
     }
 
     if(!liste.isEmpty()){
 
-        DateiDownloader* loader = new DateiDownloader(ui->BenutzernameFeld->text(), // Benutzername
+        FileDownloader* loader = new FileDownloader(ui->BenutzernameFeld->text(), // Benutzername
                                                       ui->PasswortFeld->text(),     // Passwort
                                                       getFileCount(liste),          // Anzahl der zu runterladenen Dateien
                                                       this);
 
         // Iterieren über alle Elemente
-        Strukturelement* aktuellerOrdner = liste.first();
+        Structureelement* aktuellerOrdner = liste.first();
         int counter = getFileCount(liste);
         int changedCounter = 0;
         bool neueVeranstaltung = false;
         QString veranstaltungName;
         QList<QString> downloadedItems;
-        for(QLinkedList<Strukturelement*>::iterator iterator = liste.begin();
+        for(QLinkedList<Structureelement*>::iterator iterator = liste.begin();
             iterator != liste.end();
             iterator++)
         {
@@ -794,7 +794,7 @@ void Hauptfenster::on_synchronisieren_clicked()
                           aktuellerOrdner->data(urlRole).toUrl().toString(), Qt::CaseSensitive))
                 {
 
-                    aktuellerOrdner = (Strukturelement*) aktuellerOrdner->parent();
+                    aktuellerOrdner = (Structureelement*) aktuellerOrdner->parent();
                     verzeichnis.cdUp();
                 }
             }
@@ -834,7 +834,7 @@ void Hauptfenster::on_synchronisieren_clicked()
                 //counter++;
                 if (!verzeichnis.exists((**iterator).text()) ||
                         (QFileInfo(verzeichnis, (**iterator).text()).size()
-                         != (*((Datei*)(*iterator))).data(sizeRole).toInt()))
+                         != (*((MyFile*)(*iterator))).data(sizeRole).toInt()))
                 {
                     if (!loader->startNextDownload((**iterator).text(),
                                                   veranstaltungName,
@@ -873,7 +873,7 @@ void Hauptfenster::on_synchronisieren_clicked()
 
 }
 
-void Hauptfenster::getStrukturelementeListe(Strukturelement* aktuellesElement, QLinkedList<Strukturelement*>& liste, bool onlyIncluded)
+void MyMainWindow::getStrukturelementeListe(Structureelement* aktuellesElement, QLinkedList<Structureelement*>& liste, bool onlyIncluded)
 {
     if(!onlyIncluded || (onlyIncluded && aktuellesElement->data(includeRole).toBool()))
     {
@@ -882,15 +882,15 @@ void Hauptfenster::getStrukturelementeListe(Strukturelement* aktuellesElement, Q
         liste.append(aktuellesElement);
         if(aktuellesElement->hasChildren())
             for (int i = 0; i < aktuellesElement->rowCount(); i++)
-                getStrukturelementeListe((Strukturelement*)aktuellesElement->child(i, 0), liste, onlyIncluded);
+                getStrukturelementeListe((Structureelement*)aktuellesElement->child(i, 0), liste, onlyIncluded);
     }
 }
 
-int Hauptfenster::getFileCount(QLinkedList<Strukturelement*>& liste)
+int MyMainWindow::getFileCount(QLinkedList<Structureelement*>& liste)
 {
     // Zählen aller Dateien einer Liste
     int fileCounter = 0;
-    for(QLinkedList<Strukturelement*>::iterator iterator = liste.begin(); iterator != liste.end(); iterator++)
+    for(QLinkedList<Structureelement*>::iterator iterator = liste.begin(); iterator != liste.end(); iterator++)
     {
         if ((**iterator).type() == fileItem)
             fileCounter++;
@@ -898,18 +898,18 @@ int Hauptfenster::getFileCount(QLinkedList<Strukturelement*>& liste)
     return fileCounter;
 }
 
-void Hauptfenster::authentifizieren(QNetworkReply*, QAuthenticator* auth)
+void MyMainWindow::authentifizieren(QNetworkReply*, QAuthenticator* auth)
 {
     auth->setUser(ui->BenutzernameFeld->text());
     auth->setPassword(ui->PasswortFeld->text());
 }
 
-void Hauptfenster::unknownError()
+void MyMainWindow::unknownError()
 {
 
 }
 
-void Hauptfenster::on_directoryButton_clicked()
+void MyMainWindow::on_directoryButton_clicked()
 {
     // Aufruf des Ordnerdialogs
     QString newDirectory = QFileDialog::getExistingDirectory(this,
@@ -927,27 +927,27 @@ void Hauptfenster::on_directoryButton_clicked()
 }
 
 
-void Hauptfenster::on_directoryOpen_clicked()
+void MyMainWindow::on_directoryOpen_clicked()
 {
     // Betriebssystem soll mit dem Standardprogramm den Pfad öffnen
     QDesktopServices::openUrl(QUrl("file:///" % ui->VerzeichnisFeld->text(), QUrl::TolerantMode));
 }
 
-void Hauptfenster::on_expandButton_clicked()
+void MyMainWindow::on_expandButton_clicked()
 {
     // Expandieren aller Zweige
     ui->treeView->expandAll();
 }
 
-void Hauptfenster::on_collapseButton_clicked()
+void MyMainWindow::on_collapseButton_clicked()
 {
     // Reduktion aller Zweige
     ui->treeView->collapseAll();
 }
 
-void Hauptfenster::on_treeView_doubleClicked(const QModelIndex &index)
+void MyMainWindow::on_treeView_doubleClicked(const QModelIndex &index)
 {
-    Strukturelement* element = (Strukturelement*) itemModel.itemFromIndex(proxyModel.mapToSource(index));
+    Structureelement* element = (Structureelement*) itemModel.itemFromIndex(proxyModel.mapToSource(index));
     if(element->type() == fileItem)
         if(!QDesktopServices::openUrl(QUrl(getStrukturelementPfad(element), QUrl::TolerantMode)))
         {
@@ -955,21 +955,21 @@ void Hauptfenster::on_treeView_doubleClicked(const QModelIndex &index)
         }
 }
 
-QString Hauptfenster::getStrukturelementPfad(Strukturelement* item)
+QString MyMainWindow::getStrukturelementPfad(Structureelement* item)
 {
     QString path;
     path.append(item->text());
-    Strukturelement* parent = item;
-    while ((parent = (Strukturelement*) parent->parent()) != 0)
+    Structureelement* parent = item;
+    while ((parent = (Structureelement*) parent->parent()) != 0)
         path.push_front(parent->text() % "/");
     path.push_front("file:///" % ui->VerzeichnisFeld->text() % "/");
     return path;
 }
 
-void Hauptfenster::on_treeView_customContextMenuRequested(const QPoint &pos)
+void MyMainWindow::on_treeView_customContextMenuRequested(const QPoint &pos)
 {
     // Bestimmung des Elements, auf das geklickt wurde
-    Strukturelement* RightClickedItem = (Strukturelement*) itemModel.itemFromIndex(proxyModel.mapToSource(ui->treeView->indexAt(pos)));
+    Structureelement* RightClickedItem = (Structureelement*) itemModel.itemFromIndex(proxyModel.mapToSource(ui->treeView->indexAt(pos)));
 
     // Überprüfung, ob überhaupt auf ein Element geklickt wurde (oder ins Leere)
     if (RightClickedItem == 0)
@@ -1004,13 +1004,13 @@ void Hauptfenster::on_treeView_customContextMenuRequested(const QPoint &pos)
     newCustomContextMenu.exec(ui->treeView->mapToGlobal(pos));
 }
 
-void Hauptfenster::openCourse()
+void MyMainWindow::openCourse()
 {
     // Öffnen der URL des mit der rechten Maustaste geklickten Items
     QDesktopServices::openUrl(lastRightClickItem->data(urlRole).toUrl());
 }
 
-void Hauptfenster::openItem()
+void MyMainWindow::openItem()
 {
     // Öffnen der Datei auf der Festplatte des mit der rechten Maustaste geklickten Items
     if(!QDesktopServices::openUrl(QUrl(getStrukturelementPfad(lastRightClickItem), QUrl::TolerantMode)))
@@ -1020,7 +1020,7 @@ void Hauptfenster::openItem()
     }
 }
 
-void Hauptfenster::copyURL()
+void MyMainWindow::copyURL()
 {
     // Holen der globalen Zwischenablage
     QClipboard *clipboard = QApplication::clipboard();
@@ -1030,12 +1030,12 @@ void Hauptfenster::copyURL()
 }
 
 
-void Hauptfenster::on_maxSizeBox_valueChanged(int newMaximumSize)
+void MyMainWindow::on_maxSizeBox_valueChanged(int newMaximumSize)
 {
     proxyModel.setMaximumSize(newMaximumSize);
 }
 
-void Hauptfenster::on_maxSizeCheckBox_toggled(bool checked)
+void MyMainWindow::on_maxSizeCheckBox_toggled(bool checked)
 {
     proxyModel.setMaximumSizeFilter(checked);
 }

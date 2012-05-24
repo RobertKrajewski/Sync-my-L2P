@@ -44,10 +44,10 @@ enum MyItemDataRole
     synchronisedRole    = 36
 };
 
-class Strukturelement : public QStandardItem
+class Structureelement : public QStandardItem
 {
 public:
-    Strukturelement(QString name, QUrl url, MyItemType typeEX);
+    Structureelement(QString name, QUrl url, MyItemType typeEX);
 
     int type() const;
 
