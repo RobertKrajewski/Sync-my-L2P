@@ -23,13 +23,13 @@
 class Datei : public Strukturelement
 {
 public:
-    Datei(QString name, QUrl url, QDateTime zeit, qint32 size);
-    Datei(QString name, QUrl url, QString zeit, qint32 size);
-    QDateTime GetZeit() const;
+    Datei(QString name, QUrl url, QDateTime time, qint32 size);
+    Datei(QString name, QUrl url, QString time, qint32 size);
+    QDateTime GetTime() const;
     qint32 getSize() const;
 
 private:
-    QDateTime   zeit;
+    QDateTime time;
 };
 
 #endif // DATEI_H

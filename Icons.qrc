@@ -19,4 +19,9 @@
         <file>Icons/library_32x32.ico</file>
         <file alias="drive">Icons/drive.png</file>
     </qresource>
+    <qresource prefix="/certs">
+        <file alias="l2p">www2.elearning.rwth-aachen.de.der</file>
+        <file alias="utn">UTN-USERFirst-Hardware.der</file>
+        <file alias="ssl">PositiveSSLCA.der</file>
+    </qresource>
 </RCC>

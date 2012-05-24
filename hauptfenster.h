@@ -68,6 +68,8 @@ public:
     ~Hauptfenster();
 
 private:
+    void loadSettings();
+    void saveSettings();
     void ausschliessen(Strukturelement*);
     void einbinden(Strukturelement*);
     void aktiviereLoginButton(void);
@@ -98,7 +100,7 @@ private slots:
     void openItem();
     void openCourse();
     void veranstaltungenAbgerufen(QNetworkReply*);
-    void authentifizieren(QNetworkReply*, QAuthenticator*);
+    void doAuthentification(QNetworkReply*, QAuthenticator*);
     void dateienAbgerufen(QNetworkReply*);
     void dateienAktualisieren();
     void on_ausschliessen_clicked();
