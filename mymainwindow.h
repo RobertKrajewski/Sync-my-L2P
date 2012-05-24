@@ -70,8 +70,8 @@ public:
 private:
     void loadSettings();
     void saveSettings();
-    void ausschliessen(Strukturelement*);
-    void einbinden(Strukturelement*);
+    void ausschliessen(Structureelement*);
+    void einbinden(Structureelement*);
     void aktiviereLoginButton(void);
     void getStrukturelementeListe(Structureelement*, QLinkedList<Structureelement*>&, bool);
     void unknownError();
