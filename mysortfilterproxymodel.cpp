@@ -43,7 +43,7 @@ bool MySortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &
     QModelIndex index = source->index(sourceRow, 0, sourceParent);
     //Strukturelement* item = (Strukturelement*)source->itemFromIndex(index);
 
-    // Prüfen der Filterbedingungen
+    // PrÃ¼fen der Filterbedingungen
     if (maxSizeFilter)
         return (source->data(index, sizeRole).toInt() <= maxSize);
     return true;

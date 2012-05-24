@@ -31,7 +31,7 @@ Hauptfenster::Hauptfenster(QWidget *parent) :
     // Laden von gespeicherten Einstellungen
     QSettings einstellungen("Robert K.", "L2P-Tool++");
 
-    // Hinzufügen der Daten zur Baumansicht
+    // HinzufÃ¼gen der Daten zur Baumansicht
     proxyModel.setDynamicSortFilter(true);
     proxyModel.setSourceModel(&itemModel);
     ui->treeView->setModel(&proxyModel);
@@ -88,7 +88,7 @@ Hauptfenster::Hauptfenster(QWidget *parent) :
     else
         ui->maxSizeBox->setValue(10);
 
-    // Variable für das automatische Synchronisieren beim Programmstart
+    // Variable fÃ¼r das automatische Synchronisieren beim Programmstart
     autoSynchronize = false;
 
     // Erzeugen des NetzwerkAccessManagers
@@ -106,7 +106,7 @@ Hauptfenster::Hauptfenster(QWidget *parent) :
     QRect windowRect  = this->frameGeometry();
     move((desktopRect.width()-windowRect.width())/2, (desktopRect.height()-windowRect.height())/2);
 
-    // Ausführen des Autologins, falls gewünscht
+    // AusfÃ¼hren des Autologins, falls gewÃ¼nscht
     if (einstellungen.value("login/autoLogin").toBool())
     {
         autoSynchronize = ui->autoSyncCheck->isChecked();
@@ -141,10 +141,10 @@ Hauptfenster::~Hauptfenster()
 
 void Hauptfenster::on_Aktualisieren_clicked()
 {
-    // Löschen der alten Veranstaltungsliste
+    // LÃ¶schen der alten Veranstaltungsliste
     itemModel.clear();
 
-    // Zurücksetzen der freigeschalteten Schaltflächen
+    // ZurÃ¼cksetzen der freigeschalteten SchaltflÃ¤chen
     ui->Aktualisieren->     setEnabled(false);
     ui->ausschliessen->     setEnabled(false);
     ui->einbinden->         setEnabled(false);
@@ -161,25 +161,25 @@ void Hauptfenster::on_Aktualisieren_clicked()
     QNetworkReply* reply = manager->get(QNetworkRequest(QUrl(StammURL % "/foyer/summary/default.aspx")));
     replies.insert(reply, 0);
 
-    // Starten einer zweiten Anfrage für ältere Semester, falls eingestellt
+    // Starten einer zweiten Anfrage fÃ¼r Ã¤ltere Semester, falls eingestellt
     if(ui->alteSemesterCheck->isChecked())
         replies.insert(manager->get(QNetworkRequest(QUrl(StammURL % "/foyer/archive/default.aspx"))), 0);
 }
 
 void Hauptfenster::veranstaltungenAbgerufen(QNetworkReply* reply)
 {
-    // Prüfen auf Fehler beim Abruf
+    // PrÃ¼fen auf Fehler beim Abruf
     if(!reply->error())
     {
         // Auslesen der kompletten Antwort
         QString replyText = reply->readAll();
 
-        // Erstellen eines RegExps für das Herausfiltern der Veranstaltungen
-        //QString regPattern = "<td class=\"ms-vb2\"><a href=\"(/(?:ws|ss)\\d{2}/\\d{2}(?:ws|ss)-\\d{5})/information/default.aspx\">(.{,230})</a></td><td";
-        QString regPattern = "<td class=\"ms-vb2\"><a href=\"(/(?:ws|ss)\\d{2}/\\d{2}(?:ws|ss)-\\d{5})\">(.{,230})</a></td><td";
+        // Erstellen eines RegExps fÃ¼r das Herausfiltern der Veranstaltungen
+        QString regPattern = "<td class=\"ms-vb2\"><a href=\"(/(?:ws|ss)\\d{2}/\\d{2}(?:ws|ss)-\\d{5})(?:/information/default.aspx)*\">(.*)</a></td><td";
         QRegExp* regExp = new QRegExp(regPattern, Qt::CaseSensitive);
+        regExp->setMinimal(true);
 
-        // Erstellen eines RegExps  für unzulässige Buchstaben im Veranstaltungsnamen
+        // Erstellen eines RegExps  fÃ¼r unzulÃ¤ssige Buchstaben im Veranstaltungsnamen
         QString escapePattern = "(:|<|>|/|\\\\|\\||\\*|\\^|\\?|\\\")";
         QRegExp* escapeRegExp = new QRegExp(escapePattern, Qt::CaseSensitive);
 
@@ -206,7 +206,7 @@ void Hauptfenster::veranstaltungenAbgerufen(QNetworkReply* reply)
             //neueVeranstaltung = new Strukturelement(veranstaltungName, QUrl(StammURL % urlRaum % "/materials/structured/"));
             neueVeranstaltung->setIcon(QIcon(":/Icons/directory"));
 
-            // Hinzufügen der Veranstaltung zur Liste
+            // HinzufÃ¼gen der Veranstaltung zur Liste
             itemModel.appendRow(neueVeranstaltung);
 
             // Weitersetzen der Suchposition hinter den letzten Fund
@@ -215,7 +215,7 @@ void Hauptfenster::veranstaltungenAbgerufen(QNetworkReply* reply)
 
 
 
-        // Löschen der RegExps aus dem Speicher
+        // LÃ¶schen der RegExps aus dem Speicher
         delete regExp;
         delete escapeRegExp;
     }
@@ -230,13 +230,13 @@ void Hauptfenster::veranstaltungenAbgerufen(QNetworkReply* reply)
         autoSynchronize = false;
     }
 
-    // Löschen der Antwort aus der Queue
+    // LÃ¶schen der Antwort aus der Queue
     replies.remove(reply);
 
-    // Löschen der Antwort aus dem Speicher
+    // LÃ¶schen der Antwort aus dem Speicher
     reply->deleteLater();
 
-    // Prüfen, ob noch Antworten ausstehen und ggf. Reaktiveren der Benutzeroberfläche
+    // PrÃ¼fen, ob noch Antworten ausstehen und ggf. Reaktiveren der BenutzeroberflÃ¤che
     if (replies.isEmpty())
     {
         // Veranstaltungen alphabetisch sortieren
@@ -252,10 +252,10 @@ void Hauptfenster::veranstaltungenAbgerufen(QNetworkReply* reply)
 
 void Hauptfenster::dateienAktualisieren()
 {
-    // Prüfen, ob überhaupt Dokumentorte ausgewählt wurden
+    // PrÃ¼fen, ob Ã¼berhaupt Dokumentorte ausgewÃ¤hlt wurden
     if (!ui->documentsCheck->isChecked() && !ui->structeredDocumentsCheck->isChecked() && !ui->exercisesCheck->isChecked())
     {
-        // Freischalten von Schaltflächen
+        // Freischalten von SchaltflÃ¤chen
         ui->Aktualisieren->setEnabled(true);
         ui->centralwidget->setEnabled(true);
         autoSynchronize = false;
@@ -269,10 +269,10 @@ void Hauptfenster::dateienAktualisieren()
     int rowCount = itemModel.rowCount();
     Strukturelement* aktuelleStruktur = 0;
 
-    // Übungsbetrieb Lösungen
+    // Ãœbungsbetrieb LÃ¶sungen
     // "https://www2.elearning.rwth-aachen.de/ws10/10ws-02568/exerciseCourse/SampleSolutions/"
 
-    // Übungsbetrieb Blätter
+    // Ãœbungsbetrieb BlÃ¤tter
     // "https://www2.elearning.rwth-aachen.de/ss11/11ss-33668/exerciseCourse/AssignmentDocuments/
 
     for(int i= 0; i < rowCount; i++)
@@ -280,11 +280,11 @@ void Hauptfenster::dateienAktualisieren()
         // Holen der aktuellen Veranstaltung
         aktuelleStruktur = (Strukturelement*) itemModel.item(i);
 
-        // Löschen aller Dateien
+        // LÃ¶schen aller Dateien
         if(aktuelleStruktur->rowCount() > 0)
             aktuelleStruktur->removeRows(0, aktuelleStruktur->rowCount());
 
-        // Ausführen des Requests für "Dokumente"
+        // AusfÃ¼hren des Requests fÃ¼r "Dokumente"
         if (ui->documentsCheck->isChecked())
         {
             // Erstellen eines WebDav Requests
@@ -298,11 +298,11 @@ void Hauptfenster::dateienAktualisieren()
                qDebug(Header);
             }
 
-            // Einfügen und Absenden des Requests
+            // EinfÃ¼gen und Absenden des Requests
             replies.insert(manager->sendCustomRequest(request, "PROPFIND"), aktuelleStruktur);
         }
 
-        // Ausführen des Requests für "Strukturierte Materialien"
+        // AusfÃ¼hren des Requests fÃ¼r "Strukturierte Materialien"
         if (ui->structeredDocumentsCheck->isChecked())
         {
             // Erstellen eines WebDav Requests
@@ -311,7 +311,7 @@ void Hauptfenster::dateienAktualisieren()
             request2.setRawHeader("Content-Type", "text/xml; charset=\"utf-8\"");
             request2.setRawHeader("Content-Length", "0");
 
-            // Einfügen in die Map und Absenden des Requests
+            // EinfÃ¼gen in die Map und Absenden des Requests
             replies.insert(manager->sendCustomRequest(request2, "PROPFIND"), aktuelleStruktur);
         }
 
@@ -323,7 +323,7 @@ void Hauptfenster::dateienAktualisieren()
             request.setRawHeader("Content-Type", "text/xml; charset=\"utf-8\"");
             request.setRawHeader("Content-Length", "0");
 
-            // Einfügen und Absenden des Requests
+            // EinfÃ¼gen und Absenden des Requests
             replies.insert(manager->sendCustomRequest(request, "PROPFIND"), aktuelleStruktur);
 
             // Erstellen eines WebDav Requests
@@ -332,7 +332,7 @@ void Hauptfenster::dateienAktualisieren()
             request2.setRawHeader("Content-Type", "text/xml; charset=\"utf-8\"");
             request2.setRawHeader("Content-Length", "0");
 
-            // Einfügen und Absenden des Requests
+            // EinfÃ¼gen und Absenden des Requests
             replies.insert(manager->sendCustomRequest(request2, "PROPFIND"), aktuelleStruktur);
         }
     }
@@ -343,7 +343,7 @@ void Hauptfenster::dateienAktualisieren()
         QObject::disconnect(manager, SIGNAL(finished(QNetworkReply*)),
                             this, SLOT(dateienAbgerufen(QNetworkReply*)));
 
-        // Freischalten von Schaltflächen
+        // Freischalten von SchaltflÃ¤chen
         ui->Aktualisieren-> setEnabled(true);
         ui->einbinden->     setEnabled(true);
         ui->ausschliessen-> setEnabled(true);
@@ -356,7 +356,7 @@ void Hauptfenster::dateienAktualisieren()
 
 void Hauptfenster::dateienAbgerufen(QNetworkReply* reply)
 {
-    // Prüfen auf Fehler
+    // PrÃ¼fen auf Fehler
     if (!reply->error())
     {
         // Holen die aktuelle Veranstaltung aus der Map
@@ -367,34 +367,34 @@ void Hauptfenster::dateienAbgerufen(QNetworkReply* reply)
         QXmlStreamReader Reader;
         Reader.addData(replyText);
 
-        // Vorbereitung der Daten für die Elemente
+        // Vorbereitung der Daten fÃ¼r die Elemente
         QString currentXmlTag;
         QUrl    url;
         QString name;
         QString time;
         qint32  size = 0;
 
-        // Prüfen auf das Ende
+        // PrÃ¼fen auf das Ende
         while(!Reader.atEnd())
         {
-            // Lese nächstes Element
+            // Lese nÃ¤chstes Element
             Reader.readNext();
 
-            // 1. Fall: Öffnendes Element <Element>
+            // 1. Fall: Ã–ffnendes Element <Element>
             if(Reader.isStartElement())
             {
                 // Speichern des Namens
                 currentXmlTag = Reader.name().toString();
             }
 
-            // 2. Fall: Schließendes Element mit Namen Response </Response>
+            // 2. Fall: SchlieÃŸendes Element mit Namen Response </Response>
             else if (Reader.isEndElement() && Reader.name() == "response")
             {
-                // Hinzufügen des Slashs bei der Url von Ordnern
+                // HinzufÃ¼gen des Slashs bei der Url von Ordnern
                 if(!size)
                     url.setUrl(url.toString() % "/");
 
-                // Wechsel in den übergeordneten Ordner des aktuellen Elements
+                // Wechsel in den Ã¼bergeordneten Ordner des aktuellen Elements
                 while(!url.toString().contains((aktuellerOrdner->data(urlRole).toUrl().toString()), Qt::CaseSensitive))//(in = RegExp.indexIn(url.toString())) == -1)
                 {
                     aktuellerOrdner->sortChildren(0, Qt::AscendingOrder);
@@ -404,14 +404,14 @@ void Hauptfenster::dateienAbgerufen(QNetworkReply* reply)
                 // Ignorieren aller Adressen, die "/Forms" enthalten
                 if (!url.toString().contains("/Forms", Qt::CaseSensitive))
                 {
-                    // Prüfe auf Elementart
+                    // PrÃ¼fe auf Elementart
                     // 1. Fall: Datei (size > 0)
                     if (size)
                     {
                         // Erstellen einer neuen Datei
                         Datei* newFile = new Datei(name, url, time, size);
 
-                        // Hinzufügen des endungsabhängigen Icons
+                        // HinzufÃ¼gen des endungsabhÃ¤ngigen Icons
                         // PDF
                         if (name.contains(QRegExp(".pdf$", Qt::CaseInsensitive)))
                             newFile->setData(QIcon(":/Icons/Icons/filetype_pdf.png"), Qt::DecorationRole);
@@ -439,11 +439,11 @@ void Hauptfenster::dateienAbgerufen(QNetworkReply* reply)
                             newFile->setData(true, synchronisedRole);
                         }
 
-                        // Hinzufügen zum aktuellen Ordner
+                        // HinzufÃ¼gen zum aktuellen Ordner
                         aktuellerOrdner->appendRow(newFile);
                     }
                     // 2. Fall: Ordner/Veranstaltung
-                    // Ausschließen der Ordnernamen "documents" und "structured"
+                    // AusschlieÃŸen der Ordnernamen "documents" und "structured"
                     else if (name != "documents" && name != "structured" && !url.toString().contains("exerciseCourse"))
                     {
                         // Erstellen eines neuen Ordners
@@ -452,7 +452,7 @@ void Hauptfenster::dateienAbgerufen(QNetworkReply* reply)
                         // Setzen des Zeichens
                         neuerOrdner->setData(QIcon(":/Icons/Icons/25_folder.png"), Qt::DecorationRole);
 
-                        // Hinzufügen zum aktuellen Ordner
+                        // HinzufÃ¼gen zum aktuellen Ordner
                         aktuellerOrdner->appendRow(neuerOrdner);
 
                         // NeuerOrdner wird zum aktuellen Ordner
@@ -460,7 +460,7 @@ void Hauptfenster::dateienAbgerufen(QNetworkReply* reply)
                     }
                 }
 
-                // Löschen aller eingelesener Daten
+                // LÃ¶schen aller eingelesener Daten
                 url.clear();
                 name.clear();
                 size = 0;
@@ -478,7 +478,7 @@ void Hauptfenster::dateienAbgerufen(QNetworkReply* reply)
                 else if (currentXmlTag == "displayname")
                     name = QString::fromUtf8(Reader.text().toString().toLatin1());
 
-                // Größe
+                // GrÃ¶ÃŸe
                 else if (currentXmlTag == "getcontentlength")
                     size = Reader.text().toString().toInt();
 
@@ -510,19 +510,19 @@ void Hauptfenster::dateienAbgerufen(QNetworkReply* reply)
 //        veranstaltungen.removeRow(veranstaltungen.indexFromItem(aktuelleVeranstaltung).row());
 //    }
 
-    // Löschen der Antwort aus der Liste der abzuarbeitenden Antworten
+    // LÃ¶schen der Antwort aus der Liste der abzuarbeitenden Antworten
     replies.remove(reply);
 
     // Freigabe des Speichers
     reply->deleteLater();
 
-    // Prüfen, ob alle Antworten bearbeitet wurden -> Replies.empty() = TRUE
+    // PrÃ¼fen, ob alle Antworten bearbeitet wurden -> Replies.empty() = TRUE
     if(replies.empty())
     {
         QObject::disconnect(manager, SIGNAL(finished(QNetworkReply*)),
                             this, SLOT(dateienAbgerufen(QNetworkReply*)));
 
-        // Freischalten von Schaltflächen
+        // Freischalten von SchaltflÃ¤chen
         ui->Aktualisieren-> setEnabled(true);
         ui->einbinden->     setEnabled(true);
         ui->ausschliessen-> setEnabled(true);
@@ -541,36 +541,36 @@ void Hauptfenster::dateienAbgerufen(QNetworkReply* reply)
 
 void Hauptfenster::on_ausschliessen_clicked()
 {
-    // Holen der ausgewählten Dateien
+    // Holen der ausgewÃ¤hlten Dateien
     QModelIndexList ausgewaehlt = proxyModel.mapSelectionToSource(ui->treeView->selectionModel()->selection()).indexes();
 
-    // Iteration über alle Elemente
+    // Iteration Ã¼ber alle Elemente
     Strukturelement* aktuelleStruktur = 0;
     QModelIndexList::Iterator iteratorEnd = ausgewaehlt.end();
     for(QModelIndexList::Iterator iter = ausgewaehlt.begin(); iter != iteratorEnd; iter++)
     {
-        // Holen des Vaterelements des ausgewählten Strukturelements
+        // Holen des Vaterelements des ausgewÃ¤hlten Strukturelements
         aktuelleStruktur = (Strukturelement*) iter->internalPointer();
 
-        // Ausschließen des ausgewählten Elements
+        // AusschlieÃŸen des ausgewÃ¤hlten Elements
         Strukturelement* temp = (Strukturelement*)aktuelleStruktur->child(iter->row(),0);
         ausschliessen(temp);
         //ausschliessen((Strukturelement*)aktuelleStruktur->child(iter->row(),0));
 
-        // Prüfen, ob alle Geschwisterelemente ausgeschlossen sind
-        // => Ausschließen des Vaterlements
+        // PrÃ¼fen, ob alle Geschwisterelemente ausgeschlossen sind
+        // => AusschlieÃŸen des Vaterlements
         if(aktuelleStruktur != itemModel.invisibleRootItem())
         {
             bool siblingsExcluded = true;
 
-            // Prüfung aller Zeilen, ob alle ausgeschlossen
+            // PrÃ¼fung aller Zeilen, ob alle ausgeschlossen
             for (int i=0; i < aktuelleStruktur->rowCount(); i++)
             {
                 if(((Strukturelement*)aktuelleStruktur->child(i,0))->data(includeRole).toBool())
                     siblingsExcluded = false;
             }
 
-            // Falls ja, Vaterelement auch ausschließen
+            // Falls ja, Vaterelement auch ausschlieÃŸen
             if (siblingsExcluded)
             {
                 aktuelleStruktur->setData(false, includeRole);
@@ -588,7 +588,7 @@ void Hauptfenster::on_ausschliessen_clicked()
 
 void Hauptfenster::ausschliessen(Strukturelement* aktuelleStruktur)
 {
-    // Ausschließen aller untergeordneten Elemente
+    // AusschlieÃŸen aller untergeordneten Elemente
     if(aktuelleStruktur->data(includeRole).toBool()){
         aktuelleStruktur->setData(false, includeRole);
         for(int i = 0; i < aktuelleStruktur->rowCount(); i++)
@@ -600,19 +600,19 @@ void Hauptfenster::ausschliessen(Strukturelement* aktuelleStruktur)
 
 void Hauptfenster::on_einbinden_clicked()
 {
-    // Bestimmen der ausgewählten Items
+    // Bestimmen der ausgewÃ¤hlten Items
     QModelIndexList selectedItemsList =  proxyModel.mapSelectionToSource(ui->treeView->selectionModel()->selection()).indexes();
 
-    // Variablen zur Speicherung von Pointern aus Performancegründen vor der Schleife
+    // Variablen zur Speicherung von Pointern aus PerformancegrÃ¼nden vor der Schleife
     Strukturelement* aktuelleStruktur = 0;
     QModelIndexList::Iterator iteratorEnd = selectedItemsList.end();
 
     for(QModelIndexList::Iterator iterator = selectedItemsList.begin(); iterator != iteratorEnd; iterator++)
     {
-        // Holen des Pointers auf das ausgewählte Item
+        // Holen des Pointers auf das ausgewÃ¤hlte Item
         aktuelleStruktur = (Strukturelement*)((Strukturelement*) iterator->internalPointer())->child(iterator->row(),0);
 
-        // Einbinden aller übergeordneter Ordner
+        // Einbinden aller Ã¼bergeordneter Ordner
         Strukturelement* parent = aktuelleStruktur;
         while((parent = (Strukturelement*) parent->parent()) != 0)
         {
@@ -651,11 +651,11 @@ void Hauptfenster::on_Login_clicked()
     // 1.Fall: Login erfolgreich
     if(LoginTest->exec())
     {
-        // Ändern des Schreibrechts der LineEdits
+        // Ã„ndern des Schreibrechts der LineEdits
         ui->BenutzernameFeld->setReadOnly(true);
         ui->PasswortFeld->setReadOnly(true);
 
-        // Hinzufügen eines neuen Styles
+        // HinzufÃ¼gen eines neuen Styles
         ui->BenutzernameFeld->setStyleSheet("QLineEdit{background-color:#6CFF47; font: bold}");
         ui->PasswortFeld->setStyleSheet("QLineEdit{background-color:#6CFF47; font: bold}");
 
@@ -693,7 +693,7 @@ void Hauptfenster::on_DatenSpeichern_stateChanged(int checked)
     else
         ui->AutoLogin->setEnabled(false);
 
-    // Löschen des Hakens
+    // LÃ¶schen des Hakens
     ui->AutoLogin->setChecked(false);
 }
 
@@ -705,7 +705,7 @@ void Hauptfenster::on_AutoLogin_stateChanged(int checked)
     else
         ui->autoSyncCheck->setEnabled(false);
 
-    // Löschen des Hakens
+    // LÃ¶schen des Hakens
     ui->autoSyncCheck->setChecked(false);
 }
 
@@ -721,12 +721,12 @@ void Hauptfenster::on_PasswortFeld_textChanged(const QString)
 
 void Hauptfenster::aktiviereLoginButton()
 {
-    // Löschen der gespeicherten Einstellungen, da neue Benutzerdaten vorliegen
+    // LÃ¶schen der gespeicherten Einstellungen, da neue Benutzerdaten vorliegen
     ui->AutoLogin->setChecked(false);
     ui->DatenSpeichern->setChecked(false);
 
 
-    // Aktivieren des Loginbuttons, wenn beide Felder ausgefüllt sind
+    // Aktivieren des Loginbuttons, wenn beide Felder ausgefÃ¼llt sind
     if(!ui->BenutzernameFeld->text().isEmpty() && !ui->PasswortFeld->text().isEmpty())
     {
         ui->Login->setEnabled(true);
@@ -742,7 +742,7 @@ void Hauptfenster::on_synchronisieren_clicked()
     ui->centralwidget->setEnabled(false);
     QString directoryPath = ui->VerzeichnisFeld->text();
 
-    // Falls noch kein Pfad angegeben wurde, abbrechen und FileDialog öffnen
+    // Falls noch kein Pfad angegeben wurde, abbrechen und FileDialog Ã¶ffnen
     if (directoryPath.isEmpty())
     {
         ui->tabWidget->setCurrentIndex(1);
@@ -755,7 +755,7 @@ void Hauptfenster::on_synchronisieren_clicked()
 
     QDir verzeichnis(directoryPath);
 
-    // Überprüfung, ob das angegebene Verzeichnis existiert, oder erstellt werden kann
+    // ÃœberprÃ¼fung, ob das angegebene Verzeichnis existiert, oder erstellt werden kann
     if(!verzeichnis.exists() && !verzeichnis.mkpath(verzeichnis.path()))
     {
         ui->directoryButton->setEnabled(true);
@@ -763,7 +763,7 @@ void Hauptfenster::on_synchronisieren_clicked()
         return;   
     }
 
-    // Hinzufügen aller eingebundenen Elemente einer Liste
+    // HinzufÃ¼gen aller eingebundenen Elemente einer Liste
     QLinkedList<Strukturelement*> liste;
     for(int i=0; i < itemModel.rowCount(); i++)
     {
@@ -777,7 +777,7 @@ void Hauptfenster::on_synchronisieren_clicked()
                                                       getFileCount(liste),          // Anzahl der zu runterladenen Dateien
                                                       this);
 
-        // Iterieren über alle Elemente
+        // Iterieren Ã¼ber alle Elemente
         Strukturelement* aktuellerOrdner = liste.first();
         int counter = getFileCount(liste);
         int changedCounter = 0;
@@ -888,7 +888,7 @@ void Hauptfenster::getStrukturelementeListe(Strukturelement* aktuellesElement, Q
 
 int Hauptfenster::getFileCount(QLinkedList<Strukturelement*>& liste)
 {
-    // Zählen aller Dateien einer Liste
+    // ZÃ¤hlen aller Dateien einer Liste
     int fileCounter = 0;
     for(QLinkedList<Strukturelement*>::iterator iterator = liste.begin(); iterator != liste.end(); iterator++)
     {
@@ -913,13 +913,13 @@ void Hauptfenster::on_directoryButton_clicked()
 {
     // Aufruf des Ordnerdialogs
     QString newDirectory = QFileDialog::getExistingDirectory(this,
-                                                             "Downloadverkzeichnis auswählen",
+                                                             "Downloadverkzeichnis auswÃ¤hlen",
                                                              QDir::rootPath(),
                                                              QFileDialog::ShowDirsOnly| QFileDialog::DontResolveSymlinks);
     if (!newDirectory.isEmpty())
         ui->VerzeichnisFeld->setText(newDirectory);
 
-    // Aktualisierung des Zustands des Buttons "Speicherort öffnen"
+    // Aktualisierung des Zustands des Buttons "Speicherort Ã¶ffnen"
     if(!ui->VerzeichnisFeld->text().isEmpty())
         ui->directoryOpen->setEnabled(true);
     else
@@ -929,7 +929,7 @@ void Hauptfenster::on_directoryButton_clicked()
 
 void Hauptfenster::on_directoryOpen_clicked()
 {
-    // Betriebssystem soll mit dem Standardprogramm den Pfad öffnen
+    // Betriebssystem soll mit dem Standardprogramm den Pfad Ã¶ffnen
     QDesktopServices::openUrl(QUrl("file:///" % ui->VerzeichnisFeld->text(), QUrl::TolerantMode));
 }
 
@@ -971,7 +971,7 @@ void Hauptfenster::on_treeView_customContextMenuRequested(const QPoint &pos)
     // Bestimmung des Elements, auf das geklickt wurde
     Strukturelement* RightClickedItem = (Strukturelement*) itemModel.itemFromIndex(proxyModel.mapToSource(ui->treeView->indexAt(pos)));
 
-    // Überprüfung, ob überhaupt auf ein Element geklickt wurde (oder ins Leere)
+    // ÃœberprÃ¼fung, ob Ã¼berhaupt auf ein Element geklickt wurde (oder ins Leere)
     if (RightClickedItem == 0)
         return;
 
@@ -982,16 +982,16 @@ void Hauptfenster::on_treeView_customContextMenuRequested(const QPoint &pos)
     // Erstellen eines neuen Menus
     QMenu newCustomContextMenu(this);
 
-    // Öffnen der Veranstaltungsseite im L2P
+    // Ã–ffnen der Veranstaltungsseite im L2P
     if (RightClickedItem->type() == courseItem)
     {
-        QAction* openCourseAction = new QAction("Veranstaltungsseite öffnen", this);
+        QAction* openCourseAction = new QAction("Veranstaltungsseite Ã¶ffnen", this);
         newCustomContextMenu.addAction(openCourseAction);
         QObject::connect(openCourseAction, SIGNAL(triggered()), this, SLOT(openCourse()));
     }
 
-    // Öffnen der Datei
-    QAction* openAction = new QAction("Öffnen", this);
+    // Ã–ffnen der Datei
+    QAction* openAction = new QAction("Ã–ffnen", this);
     newCustomContextMenu.addAction(openAction);
     QObject::connect(openAction, SIGNAL(triggered()), this, SLOT(openItem()));
 
@@ -1006,16 +1006,16 @@ void Hauptfenster::on_treeView_customContextMenuRequested(const QPoint &pos)
 
 void Hauptfenster::openCourse()
 {
-    // Öffnen der URL des mit der rechten Maustaste geklickten Items
+    // Ã–ffnen der URL des mit der rechten Maustaste geklickten Items
     QDesktopServices::openUrl(lastRightClickItem->data(urlRole).toUrl());
 }
 
 void Hauptfenster::openItem()
 {
-    // Öffnen der Datei auf der Festplatte des mit der rechten Maustaste geklickten Items
+    // Ã–ffnen der Datei auf der Festplatte des mit der rechten Maustaste geklickten Items
     if(!QDesktopServices::openUrl(QUrl(getStrukturelementPfad(lastRightClickItem), QUrl::TolerantMode)))
     {
-        // Öffnen der Datei im L2P des mit der rechten Maustaste geklickten Items
+        // Ã–ffnen der Datei im L2P des mit der rechten Maustaste geklickten Items
         QDesktopServices::openUrl(lastRightClickItem->data(urlRole).toUrl());
     }
 }
