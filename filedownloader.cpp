@@ -91,7 +91,7 @@ int FileDownloader::startNextDownload(QString filename, QString event, QString v
 void FileDownloader::downloadProgressSlot(qint64 bytesReceived, qint64 bytesTotal)
 {
     // Aktualisieren der Progressbar anhand der Größe der empfangenen Bytes
-    if(bytesTotal)
+    if(bytesTotal > 0)
     {
         ui->progressBar->setMaximum(bytesTotal);
         ui->progressBar->setValue(bytesReceived);
