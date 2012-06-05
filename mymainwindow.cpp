@@ -36,7 +36,7 @@ MyMainWindow::MyMainWindow(QWidget *parent) :
 
     loadSettings();
 
-    // Variable f�r das automatische Synchronisieren beim Programmstart
+    // Variable für das automatische Synchronisieren beim Programmstart
     autoSynchronize = false;
 
     // Erzeugen des NetzwerkAccessManagers
@@ -54,7 +54,7 @@ MyMainWindow::MyMainWindow(QWidget *parent) :
     QRect windowRect  = this->frameGeometry();
     move((desktopRect.width()-windowRect.width())/2, (desktopRect.height()-windowRect.height())/2);
 
-    // Ausf�hren des Autologins, falls gew�nscht
+    // Ausführen des Autologins, falls gewünscht
     QSettings settings("Robert K.", "L2P-Tool++");
     if (settings.value("login/autoLogin").toBool())
     {
@@ -664,7 +664,7 @@ void MyMainWindow::on_Login_clicked()
     // 1.Fall: Login erfolgreich
     if(LoginTest->exec())
     {
-        // Ändern des Schreibrechts der LineEdits
+        // Ã„ndern des Schreibrechts der LineEdits
         ui->BenutzernameFeld->setReadOnly(true);
         ui->PasswortFeld->setReadOnly(true);
 
@@ -882,8 +882,6 @@ void MyMainWindow::on_synchronisieren_clicked()
     }
     ui->directoryButton->setEnabled(true);
     ui->centralwidget->setEnabled(true);
-
-
 }
 
 void MyMainWindow::getStrukturelementeListe(Structureelement* aktuellesElement, QLinkedList<Structureelement*>& liste, bool onlyIncluded)
