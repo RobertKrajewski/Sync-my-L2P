@@ -16,13 +16,17 @@
 ****************************************************************************/
 
 #include "structureelement.h"
-#include "myfile.h"
 
-Structureelement::Structureelement(QString name, QUrl url, MyItemType type)
-    :QStandardItem(name), included(true), url(url), typeEX(type)
+Structureelement::Structureelement(QString name, QUrl url, MyItemType typeEX)
+    :QStandardItem(name), included(true), url(url), typeEX(typeEX)
 {
     synchronised = NOT_SYNCHRONISED;
     size = 0;
+}
+
+Structureelement::Structureelement(QString name, QUrl url, QString time, qint32 size, MyItemType typeEX)
+    :QStandardItem(name), included(true), url(url),time(QDateTime::fromString(time, Qt::ISODate)), size(size), typeEX(typeEX)
+{
 }
 
 QVariant Structureelement::data(int role) const
@@ -61,7 +65,7 @@ QVariant Structureelement::data(int role) const
             else
                  statustip.append(QString::number(size) % " Byte");
 
-            statustip.append(" - " % ((MyFile*)this)->getTime().toString("ddd dd.MM.yy hh:mm"));
+            statustip.append(" - " % time.toString("ddd dd.MM.yy hh:mm"));
 
             return statustip;
         }

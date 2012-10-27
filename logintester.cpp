@@ -70,10 +70,10 @@ LoginTester::LoginTester(QString username,
 
     QSslConfiguration newSslConfiguration2 = QSslConfiguration::defaultConfiguration();
     newCertificates2 = newSslConfiguration2.caCertificates();
-    foreach (QSslCertificate c, newCertificates2)
-    {
-        qDebug(c.subjectInfo(QSslCertificate::CommonName).toAscii());
-    }
+//    foreach (QSslCertificate c, newCertificates2)
+//    {
+//        qDebug(c.subjectInfo(QSslCertificate::CommonName).toAscii());
+//    }
 
     QObject::connect(manager, SIGNAL(authenticationRequired(QNetworkReply*, QAuthenticator*)), this, SLOT(authenticationSlot(QNetworkReply*, QAuthenticator*)));
     QObject::connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(finishedSlot(QNetworkReply*)));
@@ -131,30 +131,30 @@ void LoginTester::sslErrorsSlot(QList<QSslError> sslErrors)
 
 void LoginTester::finishedSlot(QNetworkReply* reply)
 {
-    qDebug(QString(reply->readAll()).toAscii());
+//    qDebug(QString(reply->readAll()).toAscii());
     QSslConfiguration sslConfiguration = reply->sslConfiguration();
-    qDebug(QString("Protocol: " + QString::number(sslConfiguration.protocol())).toAscii());
-    qDebug(QString("Verfiy Depth: " + QString::number(sslConfiguration.peerVerifyDepth())).toAscii());
+//    qDebug(QString("Protocol: " + QString::number(sslConfiguration.protocol())).toAscii());
+//    qDebug(QString("Verfiy Depth: " + QString::number(sslConfiguration.peerVerifyDepth())).toAscii());
     //QSslCertificate localCertificate = sslConfiguration.peerCertificate();
 
     QList<QSslCertificate> sslCertificateList = sslConfiguration.peerCertificateChain();
-    foreach(QSslCertificate localCertificate, sslCertificateList){
-        qDebug("----------------------------------------------------------");
-        qDebug(QString(localCertificate.isNull()?"NULL ":"NOT NULL ").toAscii());
-        qDebug(QString(localCertificate.isValid()?"VALID ":"NOT VALID ").toAscii());
-        qDebug("\r\nsubjectInfo");
-        qDebug(QString("LocalityName: "+localCertificate.subjectInfo(QSslCertificate::LocalityName)).toAscii());
-        qDebug(QString("CommonName: "+localCertificate.subjectInfo(QSslCertificate::CommonName)).toAscii());
-        qDebug(QString("CountryName: "+localCertificate.subjectInfo(QSslCertificate::CountryName)).toAscii());
-        qDebug(QString("Organization: "+localCertificate.subjectInfo(QSslCertificate::Organization)).toAscii());
-        qDebug(QString("OrganizationalUnitName: "+localCertificate.subjectInfo(QSslCertificate::OrganizationalUnitName)).toAscii());
-        qDebug("\r\nissuerInfo");
-        qDebug(QString("LocalityName: "+localCertificate.issuerInfo(QSslCertificate::LocalityName)).toAscii());
-        qDebug(QString("CommonName: "+localCertificate.issuerInfo(QSslCertificate::CommonName)).toAscii());
-        qDebug(QString("CountryName: "+localCertificate.issuerInfo(QSslCertificate::CountryName)).toAscii());
-        qDebug(QString("Organization: "+localCertificate.issuerInfo(QSslCertificate::Organization)).toAscii());
-        qDebug(QString("OrganizationalUnitName: "+localCertificate.issuerInfo(QSslCertificate::OrganizationalUnitName)).toAscii());
-    }
+//    foreach(QSslCertificate localCertificate, sslCertificateList){
+//        qDebug("----------------------------------------------------------");
+//        qDebug(QString(localCertificate.isNull()?"NULL ":"NOT NULL ").toAscii());
+//        qDebug(QString(localCertificate.isValid()?"VALID ":"NOT VALID ").toAscii());
+//        qDebug("\r\nsubjectInfo");
+//        qDebug(QString("LocalityName: "+localCertificate.subjectInfo(QSslCertificate::LocalityName)).toAscii());
+//        qDebug(QString("CommonName: "+localCertificate.subjectInfo(QSslCertificate::CommonName)).toAscii());
+//        qDebug(QString("CountryName: "+localCertificate.subjectInfo(QSslCertificate::CountryName)).toAscii());
+//        qDebug(QString("Organization: "+localCertificate.subjectInfo(QSslCertificate::Organization)).toAscii());
+//        qDebug(QString("OrganizationalUnitName: "+localCertificate.subjectInfo(QSslCertificate::OrganizationalUnitName)).toAscii());
+//        qDebug("\r\nissuerInfo");
+//        qDebug(QString("LocalityName: "+localCertificate.issuerInfo(QSslCertificate::LocalityName)).toAscii());
+//        qDebug(QString("CommonName: "+localCertificate.issuerInfo(QSslCertificate::CommonName)).toAscii());
+//        qDebug(QString("CountryName: "+localCertificate.issuerInfo(QSslCertificate::CountryName)).toAscii());
+//        qDebug(QString("Organization: "+localCertificate.issuerInfo(QSslCertificate::Organization)).toAscii());
+//        qDebug(QString("OrganizationalUnitName: "+localCertificate.issuerInfo(QSslCertificate::OrganizationalUnitName)).toAscii());
+//    }
     // Fehlerbehandlung
     if (reply->error())
     {

@@ -17,6 +17,7 @@
 
 #include "filedownloader.h"
 #include "ui_dateidownloader.h"
+#include <QDebug>
 
 FileDownloader::FileDownloader(QString username,
                                  QString password,
@@ -53,7 +54,7 @@ void FileDownloader::authenticate(QNetworkReply* , QAuthenticator* authenticator
     authenticator->setPassword(password);
 }
 
-int FileDownloader::startNextDownload(QString filename, QString event, QString verzeichnisPfad, QUrl url, int itemNummer)
+int FileDownloader::startNextDownload(QString filename, QString event, QString verzeichnisPfad, QUrl url, int itemNummer, int itemSize)
 {
     // Anpassen der Labels
     // Aktualisieren der Itemnummer
@@ -80,6 +81,8 @@ int FileDownloader::startNextDownload(QString filename, QString event, QString v
 
     // Start des Requests
     reply = manager->get(QNetworkRequest(url));
+    ui->progressBar->setFormat(QString("%v ").append(dataUnitFromBytes(itemSize)).append(" / %m ").append(dataUnitFromBytes(itemSize)));
+    ui->progressBar->setMaximum(roundBytes(itemSize));
     QObject::connect(reply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(downloadProgressSlot(qint64,qint64)));
     QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(readyReadSlot()));
     QObject::connect(reply, SIGNAL(finished()), this, SLOT(finishedSlot()));
@@ -91,18 +94,7 @@ int FileDownloader::startNextDownload(QString filename, QString event, QString v
 void FileDownloader::downloadProgressSlot(qint64 bytesReceived, qint64 bytesTotal)
 {
     // Aktualisieren der Progressbar anhand der Größe der empfangenen Bytes
-    if(bytesTotal > 0)
-    {
-        ui->progressBar->setMaximum(bytesTotal);
-        ui->progressBar->setValue(bytesReceived);
-
-    }
-    // Sonderfall: Unbekannte Größe
-    else
-    {
-        ui->progressBar->setMaximum(0);
-        ui->progressBar->setValue(0);
-    }
+    ui->progressBar->setValue(roundBytes(bytesReceived));
 }
 
 void FileDownloader::readyReadSlot()
@@ -163,3 +155,24 @@ void FileDownloader::keyPressEvent(QKeyEvent *event)
         event->ignore();
 }
 
+QString FileDownloader::dataUnitFromBytes(qint64 bytes) {
+//    if (bytes/(1024*1024) > 0) {
+//        return "MB";
+//    }
+    if (bytes/1024 > 0) {
+        return "kB";
+    } else {
+        return "Byte";
+    }
+}
+
+qint64 FileDownloader::roundBytes(qint64 bytes) {
+//    if (bytes/(1024*1024) > 0) {
+//        return (qint64)floor(((double)bytes/(double)(1024*1024)) + 0.5);
+//    }
+    if (bytes/1024 > 0) {
+        return (qint64)ceil(((double)bytes/1024));
+    } else {
+        return bytes;
+    }
+}

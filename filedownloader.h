@@ -45,7 +45,7 @@ public:
                              int itemNumber,
                              QWidget *parent= 0);
     ~FileDownloader();
-    int startNextDownload(QString, QString, QString, QUrl, int);
+    int startNextDownload(QString, QString, QString, QUrl, int, int);
 
 private:
     void keyPressEvent(QKeyEvent *);
@@ -61,6 +61,9 @@ private:
     int itemNumber;
 
     QFile output;
+
+    QString dataUnitFromBytes(qint64 bytes);
+    qint64 roundBytes(qint64 bytes);
 
 private slots:
     void authenticate(QNetworkReply*, QAuthenticator*);
