@@ -65,7 +65,7 @@
     </size>
    </property>
    <property name="contextMenuPolicy">
-    <enum>Qt::NoContextMenu</enum>
+    <enum>Qt::ActionsContextMenu</enum>
    </property>
    <property name="styleSheet">
     <string notr="true"/>
@@ -95,7 +95,7 @@
     <enum>QProgressBar::TopToBottom</enum>
    </property>
    <property name="format">
-    <string>%v/%m Byte</string>
+    <string>%v/%m KBs</string>
    </property>
   </widget>
   <widget class="QLabel" name="progressLabel">

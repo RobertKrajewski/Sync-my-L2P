@@ -1,91 +1,48 @@
-QT += gui core network
-SOURCES += \
-    main.cpp \
-    mymainwindow.cpp \
+#-------------------------------------------------
+#
+# Project created by QtCreator 2012-10-09T09:25:30
+#
+#-------------------------------------------------
+
+QT       += core gui network
+
+TARGET = Sync-my-L2P
+TEMPLATE = app
+
+
+SOURCES += main.cpp\
+        mymainwindow.cpp \
+    parser.cpp \
     structureelement.cpp \
-    myfile.cpp \
+    mysortfilterproxymodel.cpp \
     logintester.cpp \
     filedownloader.cpp \
-    mysortfilterproxymodel.cpp
+    utils.cpp \
+    daterangedialog.cpp
 
-HEADERS += \
-    mymainwindow.h \
+HEADERS  += mymainwindow.h \
+    parser.h \
     structureelement.h \
-    myfile.h \
+    mysortfilterproxymodel.h \
     logintester.h \
     filedownloader.h \
-    mysortfilterproxymodel.h
+    utils.h \
+    daterangedialog.h
 
-FORMS += \
-    hauptfenster.ui \
+FORMS    += mymainwindow.ui \
+    mymainwindow.ui \
     logintester.ui \
-    dateidownloader.ui
-
-RESOURCES += \
-    Icons.qrc
-
-RC_FILE += \
-    ../Sync-my-L2P/icon.rc
-
-ICON = Sync-my-L2P.icns
+    dateidownloader.ui \
+    daterangedialog.ui
 
 OTHER_FILES += \
-    COPYING.LESSER
+    Sync-my-L2P.icns \
+    README.md \
+    magnifier.ico \
+    icon.rc \
+    COPYING.LESSER \
+    .gitignore
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+RESOURCES += \
+    Icons.qrc \
+    Certificates.qrc

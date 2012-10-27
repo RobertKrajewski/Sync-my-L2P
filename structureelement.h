@@ -56,6 +56,7 @@ class Structureelement : public QStandardItem
 {
 public:
     Structureelement(QString name, QUrl url, MyItemType typeEX);
+    Structureelement(QString name, QUrl url, QString time, qint32 size, MyItemType typeEX = fileItem);
 
     int type() const;
 

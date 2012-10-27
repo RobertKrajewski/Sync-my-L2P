@@ -47,16 +47,18 @@
 #include <QDesktopWidget>
 #include <QDesktopServices>
 
-#include "myfile.h"
 
 #include "logintester.h"
 #include "filedownloader.h"
 #include "mysortfilterproxymodel.h"
 
+#include "parser.h"
+#include "utils.h"
+
 class Veranstaltung;
 
 namespace Ui {
-    class MainWindow;
+    class MyMainWindow;
 }
 
 class MyMainWindow : public QMainWindow
@@ -67,6 +69,7 @@ public:
     explicit MyMainWindow(QWidget *parent = 0);
     ~MyMainWindow();
 
+
 private:
     void loadSettings();
     void saveSettings();
@@ -76,13 +79,13 @@ private:
     void getStrukturelementeListe(Structureelement*, QLinkedList<Structureelement*>&, bool);
     void unknownError();
 
-    QString getStrukturelementPfad(Structureelement*);
+
     int getFileCount(QLinkedList<Structureelement*>& liste);
 
-    Ui::MainWindow*      ui;
+    Ui::MyMainWindow*      ui;
     QNetworkAccessManager* manager;
     MySortFilterProxyModel proxyModel;
-    QStandardItemModel     itemModel;
+    QStandardItemModel     *itemModel;
     Structureelement*       iter;
     QFile                  output;
     QMap<QNetworkReply*, Structureelement*> replies;
@@ -96,30 +99,34 @@ signals:
     void downloadFortschritt(int);
 
 private slots:
-    void copyURL();
     void openItem();
     void openCourse();
     void veranstaltungenAbgerufen(QNetworkReply*);
     void doAuthentification(QNetworkReply*, QAuthenticator*);
     void dateienAbgerufen(QNetworkReply*);
     void dateienAktualisieren();
-    void on_ausschliessen_clicked();
-    void on_einbinden_clicked();
-    void on_Login_clicked();
-    void on_DatenSpeichern_stateChanged(int);
-    void on_BenutzernameFeld_textChanged(const QString);
-    void on_PasswortFeld_textChanged(const QString);
-    void on_synchronisieren_clicked();
-    void on_directoryButton_clicked();
-    void on_Aktualisieren_clicked();
-    void on_directoryOpen_clicked();
-    void on_expandButton_clicked();
-    void on_collapseButton_clicked();
-    void on_AutoLogin_stateChanged(int arg1);
-    void on_treeView_doubleClicked(const QModelIndex &index);
-    void on_treeView_customContextMenuRequested(const QPoint &pos);
-    void on_maxSizeBox_valueChanged(int arg1);
-    void on_maxSizeCheckBox_toggled(bool checked);
+    void on_searchPushButton_clicked();
+    void on_removeSelectionPushButton_clicked();
+    void on_addSelectionPushButton_clicked();
+    void on_loginPushButton_clicked();
+    void on_userDataSaveCheckBox_stateChanged(int);
+    void on_userNameLineEdit_textChanged(const QString);
+    void on_userPasswordLineEdit_textChanged(const QString);
+    void on_syncPushButton_clicked();
+    void on_downloadFolderPushButton_clicked();
+    void on_refreshPushButton_clicked();
+    void on_openDownloadfolderPushButton_clicked();
+    void on_expandPushButton_clicked();
+    void on_contractPushButton_clicked();
+    void on_autoLoginOnStartCheckBox_stateChanged(int arg1);
+    void on_dataTreeView_doubleClicked(const QModelIndex &index);
+    void on_dataTreeView_customContextMenuRequested(const QPoint &pos);
+    void on_sizeLimitSpinBox_valueChanged(int arg1);
+    void on_sizeLimitCheckBox_toggled(bool checked);
+    void on_dateFilterCheckBox_toggled(bool checked);
+    void on_minDateEdit_dateChanged(const QDate &date);
+    void on_maxDateEdit_dateChanged(const QDate &date);
+    void copyUrlToClipboardSlot();
 };
 
 #endif // HAUPTFENSTER_H
