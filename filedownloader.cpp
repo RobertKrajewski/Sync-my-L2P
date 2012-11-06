@@ -17,6 +17,7 @@
 
 #include "filedownloader.h"
 #include "ui_dateidownloader.h"
+#include "math.h"
 #include <QDebug>
 
 FileDownloader::FileDownloader(QString username,
