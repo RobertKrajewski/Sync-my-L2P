@@ -19,41 +19,12 @@
 #define HAUPTFENSTER_H
 
 #include <QMainWindow>
-
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkRequest>
-#include <QtNetwork/QNetworkReply>
-#include <QtNetwork/QAuthenticator>
-#include <QUrl>
-
-#include <QRegExp>
-#include <QXmlStreamReader>
-
-#include <QStringBuilder>
-#include <QList>
-#include <QLinkedList>
-#include <QQueue>
-#include <QSettings>
-
-#include <QMessageBox>
-#include <QFileDialog>
-
-#include <QDir>
-#include <QFile>
-
-#include <QMenu>
-#include <QAction>
-
 #include <QDesktopWidget>
 #include <QDesktopServices>
+#include <QSystemTrayIcon>
+#include <QMenu>
 
-
-#include "logintester.h"
-#include "filedownloader.h"
-#include "mysortfilterproxymodel.h"
-
-#include "parser.h"
-#include "utils.h"
+#include "browser.h"
 
 class Veranstaltung;
 
@@ -69,64 +40,26 @@ public:
     explicit MyMainWindow(QWidget *parent = 0);
     ~MyMainWindow();
 
+public slots:
+    void enable(bool enabled);
+    void switchTabSlot(int tab);
+    void trayClickedSlot(QSystemTrayIcon::ActivationReason);
 
 private:
+    void init();
+
+    void changeEvent(QEvent *);
+
+    void createTrayIcon();
+
     void loadSettings();
     void saveSettings();
-    void ausschliessen(Structureelement*);
-    void einbinden(Structureelement*);
-    void aktiviereLoginButton(void);
-    void getStrukturelementeListe(Structureelement*, QLinkedList<Structureelement*>&, bool);
-    void unknownError();
+    void removeOldSettings();
 
+    void centerOnDesktop();
 
-    int getFileCount(QLinkedList<Structureelement*>& liste);
-
+    QSystemTrayIcon *trayIcon;
     Ui::MyMainWindow*      ui;
-    QNetworkAccessManager* manager;
-    MySortFilterProxyModel proxyModel;
-    QStandardItemModel     *itemModel;
-    Structureelement*       iter;
-    QFile                  output;
-    QMap<QNetworkReply*, Structureelement*> replies;
-
-
-    Structureelement* lastRightClickItem;
-    bool             autoSynchronize;
-
-
-signals:
-    void downloadFortschritt(int);
-
-private slots:
-    void openItem();
-    void openCourse();
-    void veranstaltungenAbgerufen(QNetworkReply*);
-    void doAuthentification(QNetworkReply*, QAuthenticator*);
-    void dateienAbgerufen(QNetworkReply*);
-    void dateienAktualisieren();
-    void on_searchPushButton_clicked();
-    void on_removeSelectionPushButton_clicked();
-    void on_addSelectionPushButton_clicked();
-    void on_loginPushButton_clicked();
-    void on_userDataSaveCheckBox_stateChanged(int);
-    void on_userNameLineEdit_textChanged(const QString);
-    void on_userPasswordLineEdit_textChanged(const QString);
-    void on_syncPushButton_clicked();
-    void on_downloadFolderPushButton_clicked();
-    void on_refreshPushButton_clicked();
-    void on_openDownloadfolderPushButton_clicked();
-    void on_expandPushButton_clicked();
-    void on_contractPushButton_clicked();
-    void on_autoLoginOnStartCheckBox_stateChanged(int arg1);
-    void on_dataTreeView_doubleClicked(const QModelIndex &index);
-    void on_dataTreeView_customContextMenuRequested(const QPoint &pos);
-    void on_sizeLimitSpinBox_valueChanged(int arg1);
-    void on_sizeLimitCheckBox_toggled(bool checked);
-    void on_dateFilterCheckBox_toggled(bool checked);
-    void on_minDateEdit_dateChanged(const QDate &date);
-    void on_maxDateEdit_dateChanged(const QDate &date);
-    void copyUrlToClipboardSlot();
 };
 
 #endif // HAUPTFENSTER_H

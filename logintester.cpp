@@ -90,7 +90,7 @@ LoginTester::~LoginTester()
 
 void LoginTester::authenticationSlot(QNetworkReply* , QAuthenticator* authenticator)
 {
-    qDebug("authenticationSlot call");
+    //qDebug("authenticationSlot call");
     // Logindaten nur ausfüllen, falls nicht mehr als die maximale Anzahl an Versuchen durchgeführt wurden
     if (tryCounter < maxTries)
     {
@@ -108,12 +108,12 @@ void LoginTester::startSlot()
     // Aufruf der L2P-Startseite zum Test der Logindaten
     QNetworkReply* reply = manager->get(QNetworkRequest(QUrl("https://www2.elearning.rwth-aachen.de/foyer/summary/default.aspx")));
     QObject::connect(reply, SIGNAL(sslErrors(QList<QSslError>)), this, SLOT(sslErrorsSlot(QList<QSslError>)));
-    qDebug("Connection started");
+    //qDebug("Connection started");
 }
 
 void LoginTester::sslErrorsSlot(QList<QSslError> sslErrors)
 {
-    qDebug("sslErrorsSlot call");
+    //qDebug("sslErrorsSlot call");
     foreach(QSslError error, sslErrors)
     {
         qDebug((QString("Error: ") + QString::number(error.error())+ QString(" ")+ error.errorString()).toAscii());

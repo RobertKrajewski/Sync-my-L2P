@@ -260,6 +260,19 @@
     <set>Qt::NoTextInteraction</set>
    </property>
   </widget>
+  <widget class="QPushButton" name="abortPushButton">
+   <property name="geometry">
+    <rect>
+     <x>590</x>
+     <y>10</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>abbrechen</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

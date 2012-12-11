@@ -144,6 +144,10 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
                     {
                         newFile->setData(SYNCHRONISED, synchronisedRole);
                     }
+                    else
+                    {
+                        newFile->setData(NOT_SYNCHRONISED, synchronisedRole);
+                    }
 
                     // Hinzufügen zum aktuellen Ordner
                     aktuellerOrdner->appendRow(newFile);
@@ -153,16 +157,16 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
                 else if (name != "documents" && name != "structured" && !url.toString().contains("exerciseCourse"))
                 {
                     // Erstellen eines neuen Ordners
-                    Structureelement* neuerOrdner = new Structureelement(name, url, directoryItem);
+                    Structureelement* newDirectory = new Structureelement(name, url, directoryItem);
 
                     // Setzen des Zeichens
-                    neuerOrdner->setData(QIcon(":/Icons/Icons/25_folder.png"), Qt::DecorationRole);
+                    newDirectory->setData(QIcon(":/Icons/Icons/25_folder.png"), Qt::DecorationRole);
 
                     // Hinzufügen zum aktuellen Ordner
-                    aktuellerOrdner->appendRow(neuerOrdner);
+                    aktuellerOrdner->appendRow(newDirectory);
 
                     // NeuerOrdner wird zum aktuellen Ordner
-                    aktuellerOrdner = neuerOrdner;
+                    aktuellerOrdner = newDirectory;
                 }
             }
 
