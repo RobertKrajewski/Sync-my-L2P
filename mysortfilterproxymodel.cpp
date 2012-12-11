@@ -21,10 +21,15 @@
 MySortFilterProxyModel::MySortFilterProxyModel(QObject *parent)
     :QSortFilterProxyModel(parent)
 {
-    maxSizeFilter = false;
-    maxSize = 0;
+    // Standardwerte hier müssen mit Standardwerten in GUI übereinstimmen,
+    // da es sonst Probleme mit den valueChanged Signals gibt
 
-    dateFilter = true;
+    maxSizeFilter = false;
+    maxSize = 1024*1024;
+
+    dateFilter = false;
+    minDate = QDate(1, 1, 1);
+    maxDate = QDate(1, 1, 1);
 }
 
 void MySortFilterProxyModel::setFilterMinimumDate(const QDate &date)

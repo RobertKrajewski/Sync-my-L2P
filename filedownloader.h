@@ -18,6 +18,7 @@
 #ifndef DATEIDOWNLOADER_H
 #define DATEIDOWNLOADER_H
 
+#include <QDesktopWidget>
 #include <QDialog>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
@@ -30,6 +31,8 @@
 #include <QFile>
 #include <QMessageBox>
 #include <QCloseEvent>
+
+#include <utils.h>
 
 namespace Ui {
     class DateiDownloader;
@@ -70,6 +73,7 @@ private slots:
     void downloadProgressSlot(qint64,qint64);
     void readyReadSlot();
     void finishedSlot();
+    void on_abortPushButton_clicked();
 };
 
 #endif // DATEIDOWNLOADER_H

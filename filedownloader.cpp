@@ -39,7 +39,7 @@ FileDownloader::FileDownloader(QString username,
     this->show();
 
     // Zentrieren des Fensters
-    QRect desktopRect = parentWidget()->frameGeometry();
+    QRect desktopRect = QApplication::desktop()->screenGeometry();/*parentWidget()->frameGeometry();*/
     QRect windowRect  = this->frameGeometry();
     move((desktopRect.width()-windowRect.width())/2+desktopRect.x(), (desktopRect.height()-windowRect.height())/2+desktopRect.y());
 }
@@ -72,11 +72,7 @@ int FileDownloader::startNextDownload(QString filename, QString event, QString v
     if(!output.open(QIODevice::WriteOnly))
     {
         // Fehlerbehandlung
-        QMessageBox messageBox;
-        messageBox.setText("Fehler beim Öffnen mit Schreibberechtigung.");
-        messageBox.setInformativeText(filename);
-        messageBox.setStandardButtons(QMessageBox::Ok);
-        messageBox.exec();
+        Utils::errorMessageBox("Fehler beim Öffnen mit Schreibberechtigung.", filename);
         return 0;
     }
 
@@ -103,11 +99,7 @@ void FileDownloader::readyReadSlot()
     // Schreiben der runtergeladenen Bytes in die Datei
     if (output.write(reply->readAll()) == -1)
     {
-        QMessageBox messageBox;
-        messageBox.setText("Beim Schreiben einer Datei auf die Fesplatte ist ein Fehler aufgetreten.");
-        messageBox.setInformativeText(ui->dateinameLabel->text());
-        messageBox.setStandardButtons(QMessageBox::Ok);
-        messageBox.exec();
+        Utils::errorMessageBox("Beim Schreiben einer Datei auf die Fesplatte ist ein Fehler aufgetreten.", ui->dateinameLabel->text());
         reply->abort();
     }
 }
@@ -124,7 +116,6 @@ void FileDownloader::finishedSlot()
 
     // Freigabe des Speichers
     reply->deleteLater();
-
 
     // Fehlerbehandlung
     if(reply->error())
@@ -143,6 +134,11 @@ void FileDownloader::finishedSlot()
         loop.exit(1);
 }
 
+void FileDownloader::on_abortPushButton_clicked()
+{
+    keyPressEvent(new QKeyEvent(QEvent::KeyPress, Qt::Key_Escape, Qt::NoModifier));
+}
+
 void FileDownloader::keyPressEvent(QKeyEvent *event)
 {
     // Abfangen der Escapetaste
@@ -157,9 +153,6 @@ void FileDownloader::keyPressEvent(QKeyEvent *event)
 }
 
 QString FileDownloader::dataUnitFromBytes(qint64 bytes) {
-//    if (bytes/(1024*1024) > 0) {
-//        return "MB";
-//    }
     if (bytes/1024 > 0) {
         return "kB";
     } else {
@@ -168,9 +161,6 @@ QString FileDownloader::dataUnitFromBytes(qint64 bytes) {
 }
 
 qint64 FileDownloader::roundBytes(qint64 bytes) {
-//    if (bytes/(1024*1024) > 0) {
-//        return (qint64)floor(((double)bytes/(double)(1024*1024)) + 0.5);
-//    }
     if (bytes/1024 > 0) {
         return (qint64)ceil(((double)bytes/1024));
     } else {

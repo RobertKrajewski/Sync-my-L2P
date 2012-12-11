@@ -18,7 +18,9 @@ SOURCES += main.cpp\
     logintester.cpp \
     filedownloader.cpp \
     utils.cpp \
-    daterangedialog.cpp
+    browser.cpp \
+    options.cpp \
+    autoclosedialog.cpp
 
 HEADERS  += mymainwindow.h \
     parser.h \
@@ -27,13 +29,17 @@ HEADERS  += mymainwindow.h \
     logintester.h \
     filedownloader.h \
     utils.h \
-    daterangedialog.h
+    browser.h \
+    options.h \
+    autoclosedialog.h
 
 FORMS    += mymainwindow.ui \
     mymainwindow.ui \
     logintester.ui \
     dateidownloader.ui \
-    daterangedialog.ui
+    browser.ui \
+    options.ui \
+    autoclosedialog.ui
 
 OTHER_FILES += \
     Sync-my-L2P.icns \
