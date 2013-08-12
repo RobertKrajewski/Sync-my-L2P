@@ -33,6 +33,7 @@ public:
     bool isSharedMaterialsCheckBoxChecked();
     bool isTutorDocumentsCheckBoxChecked();
     bool isExercisesCheckBoxChecked();
+    bool isLiteratureCheckBoxChecked();
     bool isCurrentSemesterCheckBoxChecked();
     bool isOldSemesterCheckBoxChecked();
     bool isAutoLoginOnStartCheckBoxChecked();

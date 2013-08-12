@@ -152,6 +152,7 @@ void Browser::getNewData()
     if (!options->isDocumentsCheckBoxChecked()
         && !options->isSharedMaterialsCheckBoxChecked()
         && !options->isExercisesCheckBoxChecked()
+        && !options->isLiteratureCheckBoxChecked()
         && !options->isTutorDocumentsCheckBoxChecked())
     {
         // Freischalten von Schaltflächen
@@ -232,6 +233,18 @@ void Browser::getNewData()
             delete request;
 
             request = webdavRequest(aktuelleVeranstaltung, "/exerciseCourse/AssignmentDocuments/");
+
+            // Einfügen und Absenden des Requests
+            replies.insert(manager->sendCustomRequest(*request, "PROPFIND"),
+                           aktuelleVeranstaltung);
+
+            delete request;
+        }
+
+        // Ausführen des Requests für "Literatur"
+        if (options->isLiteratureCheckBoxChecked())
+        {
+            QNetworkRequest *request = webdavRequest(aktuelleVeranstaltung, "/literature/Lists/Literature/Attachments/");
 
             // Einfügen und Absenden des Requests
             replies.insert(manager->sendCustomRequest(*request, "PROPFIND"),
