@@ -448,7 +448,7 @@ void Browser::on_syncPushButton_clicked()
         messageBox.setText
         ("Synchronisation mit dem L2P der RWTH Aachen abgeschlossen.");
         messageBox.setIcon(QMessageBox::NoIcon);
-        messageBox.setInformativeText(QString
+        messageBox.setInformativeText(QString::fromUtf8
                                       ("Es wurden %1 von %2 eingebundenen Dateien synchronisiert.\n(Dieses Fenster schließt nach 10 Sek. automatisch.)").arg
                                       (QString::number(changedCounter),
                                        QString::number(counter)));
