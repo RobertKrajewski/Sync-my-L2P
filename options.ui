@@ -140,6 +140,16 @@
       <string>Dokumentenfilter</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_4">
+      <item row="0" column="4">
+       <widget class="QCheckBox" name="literatureCheckBox">
+        <property name="text">
+         <string>Literatur</string>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="2">
        <widget class="QCheckBox" name="documentsCheckBox">
         <property name="text">

@@ -52,6 +52,7 @@ void Options::loadSettings()
     ui->documentsCheckBox->setChecked(              settings.value("documents", true).toBool());
     ui->sharedMaterialsCheckBox->setChecked(        settings.value("sharedMaterials", true).toBool());
     ui->exercisesCheckBox->setChecked(              settings.value("exercises", true).toBool());
+    ui->literatureCheckBox->setChecked(             settings.value("literature", true).toBool());
     ui->tutorDocumentsCheckBox->setChecked(         settings.value("tutorDocuments", true).toBool());
     settings.endGroup();
 
@@ -97,6 +98,7 @@ void Options::saveSettings()
     settings.setValue("documents",          ui->documentsCheckBox->isChecked());
     settings.setValue("sharedMaterials",    ui->sharedMaterialsCheckBox->isChecked());
     settings.setValue("exercises",          ui->exercisesCheckBox->isChecked());
+    settings.setValue("literature",         ui->literatureCheckBox->isChecked());
     settings.setValue("tutorDocuments",     ui->tutorDocumentsCheckBox->isChecked());
     settings.endGroup();
 
@@ -270,6 +272,10 @@ bool Options::isExercisesCheckBoxChecked()
     return ui->exercisesCheckBox->isChecked();
 }
 
+bool Options::isLiteratureCheckBoxChecked()
+{
+    return ui->literatureCheckBox->isChecked();
+}
 bool Options::isCurrentSemesterCheckBoxChecked()
 {
     return ui->currentSemesterCheckBox->isChecked();
