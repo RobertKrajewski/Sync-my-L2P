@@ -9,6 +9,7 @@ QT       += core gui network
 TARGET = Sync-my-L2P
 TEMPLATE = app
 
+CONFIG += debug_and_release
 
 SOURCES += main.cpp\
         mymainwindow.cpp \
