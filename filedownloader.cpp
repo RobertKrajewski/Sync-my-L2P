@@ -23,11 +23,13 @@
 FileDownloader::FileDownloader(QString username,
                                  QString password,
                                  int itemNumber,
+                                 bool originalModifiedDate,
                                  QWidget *parent) :
     QDialog(parent, Qt::FramelessWindowHint),
     ui(new Ui::DateiDownloader),
     username(username),
     password(password),
+    originalModifiedDate(originalModifiedDate),
     itemNumber(itemNumber)
 {
     ui->setupUi(this);
@@ -109,6 +111,13 @@ void FileDownloader::finishedSlot()
     // Entleeren und Schließen des Ausgabestreams
     output.flush();
     output.close();
+
+    if (originalModifiedDate)
+    {
+        times.actime = 0;
+        times.modtime = reply->header(QNetworkRequest::LastModifiedHeader).toDateTime().toTime_t();
+        utime(output.fileName().toLocal8Bit(), &times);
+    }
 
     QObject::disconnect(reply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(downloadProgressSlot(qint64,qint64)));
     QObject::disconnect(reply, SIGNAL(readyRead()), this, SLOT(readyReadSlot()));

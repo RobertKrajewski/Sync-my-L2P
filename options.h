@@ -29,6 +29,7 @@ public:
 
     // Getter
     bool isUserDataSaveCheckBoxChecked();
+    bool isOriginalModifiedDateCheckBoxChecked();
     bool isDocumentsCheckBoxChecked();
     bool isSharedMaterialsCheckBoxChecked();
     bool isTutorDocumentsCheckBoxChecked();

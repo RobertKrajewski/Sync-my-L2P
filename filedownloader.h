@@ -33,6 +33,8 @@
 #include <QCloseEvent>
 
 #include <utils.h>
+#include <sys/types.h>
+#include <utime.h>
 
 namespace Ui {
     class DateiDownloader;
@@ -46,6 +48,7 @@ public:
     explicit FileDownloader(QString username,
                              QString password,
                              int itemNumber,
+                             bool originalModifiedDate,
                              QWidget *parent= 0);
     ~FileDownloader();
     int startNextDownload(QString, QString, QString, QUrl, int, int);
@@ -62,8 +65,10 @@ private:
     QString password;
 
     int itemNumber;
+    bool originalModifiedDate;
 
     QFile output;
+    utimbuf times;
 
     QString dataUnitFromBytes(qint64 bytes);
     qint64 roundBytes(qint64 bytes);

@@ -351,6 +351,7 @@ void Browser::on_syncPushButton_clicked()
                 // zu
                 // runterladenen
                 // Dateien
+                options->isOriginalModifiedDateCheckBoxChecked(),
                 this);
         // Iterieren über alle Elemente
         Structureelement *currentDirectory = elementList.first();
