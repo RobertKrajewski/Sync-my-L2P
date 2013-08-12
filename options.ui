@@ -183,7 +183,7 @@
       <item row="0" column="0">
        <widget class="QCheckBox" name="currentSemesterCheckBox">
         <property name="text">
-         <string>aktuelles Semester einbinden</string>
+         <string>aktuelles Semester</string>
         </property>
         <property name="checked">
          <bool>false</bool>
@@ -193,7 +193,7 @@
       <item row="1" column="0">
        <widget class="QCheckBox" name="oldSemesterCheckBox">
         <property name="text">
-         <string>frühere Semester einbinden</string>
+         <string>frühere Semester</string>
         </property>
        </widget>
       </item>
@@ -239,7 +239,7 @@
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>Automatisch Einloggen beim Programmstart</string>
+         <string>Einloggen beim Programmstart</string>
         </property>
         <property name="checked">
          <bool>false</bool>
@@ -252,7 +252,7 @@
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>Automatisch Synchronisieren beim Programmstart</string>
+         <string>Synchronisieren beim Programmstart</string>
         </property>
        </widget>
       </item>
@@ -277,7 +277,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Automatisch Synchronisieren</string>
+           <string>Synchronisieren</string>
           </property>
          </widget>
         </item>
