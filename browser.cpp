@@ -117,6 +117,15 @@ void Browser::downloadDirectoryLineEditChangedSlot(QString downloadDirectory)
 // Auslesen der empfangenen Semesterveranstaltungsnamen
 void Browser::coursesRecieved(QNetworkReply *reply)
 {
+    // Erst mit Daten im TreeView lässt sich der Header gestalten.
+    QStringList headerLabels;
+    headerLabels << "Name" << QString::fromUtf8("Größe") << "Datum";
+    itemModel->setHorizontalHeaderLabels(headerLabels);
+
+    ui->dataTreeView->header()->setResizeMode(0, QHeaderView::Stretch);
+    ui->dataTreeView->header()->setResizeMode(1, QHeaderView::ResizeToContents);
+    ui->dataTreeView->header()->setResizeMode(2, QHeaderView::ResizeToContents);
+
     // Prüfen auf Fehler beim Abruf
     if (!reply->error())
         Parser::parseCourses(reply, itemModel);
@@ -635,7 +644,8 @@ void Browser::getStructureelementsList(Structureelement *topElement, QLinkedList
 {
     list.append(topElement);
     for (int i = 0; i < topElement->rowCount(); i++)
-        getStructureelementsList((Structureelement*) topElement->child(i), list);
+        if (topElement->child(i))
+            getStructureelementsList((Structureelement*) topElement->child(i), list);
 }
 
 int Browser::getFileCount(QLinkedList < Structureelement * > &liste)

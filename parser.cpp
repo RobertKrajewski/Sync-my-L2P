@@ -149,8 +149,13 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
                         newFile->setData(NOT_SYNCHRONISED, synchronisedRole);
                     }
 
+                    QList<QStandardItem*> row;
+                    row.append(newFile);
+                    row.append(new QStandardItem(QString::number(size/1024.0/1024.0, 'f', 2) % " MB"));
+                    row.append(new QStandardItem(QDateTime::fromString(time, Qt::ISODate).toString("yyyy-MM-dd hh:mm")));
+
                     // Hinzufügen zum aktuellen Ordner
-                    aktuellerOrdner->appendRow(newFile);
+                    aktuellerOrdner->appendRow(row);
                 }
                 // 2. Fall: Ordner/Veranstaltung
                 // Ausschließen der Ordnernamen "documents" und "structured"
