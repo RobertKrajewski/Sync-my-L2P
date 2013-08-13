@@ -198,7 +198,16 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
         }
     }
 
+    // Leere Ordner wieder rausschmeißen.
+    Structureelement* rootCourse = replies->value(reply);
+    for (int i = 0; i < rootCourse->rowCount(); i++)
+    {
+        Structureelement *item = (Structureelement *)rootCourse->child(i);
+        if (item->type() == directoryItem && item->rowCount() == 0)
+        {
+            rootCourse->removeRow(i);
+        }
+    }
     // Sortieren aller Dateien
-    aktuellerOrdner->sortChildren(0, Qt::AscendingOrder);
     replies->value(reply)->sortChildren(0, Qt::AscendingOrder);
 }
