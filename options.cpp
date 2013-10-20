@@ -42,6 +42,7 @@ void Options::loadSettings()
     settings.endGroup();
 
     ui->downloadFolderlineEdit->setText(            settings.value("downloadFolder", "").toString());
+    ui->originalModifiedDateCheckBox->setChecked(   settings.value("originalModifiedDate", true).toBool());
 
     settings.beginGroup("semesterFilter");
     ui->currentSemesterCheckBox->setChecked(        settings.value("currentSemester", true).toBool());
@@ -52,6 +53,7 @@ void Options::loadSettings()
     ui->documentsCheckBox->setChecked(              settings.value("documents", true).toBool());
     ui->sharedMaterialsCheckBox->setChecked(        settings.value("sharedMaterials", true).toBool());
     ui->exercisesCheckBox->setChecked(              settings.value("exercises", true).toBool());
+    ui->literatureCheckBox->setChecked(             settings.value("literature", true).toBool());
     ui->tutorDocumentsCheckBox->setChecked(         settings.value("tutorDocuments", true).toBool());
     settings.endGroup();
 
@@ -87,6 +89,7 @@ void Options::saveSettings()
         settings.remove("loginData");
 
     settings.setValue("downloadFolder",     ui->downloadFolderlineEdit->text());
+    settings.setValue("originalModifiedDate", ui->originalModifiedDateCheckBox->isChecked());
 
     settings.beginGroup("semesterFilter");
     settings.setValue("currentSemester",    ui->currentSemesterCheckBox->isChecked());
@@ -97,6 +100,7 @@ void Options::saveSettings()
     settings.setValue("documents",          ui->documentsCheckBox->isChecked());
     settings.setValue("sharedMaterials",    ui->sharedMaterialsCheckBox->isChecked());
     settings.setValue("exercises",          ui->exercisesCheckBox->isChecked());
+    settings.setValue("literature",         ui->literatureCheckBox->isChecked());
     settings.setValue("tutorDocuments",     ui->tutorDocumentsCheckBox->isChecked());
     settings.endGroup();
 
@@ -270,6 +274,10 @@ bool Options::isExercisesCheckBoxChecked()
     return ui->exercisesCheckBox->isChecked();
 }
 
+bool Options::isLiteratureCheckBoxChecked()
+{
+    return ui->literatureCheckBox->isChecked();
+}
 bool Options::isCurrentSemesterCheckBoxChecked()
 {
     return ui->currentSemesterCheckBox->isChecked();
@@ -293,6 +301,11 @@ bool Options::isDocumentsCheckBoxChecked()
 bool Options::isAutoSyncOnStartCheckBoxChecked()
 {
     return ui->autoSyncOnStartCheckBox->isChecked();
+}
+
+bool Options::isOriginalModifiedDateCheckBoxChecked()
+{
+    return ui->originalModifiedDateCheckBox->isChecked();
 }
 
 bool Options::isMinimizeInTrayCheckBoxChecked()

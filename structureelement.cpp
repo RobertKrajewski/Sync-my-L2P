@@ -22,11 +22,14 @@ Structureelement::Structureelement(QString name, QUrl url, MyItemType typeEX)
 {
     synchronised = NOT_SYNCHRONISED;
     size = 0;
+    setCheckable(true);
+    setTristate(true);
 }
 
 Structureelement::Structureelement(QString name, QUrl url, QString time, qint32 size, MyItemType typeEX)
     :QStandardItem(name), included(true), url(url),time(QDateTime::fromString(time, Qt::ISODate)), size(size), typeEX(typeEX)
 {
+    setCheckable(true);
 }
 
 QVariant Structureelement::data(int role) const
@@ -50,6 +53,31 @@ QVariant Structureelement::data(int role) const
     else if (role == synchronisedRole)
     {
         return synchronised;
+    }
+    else if (role == Qt::CheckStateRole)
+    {
+        if (typeEX == fileItem)
+        {
+            return included ? Qt::Checked : Qt::Unchecked;
+        }
+        // Für Ordner: rekursiv prüfen welche Subelemente ausgewählt sind.
+        else
+        {
+            float numChecked = 0;
+            for (int i = 0; i < this->rowCount(); ++i)
+            {
+                switch (((Structureelement*) this->child(i))->data(role).toInt())
+                {
+                    case Qt::Checked:
+                        numChecked++;
+                        break;
+                    case Qt::PartiallyChecked:
+                        numChecked+=0.5;
+                        break;
+                }
+            }
+            return numChecked == 0 ? Qt::Unchecked : (numChecked == this->rowCount()) ? Qt::Checked : Qt::PartiallyChecked;
+        }
     }
     else if (role == Qt::StatusTipRole)
     {
@@ -115,6 +143,24 @@ void Structureelement::setData(const QVariant &value, int role)
     if (role == includeRole)
     {
         this->included = value.toBool();
+        setCheckState(this->included ? Qt::Checked : Qt::Unchecked);
+    }
+    else if (role == Qt::CheckStateRole)
+    {
+        this->included = value.toInt() > 0 ? true : false;
+        if (typeEX != fileItem && value != Qt::PartiallyChecked)
+        {
+            for (int i = 0; i < this->rowCount(); i++)
+            {
+                ((Structureelement*) this->child(i))->setData(value, role);
+            }
+        }
+        // Ansicht aktualisieren - auch die Eltern-Elemente.
+        emitDataChanged();
+        if (parent())
+        {
+            parent()->setData(Qt::PartiallyChecked, role);
+        }
     }
     else if (role == urlRole)
     {

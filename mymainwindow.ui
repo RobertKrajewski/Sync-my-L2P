@@ -2,24 +2,27 @@
 <ui version="4.0">
  <class>MyMainWindow</class>
  <widget class="QMainWindow" name="MyMainWindow">
+  <property name="windowModality">
+   <enum>Qt::WindowModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>700</width>
-    <height>663</height>
+    <width>1100</width>
+    <height>600</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
-    <width>700</width>
+    <width>400</width>
     <height>0</height>
-   </size>
-  </property>
-  <property name="maximumSize">
-   <size>
-    <width>1000</width>
-    <height>16777215</height>
    </size>
   </property>
   <property name="windowTitle">

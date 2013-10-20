@@ -29,10 +29,12 @@ public:
 
     // Getter
     bool isUserDataSaveCheckBoxChecked();
+    bool isOriginalModifiedDateCheckBoxChecked();
     bool isDocumentsCheckBoxChecked();
     bool isSharedMaterialsCheckBoxChecked();
     bool isTutorDocumentsCheckBoxChecked();
     bool isExercisesCheckBoxChecked();
+    bool isLiteratureCheckBoxChecked();
     bool isCurrentSemesterCheckBoxChecked();
     bool isOldSemesterCheckBoxChecked();
     bool isAutoLoginOnStartCheckBoxChecked();

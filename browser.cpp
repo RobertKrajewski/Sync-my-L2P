@@ -117,6 +117,15 @@ void Browser::downloadDirectoryLineEditChangedSlot(QString downloadDirectory)
 // Auslesen der empfangenen Semesterveranstaltungsnamen
 void Browser::coursesRecieved(QNetworkReply *reply)
 {
+    // Erst mit Daten im TreeView lässt sich der Header gestalten.
+    QStringList headerLabels;
+    headerLabels << "Name" << QString::fromUtf8("Größe") << "Datum";
+    itemModel->setHorizontalHeaderLabels(headerLabels);
+
+    ui->dataTreeView->header()->setResizeMode(0, QHeaderView::Stretch);
+    ui->dataTreeView->header()->setResizeMode(1, QHeaderView::ResizeToContents);
+    ui->dataTreeView->header()->setResizeMode(2, QHeaderView::ResizeToContents);
+
     // Prüfen auf Fehler beim Abruf
     if (!reply->error())
         Parser::parseCourses(reply, itemModel);
@@ -152,6 +161,7 @@ void Browser::getNewData()
     if (!options->isDocumentsCheckBoxChecked()
         && !options->isSharedMaterialsCheckBoxChecked()
         && !options->isExercisesCheckBoxChecked()
+        && !options->isLiteratureCheckBoxChecked()
         && !options->isTutorDocumentsCheckBoxChecked())
     {
         // Freischalten von Schaltflächen
@@ -232,6 +242,18 @@ void Browser::getNewData()
             delete request;
 
             request = webdavRequest(aktuelleVeranstaltung, "/exerciseCourse/AssignmentDocuments/");
+
+            // Einfügen und Absenden des Requests
+            replies.insert(manager->sendCustomRequest(*request, "PROPFIND"),
+                           aktuelleVeranstaltung);
+
+            delete request;
+        }
+
+        // Ausführen des Requests für "Literatur"
+        if (options->isLiteratureCheckBoxChecked())
+        {
+            QNetworkRequest *request = webdavRequest(aktuelleVeranstaltung, "/literature/Lists/Literature/Attachments/");
 
             // Einfügen und Absenden des Requests
             replies.insert(manager->sendCustomRequest(*request, "PROPFIND"),
@@ -338,6 +360,7 @@ void Browser::on_syncPushButton_clicked()
                 // zu
                 // runterladenen
                 // Dateien
+                options->isOriginalModifiedDateCheckBoxChecked(),
                 this);
         // Iterieren über alle Elemente
         Structureelement *currentDirectory = elementList.first();
@@ -434,7 +457,7 @@ void Browser::on_syncPushButton_clicked()
         messageBox.setText
         ("Synchronisation mit dem L2P der RWTH Aachen abgeschlossen.");
         messageBox.setIcon(QMessageBox::NoIcon);
-        messageBox.setInformativeText(QString
+        messageBox.setInformativeText(QString::fromUtf8
                                       ("Es wurden %1 von %2 eingebundenen Dateien synchronisiert.\n(Dieses Fenster schließt nach 10 Sek. automatisch.)").arg
                                       (QString::number(changedCounter),
                                        QString::number(counter)));
@@ -621,7 +644,8 @@ void Browser::getStructureelementsList(Structureelement *topElement, QLinkedList
 {
     list.append(topElement);
     for (int i = 0; i < topElement->rowCount(); i++)
-        getStructureelementsList((Structureelement*) topElement->child(i), list);
+        if (topElement->child(i))
+            getStructureelementsList((Structureelement*) topElement->child(i), list);
 }
 
 int Browser::getFileCount(QLinkedList < Structureelement * > &liste)

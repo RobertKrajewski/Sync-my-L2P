@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>619</width>
-    <height>561</height>
+    <width>870</width>
+    <height>705</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -111,7 +111,7 @@
    <item>
     <widget class="QGroupBox" name="downloadFolderBox">
      <property name="title">
-      <string>Downloadverzeichnis</string>
+      <string>Download</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_5">
       <item row="0" column="0">
@@ -121,6 +121,16 @@
         </property>
         <property name="placeholderText">
          <string>Downloadverzeichnis</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QCheckBox" name="originalModifiedDateCheckBox">
+        <property name="text">
+         <string>Dateiänderungsdatum von Server übernehmen</string>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -140,6 +150,16 @@
       <string>Dokumentenfilter</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_4">
+      <item row="0" column="4">
+       <widget class="QCheckBox" name="literatureCheckBox">
+        <property name="text">
+         <string>Literatur</string>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="2">
        <widget class="QCheckBox" name="documentsCheckBox">
         <property name="text">
@@ -163,7 +183,7 @@
       <item row="0" column="0">
        <widget class="QCheckBox" name="currentSemesterCheckBox">
         <property name="text">
-         <string>aktuelles Semester einbinden</string>
+         <string>aktuelles Semester</string>
         </property>
         <property name="checked">
          <bool>false</bool>
@@ -173,7 +193,7 @@
       <item row="1" column="0">
        <widget class="QCheckBox" name="oldSemesterCheckBox">
         <property name="text">
-         <string>frühere Semester einbinden</string>
+         <string>frühere Semester</string>
         </property>
        </widget>
       </item>
@@ -219,7 +239,7 @@
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>Automatisch Einloggen beim Programmstart</string>
+         <string>Einloggen beim Programmstart</string>
         </property>
         <property name="checked">
          <bool>false</bool>
@@ -232,7 +252,7 @@
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>Automatisch Synchronisieren beim Programmstart</string>
+         <string>Synchronisieren beim Programmstart</string>
         </property>
        </widget>
       </item>
@@ -257,7 +277,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Automatisch Synchronisieren</string>
+           <string>Synchronisieren</string>
           </property>
          </widget>
         </item>
