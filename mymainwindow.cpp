@@ -371,7 +371,7 @@ void MyMainWindow::dateienAbgerufen(QNetworkReply* reply)
     // Prüfen auf Fehler
     if (!reply->error())
     {
-        // Holen der aktuelle Veranstaltung aus der Map
+        // Holen der aktuellen Veranstaltung aus der Map
         Structureelement* aktuellerOrdner = replies.value(reply);
 
         // Auslesen der Antwort und Speichern in dem XmlReader
