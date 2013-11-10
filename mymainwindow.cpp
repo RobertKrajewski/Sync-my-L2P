@@ -207,10 +207,9 @@ void MyMainWindow::veranstaltungenAbgerufen(QNetworkReply* reply)
 
         // Durchsuchen der gesamten Antwort nach Veranstaltungen
         while((neuePosition=regExp->indexIn(replyText, altePosition)) != -1)
-        {
-            // Anpassen der Encodierung wegen der Umlaute
-            urlRaum = QString::fromUtf8(regExp->cap(1).toLatin1());
-            veranstaltungName = QString::fromUtf8(regExp->cap(2).toLatin1());
+        {            
+            urlRaum = regExp->cap(1);
+            veranstaltungName = regExp->cap(2);
             veranstaltungName = veranstaltungName.replace(*escapeRegExp, "").trimmed();
 
 
@@ -372,7 +371,7 @@ void MyMainWindow::dateienAbgerufen(QNetworkReply* reply)
     // Prüfen auf Fehler
     if (!reply->error())
     {
-        // Holen die aktuelle Veranstaltung aus der Map
+        // Holen der aktuelle Veranstaltung aus der Map
         Structureelement* aktuellerOrdner = replies.value(reply);
 
         // Auslesen der Antwort und Speichern in dem XmlReader
@@ -382,7 +381,7 @@ void MyMainWindow::dateienAbgerufen(QNetworkReply* reply)
 
         // Vorbereitung der Daten für die Elemente
         QString currentXmlTag;
-        QUrl    url;
+        QUrl    url;        
         QString name;
         QString time;
         qint32  size = 0;
@@ -422,6 +421,7 @@ void MyMainWindow::dateienAbgerufen(QNetworkReply* reply)
                     if (size)
                     {
                         // Erstellen einer neuen Datei
+                        qDebug(url.toString().toUtf8());
                         MyFile* newFile = new MyFile(name, url, time, size);
 
                         // Hinzufügen des endungsabhängigen Icons
@@ -485,11 +485,11 @@ void MyMainWindow::dateienAbgerufen(QNetworkReply* reply)
             {
                 // URL
                 if(currentXmlTag == "href")
-                    url.setUrl(QString::fromUtf8(Reader.text().toString().toLatin1()));
+                    url.setUrl(Reader.text().toString());
 
                 // Name
                 else if (currentXmlTag == "displayname")
-                    name = QString::fromUtf8(Reader.text().toString().toLatin1());
+                    name = Reader.text().toString();
 
                 // Größe
                 else if (currentXmlTag == "getcontentlength")
@@ -497,7 +497,7 @@ void MyMainWindow::dateienAbgerufen(QNetworkReply* reply)
 
                 // Modifizierungsdatum
                 else if (currentXmlTag == "getlastmodified")
-                    time = QString::fromUtf8(Reader.text().toString().toLatin1());
+                    time = Reader.text().toString();
             }
         }
 

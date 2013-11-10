@@ -114,7 +114,7 @@ void LoginTester::startSlot()
     qDebug("Connection started");
 }
 
-void checkCertValidity(const QSslCertificate& cert){
+void LoginTester::checkCertValidity(const QSslCertificate& cert){
     qDebug(QString(cert.isNull()?"NULL ":"NOT NULL ").toLatin1());
     bool valid = true;
     if(QDateTime::currentDateTime() > cert.expiryDate())
@@ -156,30 +156,14 @@ void LoginTester::finishedSlot(QNetworkReply* reply)
     QSslConfiguration sslConfiguration = reply->sslConfiguration();
     qDebug(QString("Protocol: " + QString::number(sslConfiguration.protocol())).toLatin1());
     qDebug(QString("Verfiy Depth: " + QString::number(sslConfiguration.peerVerifyDepth())).toLatin1());
-    //QSslCertificate localCertificate = sslConfiguration.peerCertificate();
 
     QList<QSslCertificate> sslCertificateList = sslConfiguration.peerCertificateChain();
     foreach(QSslCertificate localCertificate, sslCertificateList){
-        qDebug("----------------------------------------------------------");
         checkCertValidity(localCertificate);
-        qDebug("\r\nsubjectInfo");
-        qDebug(QString("LocalityName: "+localCertificate.subjectInfo(QSslCertificate::LocalityName).at(0)).toLatin1());
-        qDebug(QString("CommonName: "+localCertificate.subjectInfo(QSslCertificate::CommonName).at(0)).toLatin1());
-        qDebug(QString("CountryName: "+localCertificate.subjectInfo(QSslCertificate::CountryName).at(0)).toLatin1());
-        qDebug(QString("Organization: "+localCertificate.subjectInfo(QSslCertificate::Organization).at(0)).toLatin1());
-        qDebug(QString("OrganizationalUnitName: "+localCertificate.subjectInfo(QSslCertificate::OrganizationalUnitName).at(0)).toLatin1());
-        qDebug("\r\nissuerInfo");
-        qDebug(QString("LocalityName: "+localCertificate.issuerInfo(QSslCertificate::LocalityName).at(0)).toLatin1());
-        qDebug(QString("CommonName: "+localCertificate.issuerInfo(QSslCertificate::CommonName).at(0)).toLatin1());
-        qDebug(QString("CountryName: "+localCertificate.issuerInfo(QSslCertificate::CountryName).at(0)).toLatin1());
-        qDebug(QString("Organization: "+localCertificate.issuerInfo(QSslCertificate::Organization).at(0)).toLatin1());
-        qDebug(QString("OrganizationalUnitName: "+localCertificate.issuerInfo(QSslCertificate::OrganizationalUnitName).at(0)).toLatin1());
     }
     // Fehlerbehandlung
     if (reply->error())
     {
-
-
         QMessageBox messageBox;
         messageBox.setText("Login fehlgeschlagen");
         messageBox.setInformativeText(QString(reply->errorString()));
