@@ -417,7 +417,7 @@ void Browser::on_syncPushButton_clicked()
             // 2. Fall: Datei
             else
             {
-                // Datei existiert noch nicht
+                // Datei existiert noch nicht oder ist zu klein
                 // counter++;
                 if (!verzeichnis.exists(currentElement->text()) ||
                     (QFileInfo(verzeichnis, currentElement->text()).size()
@@ -430,7 +430,7 @@ void Browser::on_syncPushButton_clicked()
                         break;
 
                     changedCounter++;
-                    currentElement->setData(NOW_SYNCHRONISED, synchronisedRole);
+                    currentElement->setData(JUST_SYNCHRONISED, synchronisedRole);
                     ui->dataTreeView->scrollTo(proxyModel.mapFromSource(currentElement->index()));
                     newSelection.select(currentElement->index(), currentElement->index());
                 }

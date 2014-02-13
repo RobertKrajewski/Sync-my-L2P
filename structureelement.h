@@ -48,7 +48,7 @@ enum synchroniseStatus
 {
     NOT_SYNCHRONISED = 0,
     SYNCHRONISED     = 1,
-    NOW_SYNCHRONISED = 2
+    JUST_SYNCHRONISED = 2
 
 };
 

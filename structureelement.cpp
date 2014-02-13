@@ -110,13 +110,13 @@ QVariant Structureelement::data(int role) const
     }
     else if(role == Qt::ForegroundRole)
     {
-        if (included)
-            if (synchronised == NOW_SYNCHRONISED)
-                return QBrush(Qt::blue);
-            else if (synchronised == SYNCHRONISED)
-                return QBrush(Qt::darkGreen);
-            else
-                return QBrush(Qt::black);
+        if (synchronised == JUST_SYNCHRONISED)
+            return QBrush(Qt::blue);
+        else if (synchronised == SYNCHRONISED
+                 || typeEX != fileItem)
+            return QBrush(Qt::black);
+        else if (included)
+            return QBrush(Qt::darkGreen);
         else
             return QBrush(Qt::red);
     }
