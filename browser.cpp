@@ -220,6 +220,14 @@ void Browser::getNewData()
                            aktuelleVeranstaltung);
 
             delete request;
+
+            request = webdavRequest(aktuelleVeranstaltung, "/shared/documents/");
+
+            // Einfügen und Absenden des Requests
+            replies.insert(manager->sendCustomRequest(*request, "PROPFIND"),
+                           aktuelleVeranstaltung);
+
+            delete request;
         }
 
         // Ausführen des Requests für "Übungsbetrieb"
