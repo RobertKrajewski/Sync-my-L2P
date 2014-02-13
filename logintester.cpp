@@ -70,10 +70,13 @@ LoginTester::LoginTester(QString username,
 
     QSslConfiguration newSslConfiguration2 = QSslConfiguration::defaultConfiguration();
     newCertificates2 = newSslConfiguration2.caCertificates();
-//    foreach (QSslCertificate c, newCertificates2)
-//    {
-//        qDebug(c.subjectInfo(QSslCertificate::CommonName).toAscii());
-//    }
+    foreach (QSslCertificate c, newCertificates2)
+    {
+        QStringList list = c.subjectInfo(QSslCertificate::CommonName);
+        for(QStringList::iterator i = list.begin(); i != list.end(); i++){
+            qDebug(i->toLatin1());
+        }
+    }
 
     QObject::connect(manager, SIGNAL(authenticationRequired(QNetworkReply*, QAuthenticator*)), this, SLOT(authenticationSlot(QNetworkReply*, QAuthenticator*)));
     QObject::connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(finishedSlot(QNetworkReply*)));
@@ -90,7 +93,7 @@ LoginTester::~LoginTester()
 
 void LoginTester::authenticationSlot(QNetworkReply* , QAuthenticator* authenticator)
 {
-    //qDebug("authenticationSlot call");
+    qDebug("authenticationSlot call");
     // Logindaten nur ausfüllen, falls nicht mehr als die maximale Anzahl an Versuchen durchgeführt wurden
     if (tryCounter < maxTries)
     {
@@ -108,22 +111,40 @@ void LoginTester::startSlot()
     // Aufruf der L2P-Startseite zum Test der Logindaten
     QNetworkReply* reply = manager->get(QNetworkRequest(QUrl("https://www2.elearning.rwth-aachen.de/foyer/summary/default.aspx")));
     QObject::connect(reply, SIGNAL(sslErrors(QList<QSslError>)), this, SLOT(sslErrorsSlot(QList<QSslError>)));
-    //qDebug("Connection started");
+    qDebug("Connection started");
+}
+
+void LoginTester::checkCertValidity(const QSslCertificate& cert){
+    qDebug(QString(cert.isNull()?"NULL ":"NOT NULL ").toLatin1());
+    bool valid = true;
+    if(QDateTime::currentDateTime() > cert.expiryDate())
+    {
+        qDebug("EXPIRED");
+        valid = false;
+    }
+    if(cert.isBlacklisted())
+    {
+        qDebug("BLACKLISTED");
+        valid = false;
+    }
+
+    if(valid)
+        qDebug("VALID");
+
 }
 
 void LoginTester::sslErrorsSlot(QList<QSslError> sslErrors)
 {
-    //qDebug("sslErrorsSlot call");
+    qDebug("sslErrorsSlot call");
     foreach(QSslError error, sslErrors)
     {
-        qDebug((QString("Error: ") + QString::number(error.error())+ QString(" ")+ error.errorString()).toAscii());
+        qDebug((QString("Error: ") + QString::number(error.error())+ QString(" ")+ error.errorString()).toLatin1());
         QSslCertificate certificate = error.certificate();
-        qDebug(QString(certificate.isNull()?"NULL ":"NOT NULL ").toAscii());
-        qDebug(QString(certificate.isValid()?"VALID ":"NOT VALID ").toAscii());
+        checkCertValidity(certificate);
 
         QMessageBox messageBox;
         messageBox.setText("Ssl Error");
-        messageBox.setInformativeText(QString("Error: ") + QString::number(error.error())+ QString(" ")+ error.errorString() +"\r\n Zertifikat:"+certificate.subjectInfo(QSslCertificate::CommonName));
+        messageBox.setInformativeText(QString("Error: ") + QString::number(error.error())+ QString(" ")+ error.errorString() +"\r\n Zertifikat:"+certificate.subjectInfo(QSslCertificate::CommonName).at(0));
         messageBox.exec();
 
     }
@@ -131,35 +152,18 @@ void LoginTester::sslErrorsSlot(QList<QSslError> sslErrors)
 
 void LoginTester::finishedSlot(QNetworkReply* reply)
 {
-//    qDebug(QString(reply->readAll()).toAscii());
+    qDebug(QString(reply->readAll()).toLatin1());
     QSslConfiguration sslConfiguration = reply->sslConfiguration();
-//    qDebug(QString("Protocol: " + QString::number(sslConfiguration.protocol())).toAscii());
-//    qDebug(QString("Verfiy Depth: " + QString::number(sslConfiguration.peerVerifyDepth())).toAscii());
-    //QSslCertificate localCertificate = sslConfiguration.peerCertificate();
+    qDebug(QString("Protocol: " + QString::number(sslConfiguration.protocol())).toLatin1());
+    qDebug(QString("Verfiy Depth: " + QString::number(sslConfiguration.peerVerifyDepth())).toLatin1());
 
     QList<QSslCertificate> sslCertificateList = sslConfiguration.peerCertificateChain();
-//    foreach(QSslCertificate localCertificate, sslCertificateList){
-//        qDebug("----------------------------------------------------------");
-//        qDebug(QString(localCertificate.isNull()?"NULL ":"NOT NULL ").toAscii());
-//        qDebug(QString(localCertificate.isValid()?"VALID ":"NOT VALID ").toAscii());
-//        qDebug("\r\nsubjectInfo");
-//        qDebug(QString("LocalityName: "+localCertificate.subjectInfo(QSslCertificate::LocalityName)).toAscii());
-//        qDebug(QString("CommonName: "+localCertificate.subjectInfo(QSslCertificate::CommonName)).toAscii());
-//        qDebug(QString("CountryName: "+localCertificate.subjectInfo(QSslCertificate::CountryName)).toAscii());
-//        qDebug(QString("Organization: "+localCertificate.subjectInfo(QSslCertificate::Organization)).toAscii());
-//        qDebug(QString("OrganizationalUnitName: "+localCertificate.subjectInfo(QSslCertificate::OrganizationalUnitName)).toAscii());
-//        qDebug("\r\nissuerInfo");
-//        qDebug(QString("LocalityName: "+localCertificate.issuerInfo(QSslCertificate::LocalityName)).toAscii());
-//        qDebug(QString("CommonName: "+localCertificate.issuerInfo(QSslCertificate::CommonName)).toAscii());
-//        qDebug(QString("CountryName: "+localCertificate.issuerInfo(QSslCertificate::CountryName)).toAscii());
-//        qDebug(QString("Organization: "+localCertificate.issuerInfo(QSslCertificate::Organization)).toAscii());
-//        qDebug(QString("OrganizationalUnitName: "+localCertificate.issuerInfo(QSslCertificate::OrganizationalUnitName)).toAscii());
-//    }
+    foreach(QSslCertificate localCertificate, sslCertificateList){
+        checkCertValidity(localCertificate);
+    }
     // Fehlerbehandlung
     if (reply->error())
     {
-
-
         QMessageBox messageBox;
         messageBox.setText("Login fehlgeschlagen");
         messageBox.setInformativeText(QString(reply->errorString()));
