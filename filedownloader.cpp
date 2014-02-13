@@ -114,8 +114,10 @@ void FileDownloader::finishedSlot()
 
     if (originalModifiedDate)
     {
+        QDateTime servermodtime = reply->header(QNetworkRequest::LastModifiedHeader).toDateTime();
+        servermodtime.setTimeSpec(Qt::LocalTime);
         times.actime = 0;
-        times.modtime = reply->header(QNetworkRequest::LastModifiedHeader).toDateTime().toTime_t();
+        times.modtime = servermodtime.toTime_t();
         utime(output.fileName().toLocal8Bit(), &times);
     }
 
