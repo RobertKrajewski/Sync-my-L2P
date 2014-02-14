@@ -72,7 +72,7 @@ LoginTester::LoginTester(QString username,
     newCertificates2 = newSslConfiguration2.caCertificates();
     foreach (QSslCertificate c, newCertificates2)
     {
-        QStringList list = c.subjectInfo(QSslCertificate::CommonName);
+        QStringList list = QStringList(c.subjectInfo(QSslCertificate::CommonName));
         for(QStringList::iterator i = list.begin(); i != list.end(); i++){
             qDebug(i->toLatin1());
         }
@@ -115,21 +115,20 @@ void LoginTester::startSlot()
 }
 
 void LoginTester::checkCertValidity(const QSslCertificate& cert){
-    qDebug(QString(cert.isNull()?"NULL ":"NOT NULL ").toLatin1());
-    bool valid = true;
-    if(QDateTime::currentDateTime() > cert.expiryDate())
+    if(cert.isValid())
+        qDebug() << "VALID certificate for" << cert.subjectInfo(QSslCertificate::CommonName);
+    else if (cert.isNull())
+        qDebug("NULL certificate");
+    else if(QDateTime::currentDateTime() > cert.expiryDate())
     {
-        qDebug("EXPIRED");
-        valid = false;
+        qDebug() << "EXPIRED certificate for" << cert.subjectInfo(QSslCertificate::CommonName);
     }
-    if(cert.isBlacklisted())
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
+    else if(cert.isBlacklisted())
     {
-        qDebug("BLACKLISTED");
-        valid = false;
+        qDebug() << "BLACKLISTED certificate for" << cert.subjectInfo(QSslCertificate::CommonName);
     }
-
-    if(valid)
-        qDebug("VALID");
+#endif
 
 }
 
@@ -152,7 +151,7 @@ void LoginTester::sslErrorsSlot(QList<QSslError> sslErrors)
 
 void LoginTester::finishedSlot(QNetworkReply* reply)
 {
-    qDebug(QString(reply->readAll()).toLatin1());
+    // qDebug(QString(reply->readAll()).toLatin1());
     QSslConfiguration sslConfiguration = reply->sslConfiguration();
     qDebug(QString("Protocol: " + QString::number(sslConfiguration.protocol())).toLatin1());
     qDebug(QString("Verfiy Depth: " + QString::number(sslConfiguration.peerVerifyDepth())).toLatin1());

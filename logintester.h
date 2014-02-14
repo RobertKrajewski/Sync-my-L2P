@@ -24,6 +24,7 @@
 #include <QNetworkReply>
 #include <QUrl>
 #include <QAuthenticator>
+#include <QDateTime>
 #include <QTimer>
 #include <QMessageBox>
 #include <QList>
