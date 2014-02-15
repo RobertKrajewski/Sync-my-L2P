@@ -27,7 +27,7 @@ Structureelement::Structureelement(QString name, QUrl url, MyItemType typeEX)
 }
 
 Structureelement::Structureelement(QString name, QUrl url, QString time, qint32 size, MyItemType typeEX)
-    :QStandardItem(name), included(true), url(url),time(QDateTime::fromString(time, Qt::ISODate)), size(size), typeEX(typeEX)
+    :QStandardItem(name), included(false), url(url),time(QDateTime::fromString(time, Qt::ISODate)), size(size), typeEX(typeEX)
 {
     setCheckable(true);
 }
@@ -58,12 +58,13 @@ QVariant Structureelement::data(int role) const
     {
         if (typeEX == fileItem)
         {
-            return included ? Qt::Checked : Qt::Unchecked;
+            return included && synchronised == NOT_SYNCHRONISED ? Qt::Checked : Qt::Unchecked;
         }
         // Für Ordner: rekursiv prüfen welche Subelemente ausgewählt sind.
         else
         {
             float numChecked = 0;
+            int   synced = 0;
             for (int i = 0; i < this->rowCount(); ++i)
             {
                 switch (((Structureelement*) this->child(i))->data(role).toInt())
@@ -74,9 +75,15 @@ QVariant Structureelement::data(int role) const
                     case Qt::PartiallyChecked:
                         numChecked+=0.5;
                         break;
+                    default:
+                        if (((Structureelement*)this->child(i))->data(synchronisedRole) != NOT_SYNCHRONISED)
+                            synced++;
+                        break;
                 }
             }
-            return numChecked == 0 ? Qt::Unchecked : (numChecked == this->rowCount()) ? Qt::Checked : Qt::PartiallyChecked;
+            if (numChecked == 0 || synced == this->rowCount()) return Qt::Unchecked;
+            else if (numChecked + synced == this->rowCount() || typeEX == courseItem) return Qt::Checked;
+            else return Qt::PartiallyChecked;
         }
     }
     else if (role == Qt::StatusTipRole)

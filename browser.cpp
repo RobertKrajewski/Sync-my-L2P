@@ -869,6 +869,7 @@ void Browser::on_showNewDataPushButton_clicked()
     {
         if ((item->type() == fileItem) && (item->data(synchronisedRole) == NOT_SYNCHRONISED))
         {
+            item->setData(true, includeRole);
             newSelection.select(item->index(), item->index());
             ui->dataTreeView->scrollTo(proxyModel.mapFromSource(item->index()));
         }
