@@ -115,10 +115,17 @@ void LoginTester::startSlot()
     //qDebug("Connection started");
 }
 
-void LoginTester::checkCertValidity(const QSslCertificate& cert){
-    qDebug(QString(cert.isNull()?"NULL ":"NOT NULL ").toLatin1());
-    bool valid = true;
-    if(QDateTime::currentDateTime() > cert.expiryDate())
+
+void LoginTester::checkCertValidity(const QSslCertificate& cert)
+{
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+    if(cert.verify())
+        qDebug() << "VALID certificate for" << cert.subjectInfo(QSslCertificate::CommonName);
+    else
+#endif
+    if (cert.isNull())
+        qDebug("NULL certificate");
+    else if(QDateTime::currentDateTime() > cert.expiryDate())
     {
         qDebug("EXPIRED");
         valid = false;
