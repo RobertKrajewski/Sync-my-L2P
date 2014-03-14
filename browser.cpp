@@ -326,11 +326,11 @@ void Browser::filesRecieved(QNetworkReply *reply)
 void Browser::on_syncPushButton_clicked()
 {
     emit enableSignal(false);
-    QString directoryPath = options->downloadFolderLineEditText();
+    QString downloadPath = options->downloadFolderLineEditText();
 
     // Falls noch kein Pfad angegeben wurde, abbrechen und FileDialog
     // öffnen
-    if (directoryPath.isEmpty())
+    if (downloadPath.isEmpty())
     {
         emit switchTab(1);
 //        on_downloadFolderPushButton_clicked();
@@ -340,7 +340,7 @@ void Browser::on_syncPushButton_clicked()
 
     // Deaktivieren des DialogButtons
     //ui->downloadFolderPushButton->setEnabled(false);
-    QDir verzeichnis(directoryPath);
+    QDir verzeichnis(downloadPath);
 
     // Überprüfung, ob das angegebene Verzeichnis existiert, oder
     // erstellt werden kann
@@ -371,7 +371,6 @@ void Browser::on_syncPushButton_clicked()
                 options->isOriginalModifiedDateCheckBoxChecked(),
                 this);
         // Iterieren über alle Elemente
-        Structureelement *currentDirectory = elementList.first();
         int counter = getFileCount(elementList);
         int changedCounter = 0;
         bool neueVeranstaltung = false;
@@ -379,52 +378,41 @@ void Browser::on_syncPushButton_clicked()
 
         QItemSelection newSelection;
         ui->dataTreeView->collapseAll();
-
         for (QLinkedList < Structureelement * >::iterator iterator =
                  elementList.begin(); iterator != elementList.end(); iterator++)
         {
             Structureelement* currentElement = *iterator;
-            if (currentElement->parent() != 0)
+            if (currentElement->parent() == 0)
             {
-                while (!currentElement->data(urlRole).toUrl().
-                       toString().contains(currentDirectory->data(urlRole).
-                                           toUrl().toString(),
-                                           Qt::CaseSensitive))
-                {
-                    currentDirectory = (Structureelement *) currentDirectory->parent();
-                    verzeichnis.cdUp();
-                }
-            }
-            else
-            {
-                verzeichnis.setPath(options->downloadFolderLineEditText());
                 neueVeranstaltung = true;
             }
-
             // 1. Fall: Ordner
             if (currentElement->type() != fileItem)
             {
-                if (!verzeichnis.exists(currentElement->text()))
-                {
-                    if (!verzeichnis.mkdir(currentElement->text()))
-                    {
-                        Utils::errorMessageBox("Beim Erstellen eines Ordners ist ein Fehler aufgetreten.", currentElement->text());
-                        break;
-                    }
-                }
-
                 if (neueVeranstaltung)
                 {
                     veranstaltungName = currentElement->text();
                     neueVeranstaltung = false;
                 }
 
-                currentDirectory = *iterator;
-                verzeichnis.cd(currentElement->text());
             }
             // 2. Fall: Datei
             else
             {
+                QString relPath, absPath;
+                Structureelement* item = currentElement;
+                while ((item = (Structureelement*) item->parent()))
+                {
+                    relPath = item->text() + "/" + relPath;
+                }
+                absPath = downloadPath + "/" + relPath;
+                verzeichnis = QDir(absPath);
+                if (!verzeichnis.exists() && !verzeichnis.mkpath(absPath))
+                {
+                    Utils::errorMessageBox("Beim Erstellen eines Ordners ist ein Fehler aufgetreten.", currentElement->text());
+                    break;
+                }
+
                 // Datei existiert noch nicht oder ist zu klein
                 // counter++;
                 if (!verzeichnis.exists(currentElement->text()) ||
@@ -870,8 +858,8 @@ void Browser::on_showNewDataPushButton_clicked()
         if ((item->type() == fileItem) && (item->data(synchronisedRole) == NOT_SYNCHRONISED))
         {
             item->setData(true, includeRole);
-            newSelection.select(item->index(), item->index());
-            ui->dataTreeView->scrollTo(proxyModel.mapFromSource(item->index()));
+            //newSelection.select(item->index(), item->index());
+            //ui->dataTreeView->scrollTo(proxyModel.mapFromSource(item->index()));
         }
     }
 
