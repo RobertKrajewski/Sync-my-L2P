@@ -14,7 +14,7 @@ void Parser::parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
     QString replyText = reply->readAll();
 
     // Erstellen eines RegExps für das Herausfiltern der Veranstaltungen
-    QString regPattern = "<td class=\"ms-vb2\"><a href=\"(/(?:ws|ss)\\d{2}/\\d{2}(?:ws|ss)-\\d{5})(?:/information/default.aspx)*\">(.*)</a></td><td";
+    QString regPattern = "<td class=\"ms-vb2\"><a href=\"(/(ws|ss)(\\d{2})/\\d{2}(?:ws|ss)-\\d{5})(?:/information/default.aspx)*\">(.*)</a></td><td";
     QRegExp* regExp = new QRegExp(regPattern, Qt::CaseSensitive);
     regExp->setMinimal(true);
 
@@ -36,9 +36,10 @@ void Parser::parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
     {
         // Anpassen der Encodierung wegen der Umlaute
         urlRaum = QString::fromUtf8(regExp->cap(1).toLatin1());
-        veranstaltungName = QString::fromUtf8(regExp->cap(2).toLatin1());
+        veranstaltungName = QString::fromUtf8(regExp->cap(4).toLatin1());
         veranstaltungName = veranstaltungName.replace(*escapeRegExp, "").trimmed();
-
+        // if semester suffix. funktioniert nur 2000-2099 AD
+        veranstaltungName += " - " + regExp->cap(2).toLatin1().toUpper() + "20" + regExp->cap(3);
 
         // Erstellen der neuen Veranstaltung
         neueVeranstaltung = new Structureelement(veranstaltungName, QUrl(MainURL % urlRaum), courseItem);// % "/materials/documents/"));
