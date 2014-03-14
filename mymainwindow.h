@@ -19,44 +19,17 @@
 #define HAUPTFENSTER_H
 
 #include <QMainWindow>
-
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkRequest>
-#include <QtNetwork/QNetworkReply>
-#include <QtNetwork/QAuthenticator>
-#include <QUrl>
-
-#include <QRegExp>
-#include <QXmlStreamReader>
-
-#include <QStringBuilder>
-#include <QList>
-#include <QLinkedList>
-#include <QQueue>
-#include <QSettings>
-
-#include <QMessageBox>
-#include <QFileDialog>
-
-#include <QDir>
-#include <QFile>
-
-#include <QMenu>
-#include <QAction>
-
 #include <QDesktopWidget>
 #include <QDesktopServices>
+#include <QSystemTrayIcon>
+#include <QMenu>
 
-#include "myfile.h"
-
-#include "logintester.h"
-#include "filedownloader.h"
-#include "mysortfilterproxymodel.h"
+#include "browser.h"
 
 class Veranstaltung;
 
 namespace Ui {
-    class MainWindow;
+    class MyMainWindow;
 }
 
 class MyMainWindow : public QMainWindow
@@ -67,59 +40,26 @@ public:
     explicit MyMainWindow(QWidget *parent = 0);
     ~MyMainWindow();
 
+public slots:
+    void enable(bool enabled);
+    void switchTabSlot(int tab);
+    void trayClickedSlot(QSystemTrayIcon::ActivationReason);
+
 private:
+    void init();
+
+    void changeEvent(QEvent *);
+
+    void createTrayIcon();
+
     void loadSettings();
     void saveSettings();
-    void ausschliessen(Structureelement*);
-    void einbinden(Structureelement*);
-    void aktiviereLoginButton(void);
-    void getStrukturelementeListe(Structureelement*, QLinkedList<Structureelement*>&, bool);
-    void unknownError();
+    void removeOldSettings();
 
-    QString getStrukturelementPfad(Structureelement*);
-    int getFileCount(QLinkedList<Structureelement*>& liste);
+    void centerOnDesktop();
 
-    Ui::MainWindow*      ui;
-    QNetworkAccessManager* manager;
-    MySortFilterProxyModel proxyModel;
-    QStandardItemModel     itemModel;
-    Structureelement*       iter;
-    QFile                  output;
-    QMap<QNetworkReply*, Structureelement*> replies;
-
-
-    Structureelement* lastRightClickItem;
-    bool             autoSynchronize;
-
-
-signals:
-    void downloadFortschritt(int);
-
-private slots:
-    void copyURL();
-    void openItem();
-    void openCourse();
-    void veranstaltungenAbgerufen(QNetworkReply*);
-    void doAuthentification(QNetworkReply*, QAuthenticator*);
-    void dateienAbgerufen(QNetworkReply*);
-    void dateienAktualisieren();
-    void on_ausschliessen_clicked();
-    void on_einbinden_clicked();
-    void on_Login_clicked();
-    void on_DatenSpeichern_stateChanged(int);
-    void on_BenutzernameFeld_textChanged(const QString);
-    void on_PasswortFeld_textChanged(const QString);
-    void on_synchronisieren_clicked();
-    void on_directoryButton_clicked();
-    void on_Aktualisieren_clicked();
-    void on_directoryOpen_clicked();
-    void on_expandButton_clicked();
-    void on_collapseButton_clicked();
-    void on_AutoLogin_stateChanged(int arg1);
-    void on_treeView_doubleClicked(const QModelIndex &index);
-    void on_treeView_customContextMenuRequested(const QPoint &pos);
-    void on_maxSizeBox_valueChanged(int arg1);
-    void on_maxSizeCheckBox_toggled(bool checked);
+    QSystemTrayIcon *trayIcon;
+    Ui::MyMainWindow*      ui;
 };
 
 #endif // HAUPTFENSTER_H

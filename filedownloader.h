@@ -18,6 +18,7 @@
 #ifndef DATEIDOWNLOADER_H
 #define DATEIDOWNLOADER_H
 
+#include <QDesktopWidget>
 #include <QDialog>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
@@ -31,6 +32,10 @@
 #include <QMessageBox>
 #include <QCloseEvent>
 
+#include <utils.h>
+#include <sys/types.h>
+#include <utime.h>
+
 namespace Ui {
     class DateiDownloader;
 }
@@ -43,9 +48,10 @@ public:
     explicit FileDownloader(QString username,
                              QString password,
                              int itemNumber,
+                             bool originalModifiedDate,
                              QWidget *parent= 0);
     ~FileDownloader();
-    int startNextDownload(QString, QString, QString, QUrl, int);
+    int startNextDownload(QString, QString, QString, QUrl, int, int);
 
 private:
     void keyPressEvent(QKeyEvent *);
@@ -59,14 +65,20 @@ private:
     QString password;
 
     int itemNumber;
+    bool originalModifiedDate;
 
     QFile output;
+    utimbuf times;
+
+    QString dataUnitFromBytes(qint64 bytes);
+    qint64 roundBytes(qint64 bytes);
 
 private slots:
     void authenticate(QNetworkReply*, QAuthenticator*);
     void downloadProgressSlot(qint64,qint64);
     void readyReadSlot();
     void finishedSlot();
+    void on_abortPushButton_clicked();
 };
 
 #endif // DATEIDOWNLOADER_H

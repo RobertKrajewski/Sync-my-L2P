@@ -48,7 +48,7 @@ enum synchroniseStatus
 {
     NOT_SYNCHRONISED = 0,
     SYNCHRONISED     = 1,
-    NOW_SYNCHRONISED = 2
+    JUST_SYNCHRONISED = 2
 
 };
 
@@ -56,6 +56,7 @@ class Structureelement : public QStandardItem
 {
 public:
     Structureelement(QString name, QUrl url, MyItemType typeEX);
+    Structureelement(QString name, QUrl url, QString time, qint32 size, MyItemType typeEX = fileItem);
 
     int type() const;
 

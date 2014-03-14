@@ -17,15 +17,19 @@
 
 #include "filedownloader.h"
 #include "ui_dateidownloader.h"
+#include "math.h"
+#include <QDebug>
 
 FileDownloader::FileDownloader(QString username,
                                  QString password,
                                  int itemNumber,
+                                 bool originalModifiedDate,
                                  QWidget *parent) :
     QDialog(parent, Qt::FramelessWindowHint),
     ui(new Ui::DateiDownloader),
     username(username),
     password(password),
+    originalModifiedDate(originalModifiedDate),
     itemNumber(itemNumber)
 {
     ui->setupUi(this);
@@ -37,7 +41,7 @@ FileDownloader::FileDownloader(QString username,
     this->show();
 
     // Zentrieren des Fensters
-    QRect desktopRect = parentWidget()->frameGeometry();
+    QRect desktopRect = QApplication::desktop()->screenGeometry();/*parentWidget()->frameGeometry();*/
     QRect windowRect  = this->frameGeometry();
     move((desktopRect.width()-windowRect.width())/2+desktopRect.x(), (desktopRect.height()-windowRect.height())/2+desktopRect.y());
 }
@@ -53,7 +57,7 @@ void FileDownloader::authenticate(QNetworkReply* , QAuthenticator* authenticator
     authenticator->setPassword(password);
 }
 
-int FileDownloader::startNextDownload(QString filename, QString event, QString verzeichnisPfad, QUrl url, int itemNummer)
+int FileDownloader::startNextDownload(QString filename, QString event, QString verzeichnisPfad, QUrl url, int itemNummer, int itemSize)
 {
     // Anpassen der Labels
     // Aktualisieren der Itemnummer
@@ -70,16 +74,14 @@ int FileDownloader::startNextDownload(QString filename, QString event, QString v
     if(!output.open(QIODevice::WriteOnly))
     {
         // Fehlerbehandlung
-        QMessageBox messageBox;
-        messageBox.setText("Fehler beim Öffnen mit Schreibberechtigung.");
-        messageBox.setInformativeText(filename);
-        messageBox.setStandardButtons(QMessageBox::Ok);
-        messageBox.exec();
+        Utils::errorMessageBox("Fehler beim Öffnen mit Schreibberechtigung.", filename);
         return 0;
     }
 
     // Start des Requests
     reply = manager->get(QNetworkRequest(url));
+    ui->progressBar->setFormat(QString("%v ").append(dataUnitFromBytes(itemSize)).append(" / %m ").append(dataUnitFromBytes(itemSize)));
+    ui->progressBar->setMaximum(roundBytes(itemSize));
     QObject::connect(reply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(downloadProgressSlot(qint64,qint64)));
     QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(readyReadSlot()));
     QObject::connect(reply, SIGNAL(finished()), this, SLOT(finishedSlot()));
@@ -91,18 +93,7 @@ int FileDownloader::startNextDownload(QString filename, QString event, QString v
 void FileDownloader::downloadProgressSlot(qint64 bytesReceived, qint64 bytesTotal)
 {
     // Aktualisieren der Progressbar anhand der Größe der empfangenen Bytes
-    if(bytesTotal > 0)
-    {
-        ui->progressBar->setMaximum(bytesTotal);
-        ui->progressBar->setValue(bytesReceived);
-
-    }
-    // Sonderfall: Unbekannte Größe
-    else
-    {
-        ui->progressBar->setMaximum(0);
-        ui->progressBar->setValue(0);
-    }
+    ui->progressBar->setValue(roundBytes(bytesReceived));
 }
 
 void FileDownloader::readyReadSlot()
@@ -110,11 +101,7 @@ void FileDownloader::readyReadSlot()
     // Schreiben der runtergeladenen Bytes in die Datei
     if (output.write(reply->readAll()) == -1)
     {
-        QMessageBox messageBox;
-        messageBox.setText("Beim Schreiben einer Datei auf die Fesplatte ist ein Fehler aufgetreten.");
-        messageBox.setInformativeText(ui->dateinameLabel->text());
-        messageBox.setStandardButtons(QMessageBox::Ok);
-        messageBox.exec();
+        Utils::errorMessageBox("Beim Schreiben einer Datei auf die Fesplatte ist ein Fehler aufgetreten.", ui->dateinameLabel->text());
         reply->abort();
     }
 }
@@ -125,13 +112,21 @@ void FileDownloader::finishedSlot()
     output.flush();
     output.close();
 
+    if (originalModifiedDate)
+    {
+        QDateTime servermodtime = reply->header(QNetworkRequest::LastModifiedHeader).toDateTime();
+        servermodtime.setTimeSpec(Qt::LocalTime);
+        times.actime = 0;
+        times.modtime = servermodtime.toTime_t();
+        utime(output.fileName().toLocal8Bit(), &times);
+    }
+
     QObject::disconnect(reply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(downloadProgressSlot(qint64,qint64)));
     QObject::disconnect(reply, SIGNAL(readyRead()), this, SLOT(readyReadSlot()));
     QObject::disconnect(reply, SIGNAL(finished()), this, SLOT(finishedSlot()));
 
     // Freigabe des Speichers
     reply->deleteLater();
-
 
     // Fehlerbehandlung
     if(reply->error())
@@ -150,6 +145,11 @@ void FileDownloader::finishedSlot()
         loop.exit(1);
 }
 
+void FileDownloader::on_abortPushButton_clicked()
+{
+    keyPressEvent(new QKeyEvent(QEvent::KeyPress, Qt::Key_Escape, Qt::NoModifier));
+}
+
 void FileDownloader::keyPressEvent(QKeyEvent *event)
 {
     // Abfangen der Escapetaste
@@ -163,3 +163,18 @@ void FileDownloader::keyPressEvent(QKeyEvent *event)
         event->ignore();
 }
 
+QString FileDownloader::dataUnitFromBytes(qint64 bytes) {
+    if (bytes/1024 > 0) {
+        return "kB";
+    } else {
+        return "Byte";
+    }
+}
+
+qint64 FileDownloader::roundBytes(qint64 bytes) {
+    if (bytes/1024 > 0) {
+        return (qint64)ceil(((double)bytes/1024));
+    } else {
+        return bytes;
+    }
+}

@@ -16,13 +16,20 @@
 ****************************************************************************/
 
 #include "structureelement.h"
-#include "myfile.h"
 
-Structureelement::Structureelement(QString name, QUrl url, MyItemType type)
-    :QStandardItem(name), included(true), url(url), typeEX(type)
+Structureelement::Structureelement(QString name, QUrl url, MyItemType typeEX)
+    :QStandardItem(name), included(true), url(url), typeEX(typeEX)
 {
     synchronised = NOT_SYNCHRONISED;
     size = 0;
+    setCheckable(true);
+    setTristate(true);
+}
+
+Structureelement::Structureelement(QString name, QUrl url, QString time, qint32 size, MyItemType typeEX)
+    :QStandardItem(name), included(false), url(url),time(QDateTime::fromString(time, Qt::ISODate)), size(size), typeEX(typeEX)
+{
+    setCheckable(true);
 }
 
 QVariant Structureelement::data(int role) const
@@ -47,6 +54,38 @@ QVariant Structureelement::data(int role) const
     {
         return synchronised;
     }
+    else if (role == Qt::CheckStateRole)
+    {
+        if (typeEX == fileItem)
+        {
+            return included && synchronised == NOT_SYNCHRONISED ? Qt::Checked : Qt::Unchecked;
+        }
+        // Für Ordner: rekursiv prüfen welche Subelemente ausgewählt sind.
+        else
+        {
+            float numChecked = 0;
+            int   synced = 0;
+            for (int i = 0; i < this->rowCount(); ++i)
+            {
+                switch (((Structureelement*) this->child(i))->data(role).toInt())
+                {
+                    case Qt::Checked:
+                        numChecked++;
+                        break;
+                    case Qt::PartiallyChecked:
+                        numChecked+=0.5;
+                        break;
+                    default:
+                        if (((Structureelement*)this->child(i))->data(synchronisedRole) != NOT_SYNCHRONISED)
+                            synced++;
+                        break;
+                }
+            }
+            if (numChecked == 0 || synced == this->rowCount()) return Qt::Unchecked;
+            else if (numChecked + synced == this->rowCount() || typeEX == courseItem) return Qt::Checked;
+            else return Qt::PartiallyChecked;
+        }
+    }
     else if (role == Qt::StatusTipRole)
     {
         QString statustip;
@@ -61,7 +100,7 @@ QVariant Structureelement::data(int role) const
             else
                  statustip.append(QString::number(size) % " Byte");
 
-            statustip.append(" - " % ((MyFile*)this)->getTime().toString("ddd dd.MM.yy hh:mm"));
+            statustip.append(" - " % time.toString("ddd dd.MM.yy hh:mm"));
 
             return statustip;
         }
@@ -78,13 +117,13 @@ QVariant Structureelement::data(int role) const
     }
     else if(role == Qt::ForegroundRole)
     {
-        if (included)
-            if (synchronised == NOW_SYNCHRONISED)
-                return QBrush(Qt::blue);
-            else if (synchronised == SYNCHRONISED)
-                return QBrush(Qt::darkGreen);
-            else
-                return QBrush(Qt::black);
+        if (synchronised == JUST_SYNCHRONISED)
+            return QBrush(Qt::blue);
+        else if (synchronised == SYNCHRONISED
+                 || typeEX != fileItem)
+            return QBrush(Qt::black);
+        else if (included)
+            return QBrush(Qt::darkGreen);
         else
             return QBrush(Qt::red);
     }
@@ -111,6 +150,24 @@ void Structureelement::setData(const QVariant &value, int role)
     if (role == includeRole)
     {
         this->included = value.toBool();
+        setCheckState(this->included ? Qt::Checked : Qt::Unchecked);
+    }
+    else if (role == Qt::CheckStateRole)
+    {
+        this->included = value.toInt() > 0 ? true : false;
+        if (typeEX != fileItem && value != Qt::PartiallyChecked)
+        {
+            for (int i = 0; i < this->rowCount(); i++)
+            {
+                ((Structureelement*) this->child(i))->setData(value, role);
+            }
+        }
+        // Ansicht aktualisieren - auch die Eltern-Elemente.
+        emitDataChanged();
+        if (parent())
+        {
+            parent()->setData(Qt::PartiallyChecked, role);
+        }
     }
     else if (role == urlRole)
     {

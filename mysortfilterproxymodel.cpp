@@ -16,12 +16,38 @@
 ****************************************************************************/
 
 #include "mysortfilterproxymodel.h"
+#include <QDebug>
 
 MySortFilterProxyModel::MySortFilterProxyModel(QObject *parent)
     :QSortFilterProxyModel(parent)
 {
+    // Standardwerte hier müssen mit Standardwerten in GUI übereinstimmen,
+    // da es sonst Probleme mit den valueChanged Signals gibt
+
     maxSizeFilter = false;
-    maxSize = 0;
+    maxSize = 1024*1024;
+
+    dateFilter = false;
+    minDate = QDate(1, 1, 1);
+    maxDate = QDate(1, 1, 1);
+}
+
+void MySortFilterProxyModel::setFilterMinimumDate(const QDate &date)
+{
+    minDate = date;
+    invalidateFilter();
+}
+
+void MySortFilterProxyModel::setFilterMaximumDate(const QDate &date)
+{
+    maxDate = date;
+    invalidateFilter();
+}
+
+void MySortFilterProxyModel::setInRangeDateFilter(const bool filter)
+{
+    dateFilter = filter;
+    invalidateFilter();
 }
 
 void MySortFilterProxyModel::setMaximumSize(const qint32 size)
@@ -43,7 +69,20 @@ bool MySortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &
     QModelIndex index = source->index(sourceRow, 0, sourceParent);
 
     // Prüfen der Filterbedingungen
+    bool show = true;
     if (maxSizeFilter)
-        return (source->data(index, sizeRole).toInt() <= maxSize);
-    return true;
+        show = show && sizeInRange(source->data(index, sizeRole).toInt());
+    if (dateFilter && source->itemFromIndex(index)->type() == fileItem)
+        show = show && dateInRange(source->data(index, dateRole).toDate());
+    return show;
+}
+
+bool MySortFilterProxyModel::dateInRange(const QDate &date) const
+{
+    return (((date <= maxDate) || !maxDate.isValid()) && ((date >= minDate) || !minDate.isValid()));
+}
+
+bool MySortFilterProxyModel::sizeInRange(const qint32 size) const
+{
+    return (size <= maxSize);
 }
