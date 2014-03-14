@@ -114,10 +114,14 @@ void LoginTester::startSlot()
     qDebug("Connection started");
 }
 
-void LoginTester::checkCertValidity(const QSslCertificate& cert){
-    if(cert.isValid())
+void LoginTester::checkCertValidity(const QSslCertificate& cert)
+{
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+    if(cert.verify())
         qDebug() << "VALID certificate for" << cert.subjectInfo(QSslCertificate::CommonName);
-    else if (cert.isNull())
+    else
+#endif
+    if (cert.isNull())
         qDebug("NULL certificate");
     else if(QDateTime::currentDateTime() > cert.expiryDate())
     {

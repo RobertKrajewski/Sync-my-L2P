@@ -32,9 +32,9 @@
 #include <QMessageBox>
 #include <QCloseEvent>
 
-#include <utils.h>
+#include "utils.h"
 #include <sys/types.h>
-#include <utime.h>
+#include <sys/utime.h>
 
 namespace Ui {
     class DateiDownloader;
