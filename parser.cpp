@@ -15,12 +15,12 @@ void Parser::parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
 
     // Erstellen eines RegExps für das Herausfiltern der Veranstaltungen
     QString regPattern = "<td class=\"ms-vb2\"><a href=\"(/(?:ws|ss)\\d{2}/\\d{2}(?:ws|ss)-\\d{5})(?:/information/default.aspx)*\">(.*)</a></td><td";
-    QRegExp* regExp = new QRegExp(regPattern, Qt::CaseSensitive);
-    regExp->setMinimal(true);
+    QRegExp regExp(regPattern, Qt::CaseSensitive);
+    regExp.setMinimal(true);
 
     // Erstellen eines RegExps  für unzulässige Buchstaben im Veranstaltungsnamen
     QString escapePattern = "(:|<|>|/|\\\\|\\||\\*|\\^|\\?|\\\")";
-    QRegExp* escapeRegExp = new QRegExp(escapePattern, Qt::CaseSensitive);
+    QRegExp escapeRegExp(escapePattern, Qt::CaseSensitive);
 
     // Speichern der Suchpositionen in der Antwort
     int altePosition = 0;
@@ -32,12 +32,12 @@ void Parser::parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
     QString veranstaltungName;
 
     // Durchsuchen der gesamten Antwort nach Veranstaltungen
-    while((neuePosition=regExp->indexIn(replyText, altePosition)) != -1)
+    while((neuePosition=regExp.indexIn(replyText, altePosition)) != -1)
     {
         // Anpassen der Encodierung wegen der Umlaute
-        urlRaum = QString::fromUtf8(regExp->cap(1).toLatin1());
-        veranstaltungName = QString::fromUtf8(regExp->cap(2).toLatin1());
-        veranstaltungName = veranstaltungName.replace(*escapeRegExp, "").trimmed();
+        urlRaum = QString::fromUtf8(regExp.cap(1).toLatin1());
+        veranstaltungName = QString::fromUtf8(regExp.cap(2).toLatin1());
+        veranstaltungName = veranstaltungName.replace(escapeRegExp, "").trimmed();
 
 
         // Erstellen der neuen Veranstaltung
@@ -49,14 +49,10 @@ void Parser::parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
         itemModel->appendRow(neueVeranstaltung);
 
         // Weitersetzen der Suchposition hinter den letzten Fund
-        altePosition = neuePosition + regExp->matchedLength();
+        altePosition = neuePosition + regExp.matchedLength();
     }
 
 
-
-    // Löschen der RegExps aus dem Speicher
-    delete regExp;
-    delete escapeRegExp;
 }
 
 void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelement*> *replies, QString downloadDirectoryPath)
