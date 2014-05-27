@@ -122,9 +122,15 @@ void Browser::coursesRecieved(QNetworkReply *reply)
     headerLabels << "Name" << QString::fromUtf8("Größe") << "Datum";
     itemModel->setHorizontalHeaderLabels(headerLabels);
 
+    #if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
     ui->dataTreeView->header()->setSectionResizeMode(0, QHeaderView::Stretch);
     ui->dataTreeView->header()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
     ui->dataTreeView->header()->setSectionResizeMode(2, QHeaderView::ResizeToContents);
+    #else
+    ui->dataTreeView->header()->setResizeMode(0, QHeaderView::Stretch);
+    ui->dataTreeView->header()->setResizeMode(1, QHeaderView::ResizeToContents);
+    ui->dataTreeView->header()->setResizeMode(2, QHeaderView::ResizeToContents);
+    #endif
 
     // Prüfen auf Fehler beim Abruf
     if (!reply->error())

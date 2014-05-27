@@ -116,8 +116,11 @@ void LoginTester::startSlot()
 
 void LoginTester::checkCertValidity(const QSslCertificate& cert)
 {
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-    if(cert.verify())
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
+    QList<QSslCertificate> chain;
+    chain.append(cert);
+    QList<QSslError> verify_errors = cert.verify(chain);
+    if(verify_errors.isEmpty())
         qDebug() << "VALID certificate for" << cert.subjectInfo(QSslCertificate::CommonName);
     else
 #endif
