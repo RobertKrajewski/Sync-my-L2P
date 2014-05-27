@@ -8,6 +8,16 @@ Parser::Parser(QObject *parent) :
 {
 }
 
+QString convertUtf8String(const QString& str)
+{
+    #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+    return QString::fromUtf8(str.toLatin1());
+    #else
+    // Qt5 handles utf-8 natively
+    return str;
+    #endif
+}
+
 void Parser::parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
 {
     // Auslesen der kompletten Antwort
@@ -35,16 +45,9 @@ void Parser::parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
     while((neuePosition=regExp.indexIn(replyText, altePosition)) != -1)
     {
         // Anpassen der Encodierung wegen der Umlaute
-        #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-        urlRaum = QString::fromUtf8(regExp.cap(1).toLatin1());
-        veranstaltungName = QString::fromUtf8(regExp.cap(2).toLatin1());
+        urlRaum = convertUtf8String(regExp.cap(1));
+        veranstaltungName = convertUtf8String(regExp.cap(2));
         veranstaltungName = veranstaltungName.replace(escapeRegExp, "").trimmed();
-        #else
-        // Qt5 handles utf-8 natively
-        urlRaum = regExp.cap(1);
-        veranstaltungName = regExp.cap(2);
-        veranstaltungName = veranstaltungName.replace(escapeRegExp, "").trimmed();
-        #endif
 
 
         // Erstellen der neuen Veranstaltung
@@ -190,11 +193,11 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
         {
             // URL
             if(currentXmlTag == "href" && url.isEmpty())
-                url.setUrl(QString::fromUtf8(Reader.text().toString().toLatin1()));
+                url.setUrl(convertUtf8String(Reader.text().toString()));
 
             // Name
             else if (currentXmlTag == "displayname")
-                name = QString::fromUtf8(Reader.text().toString().toLatin1());
+                name = convertUtf8String(Reader.text().toString());
 
             // Größe
             else if (currentXmlTag == "getcontentlength")
@@ -202,7 +205,7 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
 
             // Modifizierungsdatum
             else if (currentXmlTag == "getlastmodified")
-                time = QString::fromUtf8(Reader.text().toString().toLatin1());
+                time = convertUtf8String(Reader.text().toString());
         }
     }
 
