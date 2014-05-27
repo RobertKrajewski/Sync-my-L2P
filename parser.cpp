@@ -35,9 +35,16 @@ void Parser::parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
     while((neuePosition=regExp.indexIn(replyText, altePosition)) != -1)
     {
         // Anpassen der Encodierung wegen der Umlaute
+        #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
         urlRaum = QString::fromUtf8(regExp.cap(1).toLatin1());
         veranstaltungName = QString::fromUtf8(regExp.cap(2).toLatin1());
         veranstaltungName = veranstaltungName.replace(escapeRegExp, "").trimmed();
+        #else
+        // Qt5 handles utf-8 natively
+        urlRaum = regExp.cap(1);
+        veranstaltungName = regExp.cap(2);
+        veranstaltungName = veranstaltungName.replace(escapeRegExp, "").trimmed();
+        #endif
 
 
         // Erstellen der neuen Veranstaltung
