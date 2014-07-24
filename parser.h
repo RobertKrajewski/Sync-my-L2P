@@ -9,7 +9,6 @@
 #include <QMap>
 #include <QFile>
 #include "mymainwindow.h"
-#include "utils.h"
 
 class Parser : public QObject
 {
