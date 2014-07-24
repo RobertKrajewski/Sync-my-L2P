@@ -187,11 +187,11 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
         {
             // URL
             if(currentXmlTag == "href" && url.isEmpty())
-                url.setUrl(QString::fromUtf8(Reader.text().toString().toLatin1()));
+                url.setUrl(QString::fromUtf8(Reader.text().toString().toUtf8()));
 
             // Name
             else if (currentXmlTag == "displayname")
-                name = QString::fromUtf8(Reader.text().toString().toLatin1());
+                name = QString::fromUtf8(Reader.text().toString().toUtf8());
 
             // Größe
             else if (currentXmlTag == "getcontentlength")
