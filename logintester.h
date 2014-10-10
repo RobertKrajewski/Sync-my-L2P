@@ -46,7 +46,7 @@ public:
     ~LoginTester();
 
 private:
-    void checkCertValidity(QSslCertificate cert);
+    void checkCertValidity(const QSslCertificate& cert);
 
     Ui::LoginTester *ui;
     QNetworkAccessManager* manager;

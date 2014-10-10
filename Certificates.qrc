@@ -1,7 +1,7 @@
 <RCC>
     <qresource prefix="/certs">
-        <file alias="ssl">Certificates/PositiveSSLCA.der</file>
-        <file alias="utn">Certificates/UTN-USERFirst-Hardware.der</file>
-        <file alias="l2p">Certificates/www2.elearning.rwth-aachen.de.der</file>
+        <file alias="ssl">certs/PositiveSSLCA.der</file>
+        <file alias="utn">certs/UTN-USERFirst-Hardware.der</file>
+        <file alias="l2p">certs/www2.elearning.rwth-aachen.de.der</file>
     </qresource>
 </RCC>
