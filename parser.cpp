@@ -35,8 +35,8 @@ void Parser::parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
     while((neuePosition=regExp->indexIn(replyText, altePosition)) != -1)
     {
         // Anpassen der Encodierung wegen der Umlaute
-        urlRaum = QString::fromUtf8(regExp->cap(1).toLatin1());
-        veranstaltungName = QString::fromUtf8(regExp->cap(2).toLatin1());
+        urlRaum = QString::fromUtf8(regExp->cap(1).toUtf8());
+        veranstaltungName = QString::fromUtf8(regExp->cap(2).toUtf8());
         veranstaltungName = veranstaltungName.replace(*escapeRegExp, "").trimmed();
 
 
@@ -182,11 +182,11 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
         {
             // URL
             if(currentXmlTag == "href" && url.isEmpty())
-                url.setUrl(QString::fromUtf8(Reader.text().toString().toLatin1()));
+                url.setUrl(QString::fromUtf8(Reader.text().toString().toUtf8()));
 
             // Name
             else if (currentXmlTag == "displayname")
-                name = QString::fromUtf8(Reader.text().toString().toLatin1());
+                name = QString::fromUtf8(Reader.text().toString().toUtf8());
 
             // Größe
             else if (currentXmlTag == "getcontentlength")
@@ -194,7 +194,7 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
 
             // Modifizierungsdatum
             else if (currentXmlTag == "getlastmodified")
-                time = QString::fromUtf8(Reader.text().toString().toLatin1());
+                time = QString::fromUtf8(Reader.text().toString().toUtf8());
         }
     }
 
