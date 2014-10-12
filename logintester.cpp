@@ -123,6 +123,8 @@ void LoginTester::checkCertValidity(const QSslCertificate& cert)
         qDebug() << "VALID certificate for" << cert.subjectInfo(QSslCertificate::CommonName);
     else
 #endif
+        bool valid = true;
+
     if (cert.isNull())
         qDebug("NULL certificate");
     else if(QDateTime::currentDateTime() > cert.expiryDate())
