@@ -16,31 +16,46 @@ SOURCES += main.cpp\
     parser.cpp \
     structureelement.cpp \
     mysortfilterproxymodel.cpp \
-    logintester.cpp \
     filedownloader.cpp \
     utils.cpp \
     browser.cpp \
     options.cpp \
-    autoclosedialog.cpp
+    autoclosedialog.cpp \
+    login.cpp \
+    logindialog.cpp \
+    qslog/QsLog.cpp \
+    qslog/QsLogDest.cpp \
+    qslog/QsLogDestConsole.cpp \
+    qslog/QsLogDestFile.cpp \
+    qslog/QsLogDestFunctor.cpp
 
 HEADERS  += mymainwindow.h \
     parser.h \
     structureelement.h \
     mysortfilterproxymodel.h \
-    logintester.h \
     filedownloader.h \
     utils.h \
     browser.h \
     options.h \
-    autoclosedialog.h
+    autoclosedialog.h \
+    login.h \
+    clientId.h \
+    logindialog.h \
+    qslog/QsLog.h \
+    qslog/QsLogDest.h \
+    qslog/QsLogDestConsole.h \
+    qslog/QsLogDestFile.h \
+    qslog/QsLogDestFunctor.h \
+    qslog/QsLogDisableForThisFile.h \
+    qslog/QsLogLevel.h
 
 FORMS    += mymainwindow.ui \
     mymainwindow.ui \
-    logintester.ui \
     dateidownloader.ui \
     browser.ui \
     options.ui \
-    autoclosedialog.ui
+    autoclosedialog.ui \
+    logindialog.ui
 
 OTHER_FILES += \
     Sync-my-L2P.icns \

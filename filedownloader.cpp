@@ -20,15 +20,13 @@
 #include "math.h"
 #include <QDebug>
 
-FileDownloader::FileDownloader(QString username,
-                                 QString password,
-                                 int itemNumber,
+#include "qslog/QsLog.h"
+
+FileDownloader::FileDownloader(  int itemNumber,
                                  bool originalModifiedDate,
                                  QWidget *parent) :
     QDialog(parent, Qt::FramelessWindowHint),
     ui(new Ui::DateiDownloader),
-    username(username),
-    password(password),
     originalModifiedDate(originalModifiedDate),
     itemNumber(itemNumber)
 {
@@ -49,12 +47,6 @@ FileDownloader::FileDownloader(QString username,
 FileDownloader::~FileDownloader()
 {
     delete ui;
-}
-
-void FileDownloader::authenticate(QNetworkReply* , QAuthenticator* authenticator)
-{
-    authenticator->setUser(username);
-    authenticator->setPassword(password);
 }
 
 int FileDownloader::startNextDownload(QString filename, QString event, QString verzeichnisPfad, QUrl url, int itemNummer, int itemSize)
@@ -79,6 +71,8 @@ int FileDownloader::startNextDownload(QString filename, QString event, QString v
     }
 
     // Start des Requests
+
+    QLOG_DEBUG() << url.toString();
     reply = manager->get(QNetworkRequest(url));
     ui->progressBar->setFormat(QString("%v ").append(dataUnitFromBytes(itemSize)).append(" / %m ").append(dataUnitFromBytes(itemSize)));
     ui->progressBar->setMaximum(roundBytes(itemSize));
@@ -90,12 +84,14 @@ int FileDownloader::startNextDownload(QString filename, QString event, QString v
     return(loop.exec());
 }
 
+/// Anzeige des Downloadfortschritts der aktuellen Datei
 void FileDownloader::downloadProgressSlot(qint64 bytesReceived, qint64 bytesTotal)
 {
     // Aktualisieren der Progressbar anhand der Größe der empfangenen Bytes
     ui->progressBar->setValue(roundBytes(bytesReceived));
 }
 
+/// Abspeichern von empfangenen Dateiteilen
 void FileDownloader::readyReadSlot()
 {
     // Schreiben der runtergeladenen Bytes in die Datei
@@ -140,7 +136,9 @@ void FileDownloader::finishedSlot()
     }
     // Kein Fehler
     else
+    {
         loop.exit(1);
+    }
 }
 
 void FileDownloader::on_abortPushButton_clicked()
@@ -148,6 +146,7 @@ void FileDownloader::on_abortPushButton_clicked()
     keyPressEvent(new QKeyEvent(QEvent::KeyPress, Qt::Key_Escape, Qt::NoModifier));
 }
 
+/// Abbruch der Synchronisation durch die Escapetaste
 void FileDownloader::keyPressEvent(QKeyEvent *event)
 {
     // Abfangen der Escapetaste
@@ -158,21 +157,33 @@ void FileDownloader::keyPressEvent(QKeyEvent *event)
         reply->abort();
     }
     else
+    {
         event->ignore();
+    }
 }
 
-QString FileDownloader::dataUnitFromBytes(qint64 bytes) {
-    if (bytes/1024 > 0) {
+/// Erzeugung der passenden Größeneinheit von der Dateigröße
+QString FileDownloader::dataUnitFromBytes(qint64 bytes)
+{
+    if (bytes/1024 > 0)
+    {
         return "kB";
-    } else {
+    }
+    else
+    {
         return "Byte";
     }
 }
 
-qint64 FileDownloader::roundBytes(qint64 bytes) {
-    if (bytes/1024 > 0) {
+/// Dateigröße in lesbare Größe umwandeln
+qint64 FileDownloader::roundBytes(qint64 bytes)
+{
+    if (bytes/1024 > 0)
+    {
         return (qint64)ceil(((double)bytes/1024));
-    } else {
+    }
+    else
+    {
         return bytes;
     }
 }

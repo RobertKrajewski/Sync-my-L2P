@@ -29,8 +29,6 @@
 #include <QDesktopWidget>
 #include <QDesktopServices>
 
-
-#include "logintester.h"
 #include "filedownloader.h"
 #include "mysortfilterproxymodel.h"
 
@@ -76,9 +74,12 @@ private:
 
     int getFileCount(QLinkedList<Structureelement*>& liste);
 
+
     void updateButtons();
 
     QNetworkRequest *webdavRequest(Structureelement *aktuelleVeranstaltung, QString urlExtension);
+
+    QNetworkRequest *apiRequest(Structureelement *course, QString apiExtension);
 
     Ui::Browser *ui;
     QNetworkAccessManager   *manager;
@@ -99,9 +100,8 @@ private slots:
     void openItem();
     void openCourse();
     void coursesRecieved(QNetworkReply*);
-    void doAuthentification(QNetworkReply*, QAuthenticator*);
     void filesRecieved(QNetworkReply*);
-    void getNewData();
+    void requestFileInformation();
     void on_searchPushButton_clicked();
     void on_removeSelectionPushButton_clicked();
     void on_addSelectionPushButton_clicked();

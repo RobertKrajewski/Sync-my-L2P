@@ -1,5 +1,7 @@
 #include "utils.h"
 
+#include "qslog/QsLog.h"
+
 Utils::Utils(QObject *parent) :
     QObject(parent)
 {
@@ -34,4 +36,80 @@ void Utils::errorMessageBox(QString message, QString detailMessage)
     messageBox.setInformativeText(detailMessage);
     messageBox.setStandardButtons(QMessageBox::Ok);
     messageBox.exec();
+}
+
+QList<Structureelement*> Utils::getAllCourseItems(QStandardItemModel *itemModel)
+{
+    QList<Structureelement*> courses;
+
+    for(int row=0; row < itemModel->rowCount(); ++row)
+    {
+        Structureelement *element = static_cast<Structureelement*>(itemModel->item(row));
+        if(element->type() == courseItem)
+        {
+            courses.append(element);
+        }
+        else if(element->type() == semesterItem)
+        {
+            for(int innerRow=0; innerRow < element->rowCount(); ++innerRow)
+            {
+                courses.append(static_cast<Structureelement*>(element->child(innerRow)));
+            }
+        }
+        else
+        {
+            QLOG_ERROR() << "Unbekanntes Element auf der Ebene der Veranstaltungen: " << element->text();
+        }
+    }
+
+    return courses;
+}
+
+/// Factory für SemesterItems
+Structureelement *Utils::getSemesterItem(QStandardItemModel *itemModel, QString semester)
+{
+    QList<QStandardItem*> foundItems = itemModel->findItems(semester);
+    Structureelement *semesterElement;
+
+    if(foundItems.size())
+    {
+        semesterElement = static_cast<Structureelement*>(foundItems.first());
+    }
+    else
+    {
+        semesterElement = new Structureelement(semester, QUrl(), semesterItem);
+        itemModel->appendRow(semesterElement);
+    }
+
+    return semesterElement;
+}
+
+Structureelement *Utils::getDirectoryItem(Structureelement *courseItem, QStringList path)
+{
+    Structureelement *currentItem = courseItem;
+
+    foreach(QString item, path)
+    {
+        bool correctChildFound = false;
+        for(int row=0; row < currentItem->rowCount(); ++row)
+        {
+            Structureelement *child = static_cast<Structureelement*>(currentItem->child(row));
+            if(child->text() == item)
+            {
+                currentItem = child;
+                correctChildFound = true;
+                break;
+            }
+        }
+
+        if(!correctChildFound)
+        {
+            Structureelement* child = new Structureelement(item, QUrl(), directoryItem);
+
+            currentItem->appendRow(child);
+            currentItem = child;
+        }
+    }
+
+    return currentItem;
 }

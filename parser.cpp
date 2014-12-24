@@ -1,6 +1,12 @@
 #include "parser.h"
 #include <QDebug>
 
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QJsonArray>
+
+#include "qslog/QsLog.h"
+
 extern QString MainURL;
 
 Parser::Parser(QObject *parent) :
@@ -10,195 +16,93 @@ Parser::Parser(QObject *parent) :
 
 void Parser::parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
 {
-    // Auslesen der kompletten Antwort
-    QString replyText = reply->readAll();
+    // Empfangene Nachricht auslesen und als JSON interpretieren
+    QByteArray response(reply->readAll());
+    QJsonDocument document = QJsonDocument::fromJson(response);
+    QJsonObject object = document.object();
 
-    // Erstellen eines RegExps für das Herausfiltern der Veranstaltungen
-    QString regPattern = "<td class=\"ms-vb2\"><a href=\"(/(?:ws|ss)\\d{2}/\\d{2}(?:ws|ss)-\\d{5})(?:/information/default.aspx)*\">(.*)</a></td><td";
-    QRegExp* regExp = new QRegExp(regPattern, Qt::CaseSensitive);
-    regExp->setMinimal(true);
-
-    // Erstellen eines RegExps  für unzulässige Buchstaben im Veranstaltungsnamen
-    QString escapePattern = "(:|<|>|/|\\\\|\\||\\*|\\^|\\?|\\\")";
-    QRegExp* escapeRegExp = new QRegExp(escapePattern, Qt::CaseSensitive);
-
-    // Speichern der Suchpositionen in der Antwort
-    int altePosition = 0;
-    int neuePosition = 0;
-
-    // neue Veranstaltung sowie Daten
-    Structureelement* neueVeranstaltung;
-    QString urlRaum;
-    QString veranstaltungName;
-
-    // Durchsuchen der gesamten Antwort nach Veranstaltungen
-    while((neuePosition=regExp->indexIn(replyText, altePosition)) != -1)
+    if(object.isEmpty())
     {
-        // Anpassen der Encodierung wegen der Umlaute
-        urlRaum = QString::fromUtf8(regExp->cap(1).toUtf8());
-        veranstaltungName = QString::fromUtf8(regExp->cap(2).toUtf8());
-        veranstaltungName = veranstaltungName.replace(*escapeRegExp, "").trimmed();
-
-
-        // Erstellen der neuen Veranstaltung
-        neueVeranstaltung = new Structureelement(veranstaltungName, QUrl(MainURL % urlRaum), courseItem);// % "/materials/documents/"));
-        //neueVeranstaltung = new Strukturelement(veranstaltungName, QUrl(StammURL % urlRaum % "/materials/structured/"));
-        neueVeranstaltung->setIcon(QIcon(":/Icons/directory"));
-
-        // Hinzufügen der Veranstaltung zur Liste
-        itemModel->appendRow(neueVeranstaltung);
-
-        // Weitersetzen der Suchposition hinter den letzten Fund
-        altePosition = neuePosition + regExp->matchedLength();
+        QLOG_ERROR() << "Kursinformationen leer bzw. nicht lesbar.";
+        return;
     }
 
+    if(!object["Status"].toBool())
+    {
+        QLOG_ERROR() << "Status der Kursinformationen nicht ok.";
+        return;
+    }
 
+    // Array mit allen einzelnen Vorlesungen/Veranstaltungen
+    QJsonArray courses = object["dataSet"].toArray();
 
-    // Löschen der RegExps aus dem Speicher
-    delete regExp;
-    delete escapeRegExp;
+    // Für jede Veranstaltung ein neues Strukturelement anlegen
+    foreach(QJsonValue element, courses)
+    {
+        QJsonObject course = element.toObject();
+
+        QString title = course["courseTitle"].toString();
+        QString cid = course["uniqueid"].toString();
+        QString semester = course["semester"].toString();
+        Structureelement *newCourse = new Structureelement(title, cid, courseItem);
+
+        Utils::getSemesterItem(itemModel, semester)->appendRow(newCourse);
+
+        QLOG_INFO() << "Veranstaltung " << title << " (" << cid << ") hinzugefügt.";
+    }
 }
 
 void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelement*> *replies, QString downloadDirectoryPath)
 {
-    // Holen die aktuelle Veranstaltung aus der Map
-    Structureelement* aktuellerOrdner = replies->value(reply);
+    Structureelement *currentCourse = replies->value(reply);
 
-    // Auslesen der Antwort und Speichern in dem XmlReader
-    QString replyText = reply->readAll();
-    QXmlStreamReader Reader;
-    Reader.addData(replyText);
+    QByteArray response = reply->readAll();
 
+    QJsonDocument document = QJsonDocument::fromJson(response);
+    QJsonObject object = document.object();
 
-    // Vorbereitung der Daten für die Elemente
-    QString currentXmlTag;
-    QUrl    url;
-    QString name;
-    QString time;
-    qint32  size = 0;
-
-    // Prüfen auf das Ende
-    while(!Reader.atEnd())
+    if(object.isEmpty())
     {
-        // Lese nächstes Element
-        Reader.readNext();
-
-        // 1. Fall: Öffnendes Element <Element>
-        if(Reader.isStartElement())
-        {
-            // Speichern des Namens
-            currentXmlTag = Reader.name().toString();
-        }
-
-        // 2. Fall: Schließendes Element mit Namen Response </Response>
-        else if (Reader.isEndElement() && Reader.name() == "response")
-        {
-            // Hinzufügen des Slashs bei der Url von Ordnern
-            if(!size)
-                url.setUrl(url.toString() % "/");
-
-            // Wechsel in den übergeordneten Ordner des aktuellen Elements
-            QString bla = url.toString();
-            while(!url.toString().contains((aktuellerOrdner->data(urlRole).toUrl().toString()), Qt::CaseSensitive))//(in = RegExp.indexIn(url.toString())) == -1)
-            {
-                aktuellerOrdner->sortChildren(0, Qt::AscendingOrder);
-                aktuellerOrdner = (Structureelement*)aktuellerOrdner->parent();
-                if (aktuellerOrdner == 0)
-                    qDebug() << replyText;
-            }
-
-            // Ignorieren aller Adressen, die "/Forms" enthalten
-            if (!url.toString().contains("/Forms", Qt::CaseSensitive))
-            {
-                // Prüfe auf Elementart
-                // 1. Fall: Datei (size > 0)
-                if (size)
-                {
-                    // Erstellen einer neuen Datei
-                    Structureelement* newFile = new Structureelement(name, url, time, size);
-
-                    // Hinzufügen des endungsabhängigen Icons
-                    // PDF
-                    if (name.contains(QRegExp(".pdf$", Qt::CaseInsensitive)))
-                        newFile->setData(QIcon(":/Icons/Icons/filetype_pdf.png"), Qt::DecorationRole);
-
-                    // ZIP
-                    else if (name.contains(QRegExp(".zip$", Qt::CaseInsensitive)))
-                        newFile->setData(QIcon(":/Icons/Icons/filetype_zip.png"), Qt::DecorationRole);
-
-                    // RAR
-                    else if (name.contains(QRegExp(".rar$", Qt::CaseInsensitive)))
-                        newFile->setData(QIcon(":/Icons/Icons/filetype_rar.png"), Qt::DecorationRole);
-
-                    // Sonstige
-                    else
-                        newFile->setData(QIcon(":/Icons/Icons/file.png"), Qt::DecorationRole);
-
-
-                    QString path;
-                    path.append(Utils::getStrukturelementPfad(aktuellerOrdner, downloadDirectoryPath) %"/");
-                    path.append(name);
-                    path.remove(0,8);
-
-                    if(QFile::exists(path))
-                    {
-                        newFile->setData(SYNCHRONISED, synchronisedRole);
-                    }
-                    else
-                    {
-                        newFile->setData(NOT_SYNCHRONISED, synchronisedRole);
-                    }
-
-                    // Hinzufügen zum aktuellen Ordner
-                    aktuellerOrdner->appendRow(newFile);
-                }
-                // 2. Fall: Ordner/Veranstaltung
-                // Ausschließen der Ordnernamen "documents" und "structured"
-                else if (name != "documents" && name != "structured" && !url.toString().contains("exerciseCourse"))
-                {
-                    // Erstellen eines neuen Ordners
-                    Structureelement* newDirectory = new Structureelement(name, url, directoryItem);
-
-                    // Setzen des Zeichens
-                    newDirectory->setData(QIcon(":/Icons/Icons/25_folder.png"), Qt::DecorationRole);
-
-                    // Hinzufügen zum aktuellen Ordner
-                    aktuellerOrdner->appendRow(newDirectory);
-
-                    // NeuerOrdner wird zum aktuellen Ordner
-                    aktuellerOrdner = newDirectory;
-                }
-            }
-
-            // Löschen aller eingelesener Daten
-            url.clear();
-            name.clear();
-            size = 0;
-            time.clear();
-        }
-
-        // Einlesen der Elementeigenschaften
-        else if (Reader.isCharacters() && !Reader.isWhitespace())
-        {
-            // URL
-            if(currentXmlTag == "href" && url.isEmpty())
-                url.setUrl(QString::fromUtf8(Reader.text().toString().toUtf8()));
-
-            // Name
-            else if (currentXmlTag == "displayname")
-                name = QString::fromUtf8(Reader.text().toString().toUtf8());
-
-            // Größe
-            else if (currentXmlTag == "getcontentlength")
-                size = Reader.text().toString().toInt();
-
-            // Modifizierungsdatum
-            else if (currentXmlTag == "getlastmodified")
-                time = QString::fromUtf8(Reader.text().toString().toUtf8());
-        }
+        QLOG_DEBUG() << "Kursinformationen leer bzw. nicht lesbar.";
+        return;
     }
 
-    // Sortieren aller Dateien
-    aktuellerOrdner->sortChildren(0, Qt::AscendingOrder);
-    replies->value(reply)->sortChildren(0, Qt::AscendingOrder);
+    if(!object["Status"].toBool())
+    {
+        QLOG_DEBUG() << "Status der Kursinformationen nicht ok.";
+        return;
+    }
+
+    QJsonArray files = object["dataSet"].toArray();
+
+    //QString baseUrl("https://www3.elearning.rwth-aachen.de");
+
+    foreach(QJsonValue element, files)
+    {
+        QJsonObject file = element.toObject();
+        QJsonObject fileInformation = file["fileInformation"].toObject();
+
+        QString filename = fileInformation["fileName"].toString();
+        int filesize = fileInformation["fileSize"].toString().toInt();
+        int timestamp = fileInformation["modifiedTimestamp"].toInt();
+        QString directory = file["sourceFolder"].toString();
+        QString url = /*baseUrl %*/ fileInformation["downloadUrl"].toString();
+        QStringList urlParts = url.split('/');
+
+        urlParts.removeFirst();
+        urlParts.removeFirst();
+        urlParts.removeFirst();
+        urlParts.removeFirst();
+        urlParts.removeLast();
+
+        Structureelement *dir = Utils::getDirectoryItem(currentCourse, urlParts);
+
+        Structureelement* newFile = new Structureelement(filename, QUrl(url), timestamp, filesize);
+
+        newFile->setData(currentCourse->data(cidRole), cidRole);
+
+        newFile->setData(NOT_SYNCHRONISED, synchronisedRole);
+
+        dir->appendRow(newFile);
+    }
 }

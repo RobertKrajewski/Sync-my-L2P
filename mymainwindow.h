@@ -40,10 +40,9 @@ public:
     explicit MyMainWindow(QWidget *parent = 0);
     ~MyMainWindow();
 
-public slots:
-    void enable(bool enabled);
-    void switchTabSlot(int tab);
+private slots:
     void trayClickedSlot(QSystemTrayIcon::ActivationReason);
+    void logSlot(QString message, int level);
 
 private:
     void init();
