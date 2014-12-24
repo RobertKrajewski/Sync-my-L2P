@@ -163,18 +163,18 @@
         <property name="alignment">
          <set>Qt::AlignCenter</set>
         </property>
+        <property name="displayFormat">
+         <string>'ab' dd.MM.yyyy</string>
+        </property>
+        <property name="calendarPopup">
+         <bool>true</bool>
+        </property>
         <property name="date">
          <date>
           <year>1800</year>
           <month>1</month>
           <day>1</day>
          </date>
-        </property>
-        <property name="displayFormat">
-         <string>'ab' dd.MM.yyyy</string>
-        </property>
-        <property name="calendarPopup">
-         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -189,18 +189,18 @@
         <property name="accelerated">
          <bool>true</bool>
         </property>
+        <property name="displayFormat">
+         <string>'bis' dd.MM.yyyy</string>
+        </property>
+        <property name="calendarPopup">
+         <bool>true</bool>
+        </property>
         <property name="date">
          <date>
           <year>1800</year>
           <month>1</month>
           <day>1</day>
          </date>
-        </property>
-        <property name="displayFormat">
-         <string>'bis' dd.MM.yyyy</string>
-        </property>
-        <property name="calendarPopup">
-         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -229,6 +229,9 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gib hier den Namen (bzw. Teile davon) von Dateien/Ordnern/Veranstaltungen ein, um diese zu suchen. Gefundene Ergebnisse werden selektiert. Das Suchfenster unterstützt auch RegExp.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>

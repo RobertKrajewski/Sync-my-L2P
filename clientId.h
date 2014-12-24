@@ -1,0 +1,6 @@
+#ifndef CLIENTID_H
+#define CLIENTID_H
+
+#endif // CLIENTID_H
+
+#define CLIENTID "INSERTIDHERE"

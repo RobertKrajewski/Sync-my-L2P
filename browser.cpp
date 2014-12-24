@@ -4,8 +4,10 @@
 #include "options.h"
 #include <QDebug>
 
+#include "qslog/QsLog.h"
+
 // Hauptadresse des Sharepointdienstes
-QString MainURL = "https://www2.elearning.rwth-aachen.de";
+QString MainURL = "https://www3.elearning.rwth-aachen.de";
 
 Browser::Browser(QWidget *parent) :
     QWidget(parent),
@@ -21,11 +23,6 @@ Browser::Browser(QWidget *parent) :
 
     // Erzeugen des NetzwerkAccessManagers
     manager = new QNetworkAccessManager(qApp);
-    QObject::connect(manager,
-                     SIGNAL(authenticationRequired
-                          (QNetworkReply *, QAuthenticator *)), this,
-                     SLOT(doAuthentification
-                          (QNetworkReply *, QAuthenticator *)));
 
     QObject::connect(ui->searchLineEdit, SIGNAL(returnPressed()), ui->searchPushButton, SLOT(click()));
 
@@ -75,7 +72,7 @@ void Browser::saveSettings()
     settings.endGroup();
 }
 
-// Starten des Aktualisierungsvorgang durch das Abrufen der Semesterveranstaltungen
+// Starten des Aktualisierungsvorgang durch das Abrufen der Veranstaltungen
 void Browser::on_refreshPushButton_clicked()
 {
     refreshCounter++;
@@ -93,13 +90,12 @@ void Browser::on_refreshPushButton_clicked()
     QObject::connect(manager, SIGNAL(finished(QNetworkReply *)),
                      this, SLOT(coursesRecieved(QNetworkReply *)));
 
-    // Starten der Anfrage für das aktuelle Semester
-    if (options->isCurrentSemesterCheckBoxChecked())
-        replies.insert(manager->get(QNetworkRequest(QUrl(MainURL % "/foyer/summary/default.aspx"))), 0);
+    QLOG_INFO() << "Veranstaltungsrequest";
 
-    // Starten einer Anfrage für ältere Semester
-    if (options->isOldSemesterCheckBoxChecked())
-        replies.insert(manager->get(QNetworkRequest(QUrl(MainURL % "/foyer/archive/default.aspx"))), 0);
+    QNetworkRequest request(QUrl("https://www3.elearning.rwth-aachen.de/_vti_bin/L2PServices/api.svc/v1/viewAllCourseInfo?accessToken=" % options->getAccessToken()));
+
+    // Starten der Anfrage für das aktuelle Semester
+    replies.insert(manager->get(request), 0);
 }
 
 void Browser::downloadDirectoryLineEditChangedSlot(QString downloadDirectory)
@@ -117,19 +113,25 @@ void Browser::downloadDirectoryLineEditChangedSlot(QString downloadDirectory)
 // Auslesen der empfangenen Semesterveranstaltungsnamen
 void Browser::coursesRecieved(QNetworkReply *reply)
 {
+
+    QLOG_INFO() << "Veranstaltungen empfangen";
     // Prüfen auf Fehler beim Abruf
     if (!reply->error())
+    {
         Parser::parseCourses(reply, itemModel);
+    }
     else
+    {
         Utils::errorMessageBox("Beim Abruf der Veranstaltungen ist ein Fehler aufgetreten", reply->errorString());
+        QLOG_ERROR() << "Veranstaltungen nicht abrufbar: " << reply->errorString();
+    }
 
     // Löschen der Antwort aus der Queue
     replies.remove(reply);
     // Antwort für das spätere Löschen markieren
     reply->deleteLater();
 
-    // Prüfen, ob noch Antworten ausstehen und ggf. Reaktiveren der
-    // Benutzeroberfläche
+    // Wenn alle Veranstaltungen eingetroffen und geparst sind, Dateien abrufen
     if (replies.isEmpty())
     {
         // Veranstaltungen alphabetisch sortieren
@@ -141,19 +143,18 @@ void Browser::coursesRecieved(QNetworkReply *reply)
                             SLOT(coursesRecieved(QNetworkReply *)));
 
         // Aufruf der Funktion zur Aktualisierung der Dateien
-        getNewData();
+        requestFileInformation();
     }
 }
 
-// Anfordern der Dokumentlisten für jeden Kurs
-void Browser::getNewData()
+/// Anfordern der Dateien für jede Veranstaltung
+void Browser::requestFileInformation()
 {
     // Prüfen, ob überhaupt Dokumentorte ausgewählt wurden
-    if (!options->isDocumentsCheckBoxChecked()
-        && !options->isSharedMaterialsCheckBoxChecked()
-        && !options->isExercisesCheckBoxChecked()
-        && !options->isLiteratureCheckBoxChecked()
-        && !options->isTutorDocumentsCheckBoxChecked())
+    if (!options->isLearningMaterialsCheckBoxChecked()
+        && !options->isSharedLearningmaterialsCheckBoxChecked()
+        && !options->isAssignmentsCheckBoxChecked()
+        && !options->isMediaLibrarysCheckBoxChecked())
     {
         // Freischalten von Schaltflächen
         emit enableSignal(true);
@@ -165,11 +166,10 @@ void Browser::getNewData()
                      this,
                      SLOT(filesRecieved(QNetworkReply *)));
 
-    // Durchlaufen aller Veranstaltungen
-    int rowCount = itemModel->rowCount();
+    QList<Structureelement*> courses = Utils::getAllCourseItems(itemModel);
 
     // Sonderfall: Es existieren keine Veranstaltungen
-    if (rowCount == 0)
+    if (courses.size() == 0)
     {
         QObject::disconnect(manager, SIGNAL(finished(QNetworkReply *)),
                             this, SLOT(filesRecieved(QNetworkReply *)));
@@ -179,88 +179,61 @@ void Browser::getNewData()
         return;
     }
 
-    //Anfordern aller Daten per WebDAV-Request
-    for (int i = 0; i < rowCount; i++)
-    {
-        // Holen der aktuellen Veranstaltung
-        Structureelement *aktuelleVeranstaltung = (Structureelement*) itemModel->item(i);
 
+
+    //Anfordern aller Daten per APIRequest
+    foreach(Structureelement* course, courses)
+    {
         // Löschen aller Dateien
-        if (aktuelleVeranstaltung->rowCount() > 0)
-            aktuelleVeranstaltung->removeRows(0, aktuelleVeranstaltung->rowCount());
+        if (course->rowCount() > 0)
+        {
+            course->removeRows(0, course->rowCount());
+        }
 
         // Ausführen des Requests für "Dokumente"
-        if (options->isDocumentsCheckBoxChecked())
+        if (options->isLearningMaterialsCheckBoxChecked())
         {
-            QNetworkRequest *request = webdavRequest(aktuelleVeranstaltung, "/materials/documents/");
+            QNetworkRequest *request = apiRequest(course, "viewAllLearningMaterials");
 
             // Einfügen und Absenden des Requests
-            replies.insert(manager->sendCustomRequest(*request, "PROPFIND"),
-                           aktuelleVeranstaltung);
+            replies.insert(manager->get(*request),
+                           course);
 
             delete request;
         }
 
         // Ausführen des Requests für "Strukturierte Materialien"
-        if (options->isSharedMaterialsCheckBoxChecked())
+        if (options->isSharedLearningmaterialsCheckBoxChecked())
         {
-            QNetworkRequest *request = webdavRequest(aktuelleVeranstaltung, "/materials/structured/");
+            QNetworkRequest *request = apiRequest(course, "viewAllSharedDocuments");
 
             // Einfügen und Absenden des Requests
-            replies.insert(manager->sendCustomRequest(*request, "PROPFIND"),
-                           aktuelleVeranstaltung);
+            replies.insert(manager->get(*request),
+                           course);
 
             delete request;
         }
 
         // Ausführen des Requests für "Übungsbetrieb"
-        if (options->isExercisesCheckBoxChecked())
+        if (options->isAssignmentsCheckBoxChecked())
         {
-            QNetworkRequest *request = webdavRequest(aktuelleVeranstaltung, "/exerciseCourse/SampleSolutions/");
+            QNetworkRequest *request = apiRequest(course, "viewAllAssignments");
 
             // Einfügen und Absenden des Requests
-            replies.insert(manager->sendCustomRequest(*request, "PROPFIND"),
-                           aktuelleVeranstaltung);
-
-            delete request;
-
-            request = webdavRequest(aktuelleVeranstaltung, "/exerciseCourse/AssignmentAttachments/");
-
-            // Einfügen und Absenden des Requests
-            replies.insert(manager->sendCustomRequest(*request, "PROPFIND"),
-                           aktuelleVeranstaltung);
-
-            delete request;
-
-            request = webdavRequest(aktuelleVeranstaltung, "/exerciseCourse/AssignmentDocuments/");
-
-            // Einfügen und Absenden des Requests
-            replies.insert(manager->sendCustomRequest(*request, "PROPFIND"),
-                           aktuelleVeranstaltung);
+            replies.insert(manager->get(*request),
+                           course);
 
             delete request;
         }
 
         // Ausführen des Requests für "Literatur"
-        if (options->isLiteratureCheckBoxChecked())
+        if (options->isMediaLibrarysCheckBoxChecked())
         {
-            QNetworkRequest *request = webdavRequest(aktuelleVeranstaltung, "/literature/Lists/Literature/Attachments/");
+            QNetworkRequest *request = apiRequest(course, "viewAllMediaLibrarys");
 
             // Einfügen und Absenden des Requests
-            replies.insert(manager->sendCustomRequest(*request, "PROPFIND"),
-                           aktuelleVeranstaltung);
-
-            delete request;
-        }
-
-        // Ausführen des Requests für "Betreuerbereich"
-        if (options->isTutorDocumentsCheckBoxChecked())
-        {
-            QNetworkRequest *request = webdavRequest(aktuelleVeranstaltung, "/tutor/documents/");
-
-            // Einfügen und Absenden des Requests
-            replies.insert(manager->sendCustomRequest(*request, "PROPFIND"),
-                           aktuelleVeranstaltung);
+            replies.insert(manager->get(*request),
+                           course);
 
             delete request;
         }
@@ -271,14 +244,15 @@ void Browser::filesRecieved(QNetworkReply *reply)
 {
     // Prüfen auf Fehler
     if (!reply->error())
+    {
         Parser::parseFiles(reply, &replies,
                            options->downloadFolderLineEditText());
-
-    // Ausgabe einer Fehlermeldung bei Fehlern
-    // Ignoriere "ContentNotFoundError", der bei leeren Veranstaltungen
-    // auftritt
-    else if (reply->error() != QNetworkReply::ContentNotFoundError)
-        Utils::errorMessageBox("Beim Abruf des Inhalts einer Veranstaltung ist ein Fehler aufgetreten", reply->errorString());;
+    }
+    else
+    {
+        Utils::errorMessageBox("Beim Abruf des Inhalts einer Veranstaltung ist ein Fehler aufgetreten", reply->errorString());
+        QLOG_ERROR() << "Fehler beim Abrufen der Dateien einer Veranstaltung: " << reply->errorString();
+    }
 
     // Löschen der Antwort aus der Liste der abzuarbeitenden Antworten
     replies.remove(reply);
@@ -294,172 +268,180 @@ void Browser::filesRecieved(QNetworkReply *reply)
         // Freischalten von Schaltflächen
         updateButtons();
 
+        // Anzeigen aller neuen, unsynchronisierten Dateien
         if (refreshCounter == 1)
+        {
             on_showNewDataPushButton_clicked();
+        }
 
         emit enableSignal(true);
 
-        // Falls bisher noch nicht synchronisiert wurde und
-        // Synchronisation beim Start aktiviert wurde
+        // Automatische Synchronisation beim Programmstart
         if (options->isAutoSyncOnStartCheckBoxChecked() && refreshCounter==1 && options->getLoginCounter()==1)
+        {
             on_syncPushButton_clicked();
+        }
     }
 }
 
 void Browser::on_syncPushButton_clicked()
 {
     emit enableSignal(false);
-    QString directoryPath = options->downloadFolderLineEditText();
+    QString downloadPath = options->downloadFolderLineEditText();
 
-    // Falls noch kein Pfad angegeben wurde, abbrechen und FileDialog
-    // öffnen
-    if (directoryPath.isEmpty())
+    // Falls noch kein Downloadverzeichnis angegeben wurde, abbrechen
+    if (downloadPath.isEmpty())
     {
+        QLOG_ERROR() << "Kann nicht synchronisieren, da kein Downloadverzeichnis angegeben wurde";
         emit switchTab(1);
-//        on_downloadFolderPushButton_clicked();
         emit enableSignal(true);
         return;
     }
 
-    // Deaktivieren des DialogButtons
-    //ui->downloadFolderPushButton->setEnabled(false);
-    QDir verzeichnis(directoryPath);
+    QDir verzeichnis(downloadPath);
 
-    // Überprüfung, ob das angegebene Verzeichnis existiert, oder
+    // Überprüfung, ob das angegebene Verzeichnis existiert oder
     // erstellt werden kann
     if (!verzeichnis.exists() && !verzeichnis.mkpath(verzeichnis.path()))
     {
-        //ui->downloadFolderPushButton->setEnabled(true);
+        QLOG_ERROR() << "Kann Verzeichnis nicht erzeugen. Download abgebrochen.";
         emit enableSignal(true);
         return;
     }
 
-    // Hinzufügen aller eingebundenen Elemente einer Liste
-    QLinkedList < Structureelement * > elementList;
+    // Hinzufügen aller eingebundenen Elemente
+    QLinkedList<Structureelement *> elementList;
 
     for (int i = 0; i < itemModel->rowCount(); i++)
     {
         getStructureelementsList((Structureelement *) itemModel->item(i, 0), elementList, true);
     }
 
-    if (!elementList.isEmpty())
+    if (elementList.isEmpty())
     {
-        FileDownloader *loader = new FileDownloader(options->userNameLineEditText(),	// Benutzername
-                options->userPasswordLineEditText(),	// Passwort
-                getFileCount(elementList),	// Anzahl
-                // der
-                // zu
-                // runterladenen
-                // Dateien
-                options->isOriginalModifiedDateCheckBoxChecked(),
-                this);
-        // Iterieren über alle Elemente
-        Structureelement *currentDirectory = elementList.first();
-        int counter = getFileCount(elementList);
-        int changedCounter = 0;
-        bool neueVeranstaltung = false;
-        QString veranstaltungName;
-
-        QItemSelection newSelection;
-        ui->dataTreeView->collapseAll();
-
-        for (QLinkedList < Structureelement * >::iterator iterator =
-                 elementList.begin(); iterator != elementList.end(); iterator++)
-        {
-            Structureelement* currentElement = *iterator;
-            if (currentElement->parent() != 0)
-            {
-                while (!currentElement->data(urlRole).toUrl().
-                       toString().contains(currentDirectory->data(urlRole).
-                                           toUrl().toString(),
-                                           Qt::CaseSensitive))
-                {
-                    currentDirectory = (Structureelement *) currentDirectory->parent();
-                    verzeichnis.cdUp();
-                }
-            }
-            else
-            {
-                verzeichnis.setPath(options->downloadFolderLineEditText());
-                neueVeranstaltung = true;
-            }
-
-            // 1. Fall: Ordner
-            if (currentElement->type() != fileItem)
-            {
-                if (!verzeichnis.exists(currentElement->text()))
-                {
-                    if (!verzeichnis.mkdir(currentElement->text()))
-                    {
-                        Utils::errorMessageBox("Beim Erstellen eines Ordners ist ein Fehler aufgetreten.", currentElement->text());
-                        break;
-                    }
-                }
-
-                if (neueVeranstaltung)
-                {
-                    veranstaltungName = currentElement->text();
-                    neueVeranstaltung = false;
-                }
-
-                currentDirectory = *iterator;
-                verzeichnis.cd(currentElement->text());
-            }
-            // 2. Fall: Datei
-            else
-            {
-                // Datei existiert noch nicht
-                // counter++;
-                if (!verzeichnis.exists(currentElement->text()) ||
-                    (QFileInfo(verzeichnis, currentElement->text()).size()
-                     != (*((Structureelement *) (*iterator))).data(sizeRole).toInt()))
-                {
-                    if (!loader->startNextDownload(currentElement->text(),
-                                                   veranstaltungName,
-                                                   verzeichnis.
-                                                   absoluteFilePath(currentElement->text()), currentElement->data(urlRole).toUrl(), changedCounter + 1, currentElement->data(sizeRole).toInt()))
-                        break;
-
-                    changedCounter++;
-                    currentElement->setData(NOW_SYNCHRONISED, synchronisedRole);
-                    ui->dataTreeView->scrollTo(proxyModel.mapFromSource(currentElement->index()));
-                    newSelection.select(currentElement->index(), currentElement->index());
-                }
-            }
-        }
-
-        loader->close();
-
-        if (options->isAutoCloseAfterSyncCheckBoxChecked())
-        {
-            AutoCloseDialog autoClose;
-            if(!autoClose.exec())
-                QCoreApplication::quit();
-        }
-
-        // Information über abgeschlossene Synchronisation anzeigen
-
-//        Utils::errorMessageBox("Synchronisation mit dem L2P der RWTH Aachen abgeschlossen.", QString
-//                               ("Es wurden %1 von %2 eingebundenen Dateien synchronisiert.").arg
-//                               (QString::number(changedCounter),
-//                                QString::number(counter)));
-        QMessageBox messageBox(this);
-        QTimer::singleShot(10000, &messageBox, SLOT(accept()));
-        messageBox.setText
-        ("Synchronisation mit dem L2P der RWTH Aachen abgeschlossen.");
-        messageBox.setIcon(QMessageBox::NoIcon);
-        messageBox.setInformativeText(QString
-                                      ("Es wurden %1 von %2 eingebundenen Dateien synchronisiert.\n(Dieses Fenster schließt nach 10 Sek. automatisch.)").arg
-                                      (QString::number(changedCounter),
-                                       QString::number(counter)));
-        messageBox.setStandardButtons(QMessageBox::Ok);
-        messageBox.exec();
-
-        // Alle synchronisierten Elemente auswählen
-        ui->dataTreeView->selectionModel()->
-        select(proxyModel.mapSelectionFromSource(newSelection),
-               QItemSelectionModel::ClearAndSelect);
+        emit enableSignal(true);
+        return;
     }
+
+    FileDownloader *loader = new FileDownloader(
+            getFileCount(elementList),
+            options->isOriginalModifiedDateCheckBoxChecked(),
+            this);
+
+    // Iterieren über alle Elemente
+    Structureelement *currentDirectory = elementList.first();
+    int counter = getFileCount(elementList);
+    int changedCounter = 0;
+    bool neueVeranstaltung = false;
+    QString veranstaltungName;
+
+    QItemSelection newSelection;
+    ui->dataTreeView->collapseAll();
+
+    for (QLinkedList < Structureelement * >::iterator iterator =
+             elementList.begin(); iterator != elementList.end(); iterator++)
+    {
+        Structureelement* currentElement = *iterator;
+        if (currentElement->parent() != 0)
+        {
+            while (!currentElement->data(urlRole).toUrl().
+                   toString().contains(currentDirectory->data(urlRole).
+                                       toUrl().toString(),
+                                       Qt::CaseSensitive))
+            {
+                currentDirectory = (Structureelement *) currentDirectory->parent();
+                verzeichnis.cdUp();
+            }
+        }
+        else
+        {
+            verzeichnis.setPath(options->downloadFolderLineEditText());
+            neueVeranstaltung = true;
+        }
+
+        // 1. Fall: Ordner
+        if (currentElement->type() != fileItem)
+        {
+            if (!verzeichnis.exists(currentElement->text()))
+            {
+                if (!verzeichnis.mkdir(currentElement->text()))
+                {
+                    Utils::errorMessageBox("Beim Erstellen eines Ordners ist ein Fehler aufgetreten.", currentElement->text());
+                    break;
+                }
+            }
+
+            if (neueVeranstaltung)
+            {
+                veranstaltungName = currentElement->text();
+                neueVeranstaltung = false;
+            }
+
+            currentDirectory = *iterator;
+            verzeichnis.cd(currentElement->text());
+        }
+        // 2. Fall: Datei
+        else
+        {
+            // Datei existiert noch nicht
+            // counter++;
+            if (!verzeichnis.exists(currentElement->text()) ||
+                (QFileInfo(verzeichnis, currentElement->text()).size()
+                 != (*((Structureelement *) (*iterator))).data(sizeRole).toInt()))
+            {
+                QString url = QString("https://www3.elearning.rwth-aachen.de/_vti_bin/l2pservices/api.svc/v1/") %
+                        QString("downloadFile/") %
+                        currentElement->text() %
+                        QString("?accessToken=") %
+                        options->getAccessToken() %
+                        QString("&cid=") %
+                        currentElement->data(cidRole).toString() %
+                        QString("&downloadUrl=") %
+                        currentElement->data(urlRole).toString();
+
+                if (!loader->startNextDownload(currentElement->text(),
+                                               veranstaltungName,
+                                               verzeichnis.
+                                               absoluteFilePath(currentElement->text()), QUrl(url), changedCounter + 1, currentElement->data(sizeRole).toInt()))
+                    break;
+
+                changedCounter++;
+                currentElement->setData(NOW_SYNCHRONISED, synchronisedRole);
+                ui->dataTreeView->scrollTo(proxyModel.mapFromSource(currentElement->index()));
+                newSelection.select(currentElement->index(), currentElement->index());
+            }
+        }
+    }
+
+    loader->close();
+
+    // Automatisches Beenden nach der Synchronisation
+    if (options->isAutoCloseAfterSyncCheckBoxChecked())
+    {
+        AutoCloseDialog autoClose;
+        if(!autoClose.exec())
+        {
+            QCoreApplication::quit();
+        }
+    }
+
+    // Information über abgeschlossene Synchronisation anzeigen
+    QMessageBox messageBox(this);
+    QTimer::singleShot(10000, &messageBox, SLOT(accept()));
+    messageBox.setText
+    ("Synchronisation mit dem L2P der RWTH Aachen abgeschlossen.");
+    messageBox.setIcon(QMessageBox::NoIcon);
+    messageBox.setInformativeText(QString
+                                  ("Es wurden %1 von %2 eingebundenen Dateien synchronisiert.\n(Dieses Fenster schließt nach 10 Sek. automatisch.)").arg
+                                  (QString::number(changedCounter),
+                                   QString::number(counter)));
+    messageBox.setStandardButtons(QMessageBox::Ok);
+    messageBox.exec();
+
+    // Alle synchronisierten Elemente auswählen
+    ui->dataTreeView->selectionModel()->
+    select(proxyModel.mapSelectionFromSource(newSelection),
+           QItemSelectionModel::ClearAndSelect);
 
 
     emit enableSignal(true);
@@ -471,7 +453,9 @@ void Browser::on_searchPushButton_clicked()
 {
     // Kein Suchwort
     if (ui->searchLineEdit->text().isEmpty())
+    {
         return;
+    }
 
     // Alle Elemente mit dem Suchwort finden
     QList<QStandardItem *> found = itemModel->findItems("*" % ui->searchLineEdit->text() % "*",
@@ -653,6 +637,8 @@ int Browser::getFileCount(QLinkedList < Structureelement * > &liste)
     return fileCounter;
 }
 
+
+
 // Aktivierung oder Deaktivierung der Buttons in Abhängigkeit des Status
 void Browser::updateButtons()
 {
@@ -712,10 +698,16 @@ QNetworkRequest *Browser::webdavRequest(Structureelement *aktuelleVeranstaltung,
     return request;
 }
 
-void Browser::doAuthentification(QNetworkReply *, QAuthenticator *auth)
+QNetworkRequest *Browser::apiRequest(Structureelement *course, QString apiExtension)
 {
-    auth->setUser(options->userNameLineEditText());
-    auth->setPassword(options->userPasswordLineEditText());
+    QString baseUrl = "https://www3.elearning.rwth-aachen.de/_vti_bin/L2PServices/api.svc/v1/";
+    QString access = "?accessToken=" % options->getAccessToken();
+    QString cid = "&cid=" % course->data(cidRole).toString();
+
+    QString url = baseUrl % apiExtension % access % cid;
+    QNetworkRequest *request = new QNetworkRequest(QUrl(url));
+
+    return request;
 }
 
 void Browser::on_openDownloadfolderPushButton_clicked()

@@ -41,7 +41,8 @@ enum MyItemDataRole
     urlRole             = 33,
     dateRole            = 34,
     includeRole         = 35,
-    synchronisedRole    = 36
+    synchronisedRole    = 36,
+    cidRole             = 37
 };
 
 enum synchroniseStatus
@@ -56,7 +57,8 @@ class Structureelement : public QStandardItem
 {
 public:
     Structureelement(QString name, QUrl url, MyItemType typeEX);
-    Structureelement(QString name, QUrl url, QString time, qint32 size, MyItemType typeEX = fileItem);
+    Structureelement(QString name, QUrl url, int time, qint32 size, MyItemType typeEX = fileItem);
+    Structureelement(QString name, QString cid, MyItemType typeEX);
 
     int type() const;
 
@@ -69,9 +71,13 @@ protected:
     qint32      size;
     bool        included;
     QUrl        url;
+    QString     cid;
     QDateTime   time;
     MyItemType  typeEX;
     enum synchroniseStatus  synchronised;
+
+private:
+    void setIcon();
 
 
 };

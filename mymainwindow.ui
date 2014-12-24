@@ -39,7 +39,7 @@
       <widget class="Browser" name="browserTab">
        <attribute name="icon">
         <iconset resource="Icons.qrc">
-         <normaloff>:/Icons/Icons/cupboard.png</normaloff>:/Icons/Icons/cupboard.png</iconset>
+         <normaloff>:/Icons/Icons/1419140450_678077-computer-128.png</normaloff>:/Icons/Icons/1419140450_678077-computer-128.png</iconset>
        </attribute>
        <attribute name="title">
         <string>Dateibrowser</string>
@@ -49,7 +49,7 @@
       <widget class="Options" name="optionsTab">
        <attribute name="icon">
         <iconset resource="Icons.qrc">
-         <normaloff>:/Icons/Icons/gear.png</normaloff>:/Icons/Icons/gear.png</iconset>
+         <normaloff>:/Icons/Icons/1419140515_678102-cog-128.png</normaloff>:/Icons/Icons/1419140515_678102-cog-128.png</iconset>
        </attribute>
        <attribute name="title">
         <string>Einstellungen</string>
@@ -58,14 +58,31 @@
       </widget>
       <widget class="QWidget" name="logTab">
        <property name="enabled">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
+       <attribute name="icon">
+        <iconset resource="Icons.qrc">
+         <normaloff>:/Icons/Icons/1419123220_edit-paste.png</normaloff>:/Icons/Icons/1419123220_edit-paste.png</iconset>
+       </attribute>
        <attribute name="title">
         <string>Log</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <widget class="QListView" name="logListView"/>
+         <widget class="QListWidget" name="logListWidget">
+          <property name="horizontalScrollBarPolicy">
+           <enum>Qt::ScrollBarAlwaysOff</enum>
+          </property>
+          <property name="isWrapping" stdset="0">
+           <bool>false</bool>
+          </property>
+          <property name="modelColumn">
+           <number>0</number>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
