@@ -8,7 +8,7 @@
 #include <QDir>
 #include <QFile>
 
-#include "logintester.h"
+#include "login.h"
 class Browser;
 
 
@@ -25,23 +25,21 @@ public:
     ~Options();
     void loadSettings();
     void saveSettings();
-    void updateLoginPushButton(void);
 
     // Getter
     bool isUserDataSaveCheckBoxChecked();
     bool isOriginalModifiedDateCheckBoxChecked();
-    bool isDocumentsCheckBoxChecked();
-    bool isSharedMaterialsCheckBoxChecked();
-    bool isTutorDocumentsCheckBoxChecked();
-    bool isExercisesCheckBoxChecked();
-    bool isLiteratureCheckBoxChecked();
-    bool isCurrentSemesterCheckBoxChecked();
-    bool isOldSemesterCheckBoxChecked();
+    bool isLearningMaterialsCheckBoxChecked();
+    bool isSharedLearningmaterialsCheckBoxChecked();
+    bool isAssignmentsCheckBoxChecked();
+    bool isMediaLibrarysCheckBoxChecked();
     bool isAutoLoginOnStartCheckBoxChecked();
     bool isAutoSyncOnStartCheckBoxChecked();
     bool isMinimizeInTrayCheckBoxChecked();
     bool isAutoCloseAfterSyncCheckBoxChecked();
     bool isAutoBackgroundSyncCheckBoxChecked();
+
+    QString getAccessToken() const;
 
     int getLoginCounter();
 
@@ -68,13 +66,18 @@ private:
     // Zählvariable für jeden Loginversuch
     int loginCounter;
 
+    Login login;
+
+    QString accessToken;
+
 private slots:
     void on_userDataSaveCheckBox_stateChanged(int);
-    void on_userNameLineEdit_textChanged(const QString);
-    void on_userPasswordLineEdit_textChanged(const QString);
     void on_downloadFolderPushButton_clicked();
     void on_autoLoginOnStartCheckBox_stateChanged(int arg1);
     void on_downloadFolderlineEdit_textChanged(const QString);
+    void on_loginErasePushButton_clicked();
+    void loginResultSlot(int result);
+    void accessTokenChanged(QString newAccessToken);
 };
 
 #endif // OPTIONS_H

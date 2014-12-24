@@ -18,7 +18,7 @@ public:
     explicit Parser(QObject *parent = 0);
     static void parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel);
     static void parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelement*> *replies, QString downloadDirectoryPath);
-    
+
 signals:
     
 public slots:
