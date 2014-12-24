@@ -1,26 +1,31 @@
-#include "options.h"
-#include "ui_options.h"
-
-#include <QDebug>
 #include <QSystemTrayIcon>
 
+#include "options.h"
+#include "ui_options.h"
 #include "browser.h"
+#include "logindialog.h"
 
 Options::Options(QWidget *parent) :
     QWidget(parent),
+    login(this),
     ui(new Ui::Options)
 {
     ui->setupUi(this);
     loginCounter = 0;
 
+    QObject::connect(&login, SIGNAL(newAccessToken(QString)), this, SLOT(accessTokenChanged(QString)));
+
     if (QSystemTrayIcon::isSystemTrayAvailable())
         ui->minimizeInTrayCheckBox->setEnabled(true);
-
-    QObject::connect(ui->userPasswordLineEdit, SIGNAL(returnPressed()), ui->loginPushButton, SLOT(click()));
 }
 
 Options::~Options()
 {
+    if(ui->userDataSaveCheckBox->isChecked())
+    {
+        login.saveAccessToken();
+    }
+
     delete ui;
 }
 
@@ -32,42 +37,33 @@ void Options::loadSettings()
     settings.beginGroup("loginData");
     if (settings.value("saveLoginData", false).toBool())
     {
-        ui->userNameLineEdit->setText(              settings.value("u", "").toString());
-        ui->userPasswordLineEdit->setText(          settings.value("p", "").toString());
         ui->userDataSaveCheckBox->setChecked(true);
         ui->userDataSaveCheckBox->setEnabled(true);
     }
     else
+    {
         ui->userDataSaveCheckBox->setChecked(false);
+    }
     settings.endGroup();
 
     ui->downloadFolderlineEdit->setText(            settings.value("downloadFolder", "").toString());
     ui->originalModifiedDateCheckBox->setChecked(   settings.value("originalModifiedDate", true).toBool());
 
-    settings.beginGroup("semesterFilter");
-    ui->currentSemesterCheckBox->setChecked(        settings.value("currentSemester", true).toBool());
-    ui->oldSemesterCheckBox->setChecked(            settings.value("oldSemester", false).toBool());
-    settings.endGroup();
-
     settings.beginGroup("documentFilter");
-    ui->documentsCheckBox->setChecked(              settings.value("documents", true).toBool());
-    ui->sharedMaterialsCheckBox->setChecked(        settings.value("sharedMaterials", true).toBool());
-    ui->exercisesCheckBox->setChecked(              settings.value("exercises", true).toBool());
-    ui->literatureCheckBox->setChecked(             settings.value("literature", true).toBool());
-    ui->tutorDocumentsCheckBox->setChecked(         settings.value("tutorDocuments", true).toBool());
+    ui->learningMaterialsCheckBox->setChecked(              settings.value("documents", true).toBool());
+    ui->sharedDocumentsCheckBox->setChecked(        settings.value("sharedMaterials", true).toBool());
+    ui->assignmentsCheckBox->setChecked(              settings.value("exercises", true).toBool());
+    ui->mediaLibrarysCheckBox->setChecked(             settings.value("literature", true).toBool());
     settings.endGroup();
 
     settings.beginGroup("automation");
     ui->autoLoginOnStartCheckBox->setChecked(       settings.value("autoLoginOnStart", false).toBool());
     ui->autoSyncOnStartCheckBox->setChecked(        settings.value("autoSyncOnStart", false).toBool());
-    ui->autoBackgroundSyncCheckBox->setChecked(     settings.value("autoBackgroundSync", false).toBool());
-    ui->autoBackgroundSyncSpinBox->setValue(        settings.value("autoBackgroundSyncTime", 60).toInt());
     ui->autoCloseAfterSyncCheckBox->setChecked(     settings.value("autoCloseAfterSync", false).toBool());
     settings.endGroup();
 
     settings.beginGroup("misc");
     ui->minimizeInTrayCheckBox->setChecked(         settings.value("minimizeInTray", false).toBool());
-    ui->seperateDirectoriesCheckBox->setChecked(    settings.value("seperateDirectories", false).toBool());
     settings.endGroup();
 }
 
@@ -80,8 +76,6 @@ void Options::saveSettings()
     if (ui->userDataSaveCheckBox->isChecked())
     {
         settings.beginGroup("loginData");
-        settings.setValue("u", ui->userNameLineEdit->text());
-        settings.setValue("p", ui->userPasswordLineEdit->text());
         settings.setValue("saveLoginData", true);
         settings.endGroup();
     }
@@ -91,77 +85,36 @@ void Options::saveSettings()
     settings.setValue("downloadFolder",     ui->downloadFolderlineEdit->text());
     settings.setValue("originalModifiedDate", ui->originalModifiedDateCheckBox->isChecked());
 
-    settings.beginGroup("semesterFilter");
-    settings.setValue("currentSemester",    ui->currentSemesterCheckBox->isChecked());
-    settings.setValue("oldSemester",        ui->oldSemesterCheckBox->isChecked());
-    settings.endGroup();
-
     settings.beginGroup("documentFilter");
-    settings.setValue("documents",          ui->documentsCheckBox->isChecked());
-    settings.setValue("sharedMaterials",    ui->sharedMaterialsCheckBox->isChecked());
-    settings.setValue("exercises",          ui->exercisesCheckBox->isChecked());
-    settings.setValue("literature",         ui->literatureCheckBox->isChecked());
-    settings.setValue("tutorDocuments",     ui->tutorDocumentsCheckBox->isChecked());
+    settings.setValue("documents",          ui->learningMaterialsCheckBox->isChecked());
+    settings.setValue("sharedMaterials",    ui->sharedDocumentsCheckBox->isChecked());
+    settings.setValue("exercises",          ui->assignmentsCheckBox->isChecked());
+    settings.setValue("literature",         ui->mediaLibrarysCheckBox->isChecked());
     settings.endGroup();
 
     settings.beginGroup("automation");
     settings.setValue("autoLoginOnStart",   ui->autoLoginOnStartCheckBox->isChecked());
     settings.setValue("autoSyncOnStart",    ui->autoSyncOnStartCheckBox->isChecked());
-    settings.setValue("autoBackgroundSync", ui->autoBackgroundSyncCheckBox->isChecked());
-    settings.setValue("autoBackgroundSyncTime", ui->autoBackgroundSyncSpinBox->value());
     settings.setValue("autoCloseAfterSync", ui->autoCloseAfterSyncCheckBox->isChecked());
     settings.endGroup();
 
     settings.beginGroup("misc");
     settings.setValue("minimizeInTray",     ui->minimizeInTrayCheckBox->isChecked());
-    settings.setValue("seperateDirectories",ui->seperateDirectoriesCheckBox->isChecked());
     settings.endGroup();
 }
 
+
+
 void Options::on_loginPushButton_clicked()
 {
+    LoginDialog ld;
+    QObject::connect(&ld, SIGNAL(finished(int)), this, SLOT(loginResultSlot(int)));
+
+    login.init();
+    ld.run(&login);
+    ld.exec();
+
     loginCounter++;
-
-    // Erstellen eines Logintesters
-    LoginTester *loginTester = new LoginTester(ui->userNameLineEdit->text(),
-                                               ui->userPasswordLineEdit->text(),
-                                               2,
-                                               this);
-
-    // Testen des Logins
-    // 1.Fall: Login erfolgreich
-    if (loginTester->exec())
-    {
-        // Ändern des Schreibrechts der LineEdits
-        ui->userNameLineEdit->setReadOnly(true);
-        ui->userPasswordLineEdit->setReadOnly(true);
-
-        // Hinzufügen eines neuen Styles
-        ui->userNameLineEdit->setStyleSheet
-        ("QLineEdit{background-color:#6CFF47; font: bold}");
-        ui->userPasswordLineEdit->setStyleSheet
-        ("QLineEdit{background-color:#6CFF47; font: bold}");
-
-        // Aktualisieren der Buttons
-        ui->loginPushButton->setEnabled(false);
-        //ui->refreshPushButton->setEnabled(true);
-        ui->autoLoginOnStartCheckBox->setEnabled(true);
-        ui->userDataSaveCheckBox->setEnabled(true);
-
-        // Setzen des buttons je nach Einstellung
-        QSettings settings;
-        // ui->userDataSaveCheckBox->setChecked(einstellungen.value("login/save").toBool());
-        //ui->autoLoginOnStartCheckBox->setChecked(settings.value("login/autoLoginOnStartCheckBox").toBool());
-        //ui->autoSyncOnStartCheckBox->setChecked(settings.value("autoSync").toBool());
-        // Anzeigen des Erfolgs in der Statusbar
-        //ui->statusBar->showMessage("Login erfolgreich!");
-
-        emit switchTab(0);
-        // Sofortiges Aktualisiern der Daten
-        browser->on_refreshPushButton_clicked();
-    }
-
-    delete loginTester;
 }
 
 void Options::on_userDataSaveCheckBox_stateChanged(int checked)
@@ -182,16 +135,11 @@ void Options::on_autoLoginOnStartCheckBox_stateChanged(int checked)
     if (checked)
     {
         ui->autoSyncOnStartCheckBox->setEnabled(true);
-//        ui->autoBackgroundSyncCheckBox->setEnabled(true);
-//        ui->autoBackgroundSyncSpinBox->setEnabled(true);
     }
     else
     {
         ui->autoSyncOnStartCheckBox->setEnabled(false);
         ui->autoSyncOnStartCheckBox->setChecked(false);
-        ui->autoBackgroundSyncCheckBox->setEnabled(false);
-        ui->autoBackgroundSyncCheckBox->setChecked(false);
-        ui->autoBackgroundSyncSpinBox->setEnabled(false);
     }
 }
 
@@ -199,37 +147,6 @@ void Options::on_downloadFolderlineEdit_textChanged(const QString downloadFolder
 {
     emit downloadFolderLineEditTextChanged(downloadFolder);
 }
-
-void Options::on_userNameLineEdit_textChanged(const QString)
-{
-    updateLoginPushButton();
-}
-
-void Options::on_userPasswordLineEdit_textChanged(const QString)
-{
-    updateLoginPushButton();
-}
-
-void Options::updateLoginPushButton()
-{
-    // Löschen der gespeicherten Einstellungen, da neue Benutzerdaten
-    // vorliegen
-    //ui->autoLoginOnStartCheckBox->setChecked(false);
-    //ui->userDataSaveCheckBox->setChecked(false);
-
-    // Aktivieren des Loginbuttons, wenn beide Felder ausgefüllt sind
-    if (!ui->userNameLineEdit->text().isEmpty()
-        && !ui->userPasswordLineEdit->text().isEmpty())
-    {
-        ui->loginPushButton->setEnabled(true);
-    }
-    else
-    {
-        ui->loginPushButton->setEnabled(false);
-    }
-}
-
-
 
 void Options::on_downloadFolderPushButton_clicked()
 {
@@ -249,53 +166,29 @@ QString Options::downloadFolderLineEditText()
     return ui->downloadFolderlineEdit->text();
 }
 
-QString Options::userNameLineEditText()
-{
-    return ui->userNameLineEdit->text();
-}
-
-QString Options::userPasswordLineEditText()
-{
-    return ui->userPasswordLineEdit->text();
-}
-
 void Options::init(Browser *browser)
 {
     this->browser = browser;
 }
 
-bool Options::isTutorDocumentsCheckBoxChecked()
+bool Options::isAssignmentsCheckBoxChecked()
 {
-    return ui->tutorDocumentsCheckBox->isChecked();
+    return ui->assignmentsCheckBox->isChecked();
 }
 
-bool Options::isExercisesCheckBoxChecked()
+bool Options::isMediaLibrarysCheckBoxChecked()
 {
-    return ui->exercisesCheckBox->isChecked();
+    return ui->mediaLibrarysCheckBox->isChecked();
 }
 
-bool Options::isLiteratureCheckBoxChecked()
+bool Options::isSharedLearningmaterialsCheckBoxChecked()
 {
-    return ui->literatureCheckBox->isChecked();
-}
-bool Options::isCurrentSemesterCheckBoxChecked()
-{
-    return ui->currentSemesterCheckBox->isChecked();
+    return ui->sharedDocumentsCheckBox->isChecked();
 }
 
-bool Options::isOldSemesterCheckBoxChecked()
+bool Options::isLearningMaterialsCheckBoxChecked()
 {
-    return ui->oldSemesterCheckBox->isChecked();
-}
-
-bool Options::isSharedMaterialsCheckBoxChecked()
-{
-    return ui->sharedMaterialsCheckBox->isChecked();
-}
-
-bool Options::isDocumentsCheckBoxChecked()
-{
-    return ui->documentsCheckBox->isChecked();
+    return ui->learningMaterialsCheckBox->isChecked();
 }
 
 bool Options::isAutoSyncOnStartCheckBoxChecked()
@@ -318,6 +211,11 @@ bool Options::isAutoCloseAfterSyncCheckBoxChecked()
     return ui->autoCloseAfterSyncCheckBox->isChecked();
 }
 
+QString Options::getAccessToken() const
+{
+    return accessToken;
+}
+
 bool Options::isAutoLoginOnStartCheckBoxChecked()
 {
     return ui->autoLoginOnStartCheckBox->isChecked();
@@ -326,4 +224,44 @@ bool Options::isAutoLoginOnStartCheckBoxChecked()
 int Options::getLoginCounter()
 {
     return loginCounter;
+}
+
+void Options::on_loginErasePushButton_clicked()
+{
+    ui->loginStatusLabel->setText("Status: ausgeloggt");
+
+    login.deleteAccess();
+    ui->loginErasePushButton->setEnabled(false);
+    ui->loginPushButton->setEnabled(true);
+    ui->autoLoginOnStartCheckBox->setEnabled(false);
+    ui->autoLoginOnStartCheckBox->setChecked(false);
+    ui->userDataSaveCheckBox->setEnabled(false);
+    ui->userDataSaveCheckBox->setChecked(false);
+}
+
+void Options::loginResultSlot(int result)
+{
+    if(result == QDialog::Accepted)
+    {
+        ui->loginStatusLabel->setText("Status: Login erfolgreich");
+
+        // Aktualisieren der Buttons
+        ui->loginErasePushButton->setEnabled(true);
+        ui->loginPushButton->setEnabled(false);
+        ui->autoLoginOnStartCheckBox->setEnabled(true);
+        ui->userDataSaveCheckBox->setEnabled(true);
+
+        //emit switchTab(0);
+        // Sofortiges Aktualisiern der Daten
+        browser->on_refreshPushButton_clicked();
+    }
+    else
+    {
+        ui->loginStatusLabel->setText("Status: Login fehlgeschlagen");
+    }
+}
+
+void Options::accessTokenChanged(QString newAccessToken)
+{
+    accessToken = newAccessToken;
 }

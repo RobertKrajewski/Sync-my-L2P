@@ -45,9 +45,7 @@ class FileDownloader : public QDialog
     Q_OBJECT
 
 public:
-    explicit FileDownloader(QString username,
-                             QString password,
-                             int itemNumber,
+    explicit FileDownloader(int itemNumber,
                              bool originalModifiedDate,
                              QWidget *parent= 0);
     ~FileDownloader();
@@ -61,9 +59,6 @@ private:
 
     QEventLoop loop;
 
-    QString username;
-    QString password;
-
     int itemNumber;
     bool originalModifiedDate;
 
@@ -74,7 +69,6 @@ private:
     qint64 roundBytes(qint64 bytes);
 
 private slots:
-    void authenticate(QNetworkReply*, QAuthenticator*);
     void downloadProgressSlot(qint64,qint64);
     void readyReadSlot();
     void finishedSlot();

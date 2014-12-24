@@ -22,11 +22,26 @@ Structureelement::Structureelement(QString name, QUrl url, MyItemType typeEX)
 {
     synchronised = NOT_SYNCHRONISED;
     size = 0;
+    setIcon();
 }
 
-Structureelement::Structureelement(QString name, QUrl url, QString time, qint32 size, MyItemType typeEX)
-    :QStandardItem(name), included(true), url(url),time(QDateTime::fromString(time, Qt::ISODate)), size(size), typeEX(typeEX)
+Structureelement::Structureelement(QString name, QUrl url, int time, qint32 size, MyItemType typeEX)
+    :QStandardItem(name),
+     included(true),
+     url(url),
+     time(QDateTime::fromMSecsSinceEpoch(qint64(1000) * time)),
+     size(size),
+     typeEX(typeEX)
 {
+    setIcon();
+}
+
+Structureelement::Structureelement(QString name, QString cid, MyItemType typeEX)
+    :QStandardItem(name), included(true), url(), typeEX(typeEX), cid(cid)
+{
+    synchronised = NOT_SYNCHRONISED;
+    size = 0;
+    setIcon();
 }
 
 QVariant Structureelement::data(int role) const
@@ -50,6 +65,10 @@ QVariant Structureelement::data(int role) const
     else if (role == synchronisedRole)
     {
         return synchronised;
+    }
+    else if (role == cidRole)
+    {
+        return cid;
     }
     else if (role == Qt::StatusTipRole)
     {
@@ -95,6 +114,48 @@ QVariant Structureelement::data(int role) const
     return QStandardItem::data(role);
 }
 
+void Structureelement::setIcon()
+{
+    if(typeEX == fileItem)
+    {
+        QString filename = text();
+        // Hinzufügen des endungsabhängigen Icons
+        // PDF
+        if (filename.contains(QRegExp(".pdf$", Qt::CaseInsensitive)))
+        {
+           setData(QIcon(":/Icons/Icons/1419140442_file-pdf-128.png"), Qt::DecorationRole);
+        }
+        // ZIP
+        else if (filename.contains(QRegExp(".zip$", Qt::CaseInsensitive)))
+        {
+            setData(QIcon(":/Icons/Icons/filetype_zip.png"), Qt::DecorationRole);
+        }
+        // RAR
+        else if (filename.contains(QRegExp(".rar$", Qt::CaseInsensitive)))
+        {
+            setData(QIcon(":/Icons/Icons/filetype_rar.png"), Qt::DecorationRole);
+        }
+        // Sonstige
+        else
+        {
+            setData(QIcon(":/Icons/Icons/file.png"), Qt::DecorationRole);
+        }
+    }
+    else if(typeEX == courseItem)
+    {
+        setData(QIcon(":/Icons/Icons/1419123850_paste.png"), Qt::DecorationRole);
+    }
+    else if(typeEX == directoryItem)
+    {
+        setData(QIcon(":/Icons/Icons/1419140428_folder-blue-128.png"), Qt::DecorationRole);
+    }
+    else if(typeEX == semesterItem)
+    {
+        setData(QIcon(":/Icons/Icons/1419140388_calendar-128.png"), Qt::DecorationRole);
+    }
+
+}
+
 bool Structureelement::operator< (const QStandardItem& other) const
 {
     if ((this->size == 0) && ((((Structureelement*)(&other))->size) != 0))
@@ -131,6 +192,10 @@ void Structureelement::setData(const QVariant &value, int role)
     else if (role == synchronisedRole)
     {
         this->synchronised = (synchroniseStatus) value.toInt();
+    }
+    else if (role == cidRole)
+    {
+        this->cid = value.toString();
     }
     else
     {
