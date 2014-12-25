@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>download.png</file>
+        <file>login.png</file>
+        <file>magnifier.png</file>
+        <file>refresh.png</file>
+        <file>otherFile.png</file>
+        <file>rar.png</file>
+        <file>zip.png</file>
+        <file>downloadDirectory.png</file>
+        <file>logs.png</file>
+        <file>semester.png</file>
+        <file>course.png</file>
+        <file>directory.png</file>
+        <file>pdf.png</file>
+        <file>browser.png</file>
+        <file>settings.png</file>
+    </qresource>
+</RCC>

@@ -66,5 +66,5 @@ OTHER_FILES += \
     .gitignore
 
 RESOURCES += \
-    Icons.qrc \
+    icons\icons.qrc \
     Certificates.qrc
