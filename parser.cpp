@@ -1,18 +1,13 @@
 #include "parser.h"
-#include <QDebug>
 
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonArray>
+#include <QMap>
+#include <QFile>
 
+#include "utils.h"
 #include "qslog/QsLog.h"
-
-extern QString MainURL;
-
-Parser::Parser(QObject *parent) :
-    QObject(parent)
-{
-}
 
 void Parser::parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
 {
