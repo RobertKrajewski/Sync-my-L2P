@@ -31,7 +31,7 @@ void Utils::errorMessageBox(QString message, QString detailMessage)
 {
     // Falls ein Fehler aufgetreten sein sollte, Ausgabe dessen
     QMessageBox messageBox;
-    messageBox.setWindowIcon(QIcon(":/Icons/Icons/magnifier.png"));
+    messageBox.setWindowIcon(QIcon(":/icons/magnifier.png"));
     messageBox.setText(message);
     messageBox.setInformativeText(detailMessage);
     messageBox.setStandardButtons(QMessageBox::Ok);
