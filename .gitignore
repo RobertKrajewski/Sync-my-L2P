@@ -1,8 +1,10 @@
 Sync-my-L2P
-Certificates
+bin
 *.o
 *.pro.user
 moc_*.cpp
 qrc_*.cpp
 ui_*.h
 Makefile*
+*.exe
+*.obj

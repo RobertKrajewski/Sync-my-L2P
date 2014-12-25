@@ -71,8 +71,8 @@
            <string>einloggen</string>
           </property>
           <property name="icon">
-           <iconset resource="Icons.qrc">
-            <normaloff>:/Icons/Icons/lock.png</normaloff>:/Icons/Icons/lock.png</iconset>
+           <iconset resource="icons/icons.qrc">
+            <normaloff>:/icons/login.png</normaloff>:/icons/login.png</iconset>
           </property>
           <property name="default">
            <bool>false</bool>
@@ -114,6 +114,10 @@
        <widget class="QPushButton" name="downloadFolderPushButton">
         <property name="text">
          <string>Durchsuchen</string>
+        </property>
+        <property name="icon">
+         <iconset resource="icons/icons.qrc">
+          <normaloff>:/icons/downloadDirectory.png</normaloff>:/icons/downloadDirectory.png</iconset>
         </property>
        </widget>
       </item>
@@ -297,7 +301,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="Icons.qrc"/>
+  <include location="icons/icons.qrc"/>
  </resources>
  <connections/>
 </ui>

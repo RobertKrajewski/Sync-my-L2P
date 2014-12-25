@@ -17,8 +17,8 @@
    <string>Login</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Icons.qrc">
-    <normaloff>:/Icons/Icons/lock.png</normaloff>:/Icons/Icons/lock.png</iconset>
+   <iconset resource="icons/icons.qrc">
+    <normaloff>:/icons/login.png</normaloff>:/icons/login.png</iconset>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -63,7 +63,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="Icons.qrc"/>
+  <include location="icons/icons.qrc"/>
  </resources>
  <connections>
   <connection>

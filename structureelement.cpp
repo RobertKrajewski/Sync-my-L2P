@@ -123,35 +123,35 @@ void Structureelement::setIcon()
         // PDF
         if (filename.contains(QRegExp(".pdf$", Qt::CaseInsensitive)))
         {
-           setData(QIcon(":/Icons/Icons/1419140442_file-pdf-128.png"), Qt::DecorationRole);
+           setData(QIcon(":/icons/pdf.png"), Qt::DecorationRole);
         }
         // ZIP
         else if (filename.contains(QRegExp(".zip$", Qt::CaseInsensitive)))
         {
-            setData(QIcon(":/Icons/Icons/filetype_zip.png"), Qt::DecorationRole);
+            setData(QIcon(":/icons/zip.png"), Qt::DecorationRole);
         }
         // RAR
         else if (filename.contains(QRegExp(".rar$", Qt::CaseInsensitive)))
         {
-            setData(QIcon(":/Icons/Icons/filetype_rar.png"), Qt::DecorationRole);
+            setData(QIcon(":/icons/rar.png"), Qt::DecorationRole);
         }
         // Sonstige
         else
         {
-            setData(QIcon(":/Icons/Icons/file.png"), Qt::DecorationRole);
+            setData(QIcon(":/icons/otherFile.png"), Qt::DecorationRole);
         }
     }
     else if(typeEX == courseItem)
     {
-        setData(QIcon(":/Icons/Icons/1419123850_paste.png"), Qt::DecorationRole);
+        setData(QIcon(":/icons/course.png"), Qt::DecorationRole);
     }
     else if(typeEX == directoryItem)
     {
-        setData(QIcon(":/Icons/Icons/1419140428_folder-blue-128.png"), Qt::DecorationRole);
+        setData(QIcon(":/icons/directory.png"), Qt::DecorationRole);
     }
     else if(typeEX == semesterItem)
     {
-        setData(QIcon(":/Icons/Icons/1419140388_calendar-128.png"), Qt::DecorationRole);
+        setData(QIcon(":/icons/semester.png"), Qt::DecorationRole);
     }
 
 }

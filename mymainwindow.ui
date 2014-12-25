@@ -26,8 +26,8 @@
    <string>Sync-my-L²P</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Icons.qrc">
-    <normaloff>:/Icons/Icons/magnifier.png</normaloff>:/Icons/Icons/magnifier.png</iconset>
+   <iconset resource="icons/icons.qrc">
+    <normaloff>:/icons/magnifier.png</normaloff>:/icons/magnifier.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -38,8 +38,8 @@
       </property>
       <widget class="Browser" name="browserTab">
        <attribute name="icon">
-        <iconset resource="Icons.qrc">
-         <normaloff>:/Icons/Icons/1419140450_678077-computer-128.png</normaloff>:/Icons/Icons/1419140450_678077-computer-128.png</iconset>
+        <iconset resource="icons/icons.qrc">
+         <normaloff>:/icons/browser.png</normaloff>:/icons/browser.png</iconset>
        </attribute>
        <attribute name="title">
         <string>Dateibrowser</string>
@@ -48,8 +48,8 @@
       </widget>
       <widget class="Options" name="optionsTab">
        <attribute name="icon">
-        <iconset resource="Icons.qrc">
-         <normaloff>:/Icons/Icons/1419140515_678102-cog-128.png</normaloff>:/Icons/Icons/1419140515_678102-cog-128.png</iconset>
+        <iconset resource="icons/icons.qrc">
+         <normaloff>:/icons/settings.png</normaloff>:/icons/settings.png</iconset>
        </attribute>
        <attribute name="title">
         <string>Einstellungen</string>
@@ -61,8 +61,8 @@
         <bool>true</bool>
        </property>
        <attribute name="icon">
-        <iconset resource="Icons.qrc">
-         <normaloff>:/Icons/Icons/1419123220_edit-paste.png</normaloff>:/Icons/Icons/1419123220_edit-paste.png</iconset>
+        <iconset resource="icons/icons.qrc">
+         <normaloff>:/icons/logs.png</normaloff>:/icons/logs.png</iconset>
        </attribute>
        <attribute name="title">
         <string>Log</string>
@@ -107,7 +107,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="Icons.qrc"/>
+  <include location="icons/icons.qrc"/>
  </resources>
  <connections/>
 </ui>

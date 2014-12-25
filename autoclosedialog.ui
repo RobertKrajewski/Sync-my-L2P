@@ -20,8 +20,8 @@
    <string>Automatisch beenden</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Icons.qrc">
-    <normaloff>:/Icons/Icons/magnifier.png</normaloff>:/Icons/Icons/magnifier.png</iconset>
+   <iconset resource="icons/icons.qrc">
+    <normaloff>:/icons/magnifier.png</normaloff>:/icons/magnifier.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -40,7 +40,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="Icons.qrc"/>
+  <include location="icons/icons.qrc"/>
  </resources>
  <connections/>
 </ui>
