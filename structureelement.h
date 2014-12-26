@@ -68,7 +68,10 @@ public:
     QVariant data(int role = Qt::UserRole + 1) const;
 
 protected:
+    /// Größe des Elements in Bytes
     qint32      size;
+
+    /// Ob die Datei in den Download eingebunden wird
     bool        included;
     QUrl        url;
     QString     cid;
@@ -77,7 +80,7 @@ protected:
     enum synchroniseStatus  synchronised;
 
 private:
-    void setIcon();
+    void chooseIcon();
 
 
 };
