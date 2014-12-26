@@ -12,7 +12,7 @@ class Utils : public QObject
 public:
     explicit Utils(QObject *parent = 0);
     static QString getStrukturelementPfad(Structureelement* item, QString path);
-    static void copyTextToClipboard(Structureelement *item);
+    static void copyTextToClipboard(QString text);
     static void errorMessageBox(QString message, QString detailMessage);
 
     static QList<Structureelement*> getAllCourseItems(QStandardItemModel* itemModel);

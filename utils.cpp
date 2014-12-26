@@ -18,13 +18,13 @@ QString Utils::getStrukturelementPfad(Structureelement *item, QString downloadDi
         return elementPath;
 }
 
-void Utils::copyTextToClipboard(Structureelement *item)
+void Utils::copyTextToClipboard(QString text)
 {
     // Holen der globalen Zwischenablage
     QClipboard *clipboard = QApplication::clipboard();
 
     // Kopieren der URL des mit der rechten Maustaste geklickten Items in die Zwischenablage
-    clipboard->setText(item->data(urlRole).toUrl().toString());
+    clipboard->setText(text);
 }
 
 void Utils::errorMessageBox(QString message, QString detailMessage)

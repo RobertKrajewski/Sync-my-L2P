@@ -855,7 +855,7 @@ void Browser::on_showNewDataPushButton_clicked()
 
 void Browser::copyUrlToClipboardSlot()
 {
-    Utils::copyTextToClipboard(lastRightClickItem);
+    Utils::copyTextToClipboard(lastRightClickItem->text());
 }
 
 void Browser::successfulLoginSlot()

@@ -20,7 +20,6 @@
 #include "ui_mymainwindow.h"
 
 #include "qslog/QsLog.h"
-#include "qslog/QsLogDest.h"
 
 
 MyMainWindow::MyMainWindow(QWidget *parent):
@@ -32,9 +31,6 @@ MyMainWindow::MyMainWindow(QWidget *parent):
     // Fenster und Tabs initialisieren
     ui->setupUi(this);
     init();
-
-    QsLogging::Logger::instance().addDestination(QsLogging::DestinationFactory::MakeFunctorDestination(this, SLOT(logSlot(QString,int))));
-    QsLogging::Logger::instance().setLoggingLevel(QsLogging::DebugLevel);
 
     QObject::connect(ui->browserTab, SIGNAL(enableSignal(bool)), this, SLOT(setEnabled(bool)));
     QObject::connect(ui->optionsTab, SIGNAL(enableSignal(bool)), this, SLOT(setEnabled(bool)));
@@ -88,6 +84,7 @@ void MyMainWindow::loadSettings()
 
     ui->browserTab->loadSettings();
     ui->optionsTab->loadSettings();
+    ui->logTab->loadSettings();
 }
 
 /// Speichern aller Einstellungen
@@ -95,6 +92,7 @@ void MyMainWindow::saveSettings()
 {
     ui->browserTab->saveSettings();
     ui->optionsTab->saveSettings();
+    ui->logTab->saveSettings();
 }
 
 /// Löschen alter Einstellungen
@@ -140,7 +138,7 @@ void MyMainWindow::changeEvent(QEvent *event)
 
 void MyMainWindow::createTrayIcon()
 {
-    trayIcon = new QSystemTrayIcon(QIcon(":/Icons/Icons/magnifier.png"), this);
+    trayIcon = new QSystemTrayIcon(QIcon(":/icons/magnifier.png"), this);
     QObject::connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayClickedSlot(QSystemTrayIcon::ActivationReason)));
 }
 
@@ -162,12 +160,5 @@ void MyMainWindow::centerOnDesktop()
     QRect windowRect = this->frameGeometry();
     move((desktopRect.width()  - windowRect.width())  / 2,
          (desktopRect.height() - windowRect.height()) / 2);
-}
-
-/// Empfänger für alle Nachrichten, die im Log auftauchen sollen
-void MyMainWindow::logSlot(QString message, int level)
-{
-    (void) level;
-    ui->logListWidget->addItem(message);
 }
 

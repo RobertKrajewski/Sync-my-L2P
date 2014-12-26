@@ -42,7 +42,6 @@ public:
 
 private slots:
     void trayClickedSlot(QSystemTrayIcon::ActivationReason);
-    void logSlot(QString message, int level);
 
 private:
     void init();
