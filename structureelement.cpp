@@ -22,7 +22,7 @@ Structureelement::Structureelement(QString name, QUrl url, MyItemType typeEX)
 {
     synchronised = NOT_SYNCHRONISED;
     size = 0;
-    setIcon();
+    chooseIcon();
 }
 
 Structureelement::Structureelement(QString name, QUrl url, int time, qint32 size, MyItemType typeEX)
@@ -33,7 +33,7 @@ Structureelement::Structureelement(QString name, QUrl url, int time, qint32 size
      size(size),
      typeEX(typeEX)
 {
-    setIcon();
+    chooseIcon();
 }
 
 Structureelement::Structureelement(QString name, QString cid, MyItemType typeEX)
@@ -41,7 +41,7 @@ Structureelement::Structureelement(QString name, QString cid, MyItemType typeEX)
 {
     synchronised = NOT_SYNCHRONISED;
     size = 0;
-    setIcon();
+    chooseIcon();
 }
 
 QVariant Structureelement::data(int role) const
@@ -114,7 +114,8 @@ QVariant Structureelement::data(int role) const
     return QStandardItem::data(role);
 }
 
-void Structureelement::setIcon()
+/// Icon anhand des Types und der Dateiendung auswählen
+void Structureelement::chooseIcon()
 {
     if(typeEX == fileItem)
     {
@@ -123,39 +124,39 @@ void Structureelement::setIcon()
         // PDF
         if (filename.contains(QRegExp(".pdf$", Qt::CaseInsensitive)))
         {
-           setData(QIcon(":/icons/pdf.png"), Qt::DecorationRole);
+           setIcon(QIcon(":/icons/pdf.png"));
         }
         // ZIP
         else if (filename.contains(QRegExp(".zip$", Qt::CaseInsensitive)))
         {
-            setData(QIcon(":/icons/zip.png"), Qt::DecorationRole);
+            setIcon(QIcon(":/icons/zip.png"));
         }
         // RAR
         else if (filename.contains(QRegExp(".rar$", Qt::CaseInsensitive)))
         {
-            setData(QIcon(":/icons/rar.png"), Qt::DecorationRole);
+            setIcon(QIcon(":/icons/rar.png"));
         }
         // Sonstige
         else
         {
-            setData(QIcon(":/icons/otherFile.png"), Qt::DecorationRole);
+            setIcon(QIcon(":/icons/otherFile.png"));
         }
     }
     else if(typeEX == courseItem)
     {
-        setData(QIcon(":/icons/course.png"), Qt::DecorationRole);
+        setIcon(QIcon(":/icons/course.png"));
     }
     else if(typeEX == directoryItem)
     {
-        setData(QIcon(":/icons/directory.png"), Qt::DecorationRole);
+        setIcon(QIcon(":/icons/directory.png"));
     }
     else if(typeEX == semesterItem)
     {
-        setData(QIcon(":/icons/semester.png"), Qt::DecorationRole);
+        setIcon(QIcon(":/icons/semester.png"));
     }
-
 }
 
+/// Vergleich zwischen zwei Items. Ordner haben Vorrang vor Dateien und sonst wird alphabetisch sortiert.
 bool Structureelement::operator< (const QStandardItem& other) const
 {
     if ((this->size == 0) && ((((Structureelement*)(&other))->size) != 0))
