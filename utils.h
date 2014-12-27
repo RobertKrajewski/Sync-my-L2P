@@ -11,7 +11,7 @@ class Utils : public QObject
     Q_OBJECT
 public:
     explicit Utils(QObject *parent = 0);
-    static QString getStrukturelementPfad(Structureelement* item, QString path);
+    static QString getElementLocalPath(Structureelement* item, QString path);
     static void copyTextToClipboard(QString text);
     static void errorMessageBox(QString message, QString detailMessage);
 
