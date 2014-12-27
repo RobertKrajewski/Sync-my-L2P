@@ -21,11 +21,6 @@ Options::Options(QWidget *parent) :
 
 Options::~Options()
 {
-    if(ui->userDataSaveCheckBox->isChecked())
-    {
-        login.saveAccessToken();
-    }
-
     delete ui;
 }
 
@@ -101,6 +96,11 @@ void Options::saveSettings()
     settings.beginGroup("misc");
     settings.setValue("minimizeInTray",     ui->minimizeInTrayCheckBox->isChecked());
     settings.endGroup();
+
+    if(ui->userDataSaveCheckBox->isChecked())
+    {
+        login.saveAccessToken();
+    }
 }
 
 
