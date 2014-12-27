@@ -18,7 +18,6 @@
 #include "filedownloader.h"
 #include "ui_dateidownloader.h"
 #include "math.h"
-#include <QDebug>
 
 #include "qslog/QsLog.h"
 
@@ -87,6 +86,7 @@ int FileDownloader::startNextDownload(QString filename, QString event, QString v
 /// Anzeige des Downloadfortschritts der aktuellen Datei
 void FileDownloader::downloadProgressSlot(qint64 bytesReceived, qint64 bytesTotal)
 {
+    (void) bytesTotal;
     // Aktualisieren der Progressbar anhand der Größe der empfangenen Bytes
     ui->progressBar->setValue(roundBytes(bytesReceived));
 }
@@ -165,7 +165,11 @@ void FileDownloader::keyPressEvent(QKeyEvent *event)
 /// Erzeugung der passenden Größeneinheit von der Dateigröße
 QString FileDownloader::dataUnitFromBytes(qint64 bytes)
 {
-    if (bytes/1024 > 0)
+    if(bytes > 1024 * 1024 * 5)
+    {
+        return "mB";
+    }
+    else if (bytes > 1024 * 5)
     {
         return "kB";
     }
@@ -178,9 +182,13 @@ QString FileDownloader::dataUnitFromBytes(qint64 bytes)
 /// Dateigröße in lesbare Größe umwandeln
 qint64 FileDownloader::roundBytes(qint64 bytes)
 {
-    if (bytes/1024 > 0)
+    if(bytes > 1024 * 1024 * 5)
     {
-        return (qint64)ceil(((double)bytes/1024));
+        return bytes / (1024 * 1024);
+    }
+    else if (bytes > 1024 * 5)
+    {
+        return bytes / 1024;
     }
     else
     {
