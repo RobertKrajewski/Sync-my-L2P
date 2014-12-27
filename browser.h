@@ -72,7 +72,7 @@ private:
     void getStructureelementsList(Structureelement*, QLinkedList<Structureelement*>&, bool);
     void getStructureelementsList(Structureelement *topElement, QLinkedList <Structureelement *> &list);
 
-    int getFileCount(QLinkedList<Structureelement*>& liste);
+    int getFileCount(QLinkedList<Structureelement*>& items);
 
 
     void updateButtons();
