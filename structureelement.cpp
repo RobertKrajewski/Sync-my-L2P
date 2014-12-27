@@ -31,6 +31,7 @@ Structureelement::Structureelement(QString name, QUrl url, int time, qint32 size
      typeEX(typeEX),
      cid(cid)
 {
+    synchronised = NOT_SYNCHRONISED;
     chooseIcon();
 }
 
