@@ -18,13 +18,11 @@
 #ifndef DATEIDOWNLOADER_H
 #define DATEIDOWNLOADER_H
 
-#include <QDesktopWidget>
 #include <QDialog>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QUrl>
-#include <QAuthenticator>
 #include <QTimer>
 #include <QEventLoop>
 #include <QStringBuilder>
