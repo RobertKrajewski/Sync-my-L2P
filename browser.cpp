@@ -51,7 +51,7 @@ void Browser::loadSettings()
     settings.beginGroup("dateFilter");
     ui->dateFilterCheckBox->setChecked(settings.value("dateFilter", false).toBool());
     ui->minDateEdit->setDate(settings.value("minDate", QDate(2000, 1, 1)).toDate());
-    ui->maxDateEdit->setDate(settings.value("maxDate", QDate(2020, 1, 1)).toDate());
+    ui->maxDateEdit->setDate(settings.value("maxDate", QDate(2042, 1, 1)).toDate());
     settings.endGroup();
 }
 
@@ -70,6 +70,18 @@ void Browser::saveSettings()
     settings.setValue("mindate",        ui->minDateEdit->date());
     settings.setValue("maxDate",        ui->maxDateEdit->date());
     settings.endGroup();
+}
+
+void Browser::downloadDirectoryLineEditChangedSlot(QString downloadDirectory)
+{
+    if (downloadDirectory.isEmpty())
+    {
+        ui->openDownloadfolderPushButton->setEnabled(false);
+    }
+    else
+    {
+        ui->openDownloadfolderPushButton->setEnabled(true);
+    }
 }
 
 // Starten des Aktualisierungsvorgang durch das Abrufen der Veranstaltungen
@@ -94,20 +106,8 @@ void Browser::on_refreshPushButton_clicked()
 
     QNetworkRequest request(QUrl("https://www3.elearning.rwth-aachen.de/_vti_bin/L2PServices/api.svc/v1/viewAllCourseInfo?accessToken=" % options->getAccessToken()));
 
-    // Starten der Anfrage für das aktuelle Semester
-    replies.insert(manager->get(request), 0);
-}
-
-void Browser::downloadDirectoryLineEditChangedSlot(QString downloadDirectory)
-{
-    if (downloadDirectory.isEmpty())
-    {
-        ui->openDownloadfolderPushButton->setEnabled(false);
-    }
-    else
-    {
-        ui->openDownloadfolderPushButton->setEnabled(true);
-    }
+    // Starten der Anfrage für die Veranstaltungen
+    manager->get(request);
 }
 
 // Auslesen der empfangenen Semesterveranstaltungsnamen
@@ -126,25 +126,16 @@ void Browser::coursesRecieved(QNetworkReply *reply)
         QLOG_ERROR() << "Veranstaltungen nicht abrufbar: " << reply->errorString();
     }
 
-    // Löschen der Antwort aus der Queue
-    replies.remove(reply);
-    // Antwort für das spätere Löschen markieren
-    reply->deleteLater();
+    // Veranstaltungen alphabetisch sortieren
+    itemModel->sort(0);
 
-    // Wenn alle Veranstaltungen eingetroffen und geparst sind, Dateien abrufen
-    if (replies.isEmpty())
-    {
-        // Veranstaltungen alphabetisch sortieren
-        itemModel->sort(0);
+    QObject::disconnect(manager,
+                        SIGNAL(finished(QNetworkReply *)),
+                        this,
+                        SLOT(coursesRecieved(QNetworkReply *)));
 
-        QObject::disconnect(manager,
-                            SIGNAL(finished(QNetworkReply *)),
-                            this,
-                            SLOT(coursesRecieved(QNetworkReply *)));
-
-        // Aufruf der Funktion zur Aktualisierung der Dateien
-        requestFileInformation();
-    }
+    // Aufruf der Funktion zur Aktualisierung der Dateien
+    requestFileInformation();
 }
 
 /// Anfordern der Dateien für jede Veranstaltung
@@ -158,6 +149,7 @@ void Browser::requestFileInformation()
     {
         // Freischalten von Schaltflächen
         emit enableSignal(true);
+        updateButtons();
         return;
     }
 
@@ -220,8 +212,8 @@ void Browser::requestFileInformation()
             QNetworkRequest *request = apiRequest(course, "viewAllAssignments");
 
             // Einfügen und Absenden des Requests
-            replies.insert(manager->get(*request),
-                           course);
+//            replies.insert(manager->get(*request),
+//                           course);
 
             delete request;
         }
@@ -252,6 +244,7 @@ void Browser::filesRecieved(QNetworkReply *reply)
     {
         Utils::errorMessageBox("Beim Abruf des Inhalts einer Veranstaltung ist ein Fehler aufgetreten", reply->errorString());
         QLOG_ERROR() << "Fehler beim Abrufen der Dateien einer Veranstaltung: " << reply->errorString();
+        QLOG_ERROR() << reply->readAll();
     }
 
     // Löschen der Antwort aus der Liste der abzuarbeitenden Antworten
@@ -292,6 +285,7 @@ void Browser::on_syncPushButton_clicked()
     // Falls noch kein Downloadverzeichnis angegeben wurde, abbrechen
     if (downloadPath.isEmpty())
     {
+        Utils::errorMessageBox("Downloadverzeichnis fehlt!", "Download unmöglich, da kein Zielverzeichnis angegeben wurde.");
         QLOG_ERROR() << "Kann nicht synchronisieren, da kein Downloadverzeichnis angegeben wurde";
         emit switchTab(1);
         emit enableSignal(true);
@@ -317,20 +311,21 @@ void Browser::on_syncPushButton_clicked()
         getStructureelementsList((Structureelement *) itemModel->item(i, 0), elementList, true);
     }
 
+    // Abbruch bei fehlenden Elementen
     if (elementList.isEmpty())
     {
         emit enableSignal(true);
         return;
     }
 
+    int counter = getFileCount(elementList);
     FileDownloader *loader = new FileDownloader(
-            getFileCount(elementList),
+            counter,
             options->isOriginalModifiedDateCheckBoxChecked(),
             this);
 
     // Iterieren über alle Elemente
     Structureelement *currentDirectory = elementList.first();
-    int counter = getFileCount(elementList);
     int changedCounter = 0;
     bool neueVeranstaltung = false;
     QString veranstaltungName;
@@ -622,16 +617,17 @@ void Browser::getStructureelementsList(Structureelement *topElement, QLinkedList
         getStructureelementsList((Structureelement*) topElement->child(i), list);
 }
 
-int Browser::getFileCount(QLinkedList < Structureelement * > &liste)
+/// Bestimmung der Zahl der Dateien in einer Liste
+int Browser::getFileCount(QLinkedList < Structureelement * > &items)
 {
-    // Zählen aller Dateien einer Liste
     int fileCounter = 0;
 
-    for (QLinkedList < Structureelement * >::iterator iterator =
-             liste.begin(); iterator != liste.end(); iterator++)
+    foreach(Structureelement* item, items)
     {
-        if ((**iterator).type() == fileItem)
+        if(item->type() == fileItem)
+        {
             fileCounter++;
+        }
     }
 
     return fileCounter;
@@ -685,19 +681,6 @@ void Browser::updateButtons()
 
 }
 
-// Erzeugt ein webdavRequest für das L2P
-// Der Benutzer muss den Request selbst wieder löschen
-QNetworkRequest *Browser::webdavRequest(Structureelement *aktuelleVeranstaltung, QString urlExtension)
-{
-    QNetworkRequest *request = new QNetworkRequest(QUrl(aktuelleVeranstaltung->data(urlRole).toUrl().toString() % urlExtension));
-    request->setRawHeader("Depth", "infinity");
-    request->setRawHeader("Content-Type",
-                         "text/xml; charset=\"utf-8\"");
-    request->setRawHeader("Content-Length", "0");
-
-    return request;
-}
-
 QNetworkRequest *Browser::apiRequest(Structureelement *course, QString apiExtension)
 {
     QString baseUrl = "https://www3.elearning.rwth-aachen.de/_vti_bin/L2PServices/api.svc/v1/";
@@ -739,7 +722,7 @@ void Browser::on_dataTreeView_doubleClicked(const QModelIndex &index)
 
     if (element->type() == fileItem)
         if (!QDesktopServices::openUrl(QUrl
-                                       (Utils::getStrukturelementPfad(element,
+                                       (Utils::getElementLocalPath(element,
                                                options->downloadFolderLineEditText()),
                                         QUrl::TolerantMode)))
         {
@@ -794,9 +777,10 @@ void Browser::openCourse()
 
 void Browser::openItem()
 {
+    QLOG_INFO() << Utils::getElementLocalPath(lastRightClickItem, options->downloadFolderLineEditText());
     // Öffnen der Datei auf der Festplatte des mit der rechten Maustaste
     // geklickten Items
-    if (!QDesktopServices::openUrl(QUrl(Utils::getStrukturelementPfad(lastRightClickItem, options->downloadFolderLineEditText()), QUrl::TolerantMode)))
+    if (!QDesktopServices::openUrl(QUrl(Utils::getElementLocalPath(lastRightClickItem, options->downloadFolderLineEditText()), QUrl::TolerantMode)))
     {
         // Öffnen der Datei im L2P des mit der rechten Maustaste
         // geklickten Items
