@@ -18,7 +18,7 @@ void Parser::parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
 
     if(object.isEmpty())
     {
-        QLOG_ERROR() << "Kursinformationen leer bzw. nicht lesbar.";
+        QLOG_INFO() << "Kursinformationen leer bzw. nicht lesbar.";
         return;
     }
 
@@ -64,13 +64,11 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
 
     if(!object["Status"].toBool())
     {
-        QLOG_DEBUG() << "Status der Kursinformationen nicht ok.";
+        QLOG_ERROR() << "Status der Kursinformationen nicht ok.";
         return;
     }
 
     QJsonArray files = object["dataSet"].toArray();
-
-    //QString baseUrl("https://www3.elearning.rwth-aachen.de");
 
     foreach(QJsonValue element, files)
     {
@@ -80,8 +78,7 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
         QString filename = fileInformation["fileName"].toString();
         int filesize = fileInformation["fileSize"].toString().toInt();
         int timestamp = fileInformation["modifiedTimestamp"].toInt();
-        QString directory = file["sourceFolder"].toString();
-        QString url = /*baseUrl %*/ fileInformation["downloadUrl"].toString();
+        QString url = fileInformation["downloadUrl"].toString();
         QStringList urlParts = url.split('/');
 
         urlParts.removeFirst();
