@@ -30,10 +30,11 @@ void Login::init()
     settingsLoaded = true;
 
     QSettings settings;
-
     settings.beginGroup("loginData");
     refreshToken = settings.value("refreshToken", "").toString();
     settings.endGroup();
+
+    QLOG_DEBUG() << "Geladenes RefreshToken: " << refreshToken;
 }
 
 void Login::getAccess()
@@ -93,6 +94,8 @@ void Login::getUserCode()
 
 void Login::stopLoginSlot()
 {
+    QLOG_DEBUG() << "Stoppe Login";
+
     stopLoginTimer.stop();
 
     if(accessToken.isEmpty())
@@ -104,6 +107,8 @@ void Login::stopLoginSlot()
 
 void Login::deleteAccess()
 {
+    QLOG_DEBUG() << "Lösche Zugriffsdaten.";
+
     accessToken.clear();
     refreshToken.clear();
 }
@@ -142,7 +147,7 @@ void Login::finishedSlot(QNetworkReply *reply)
 
     if(object.isEmpty())
     {
-        QLOG_DEBUG() << "Keine lesbare Antwort erhalten.";
+        QLOG_ERROR() << "Keine lesbare Antwort erhalten.";
         stopLoginSlot();
         return;
     }
@@ -197,7 +202,7 @@ void Login::finishedSlot(QNetworkReply *reply)
         }
         else
         {
-            QLOG_DEBUG() << "Status der Antwort ok, aber Antworttyp nicht bekannt.\n" << object;
+            QLOG_ERROR() << "Status der Antwort ok, aber Antworttyp nicht bekannt.\n" << object;
 
             stopLoginSlot();
         }
@@ -227,7 +232,7 @@ void Login::finishedSlot(QNetworkReply *reply)
     }
     else
     {
-        QLOG_DEBUG() << "Unerwarteter Antwortstatus: " << status;
+        QLOG_ERROR() << "Unerwarteter Antwortstatus: " << status;
 
         stopLoginSlot();
     }
