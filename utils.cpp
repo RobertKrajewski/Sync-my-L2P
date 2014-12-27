@@ -1,3 +1,6 @@
+#include <QStringBuilder>
+#include <QApplication>
+
 #include "utils.h"
 
 #include "qslog/QsLog.h"
@@ -7,14 +10,22 @@ Utils::Utils(QObject *parent) :
 {
 }
 
-QString Utils::getStrukturelementPfad(Structureelement *item, QString downloadDirectoryPath)
+/// Bestimmung des lokalen Pfads für ein Element
+QString Utils::getElementLocalPath(Structureelement *item, QString downloadDirectoryPath)
 {
         QString elementPath;
+
+        // Dateiname
         elementPath.append(item->text());
+
+        // Zwischenverzeichnisse
         Structureelement* parent = item;
         while ((parent = (Structureelement*) parent->parent()) != 0)
             elementPath.push_front(parent->text() % "/");
+
+        // Downloadverzeichnis
         elementPath.push_front("file:///" % downloadDirectoryPath % "/");
+
         return elementPath;
 }
 
@@ -38,6 +49,7 @@ void Utils::errorMessageBox(QString message, QString detailMessage)
     messageBox.exec();
 }
 
+/// Erstellung einer Liste mit allen Veransaltungen
 QList<Structureelement*> Utils::getAllCourseItems(QStandardItemModel *itemModel)
 {
     QList<Structureelement*> courses;
@@ -77,17 +89,19 @@ Structureelement *Utils::getSemesterItem(QStandardItemModel *itemModel, QString 
     }
     else
     {
-        semesterElement = new Structureelement(semester, QUrl(), semesterItem);
+        semesterElement = new Structureelement(semester, QUrl(), 0, 0, QString(), semesterItem);
         itemModel->appendRow(semesterElement);
     }
 
     return semesterElement;
 }
 
+/// Factory für DirectoryItems
 Structureelement *Utils::getDirectoryItem(Structureelement *courseItem, QStringList path)
 {
     Structureelement *currentItem = courseItem;
 
+    // Iteriere entlang der Elemente des Pfads und erstelle diese ggf.
     foreach(QString item, path)
     {
         bool correctChildFound = false;
@@ -104,7 +118,7 @@ Structureelement *Utils::getDirectoryItem(Structureelement *courseItem, QStringL
 
         if(!correctChildFound)
         {
-            Structureelement* child = new Structureelement(item, QUrl(), directoryItem);
+            Structureelement* child = new Structureelement(item, QUrl(), 0, 0, QString(), directoryItem);
 
             currentItem->appendRow(child);
             currentItem = child;

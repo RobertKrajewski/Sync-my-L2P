@@ -18,13 +18,7 @@
 #ifndef STRUKTURELEMENT_H
 #define STRUKTURELEMENT_H
 #include <QUrl>
-#include <QString>
-#include <QtGlobal>
-#include <QTreeWidgetItem>
 #include <QStandardItem>
-#include <QStringBuilder>
-#include <QClipboard>
-#include <QApplication>
 #include <QDateTime>
 
 enum MyItemType
@@ -56,11 +50,9 @@ enum synchroniseStatus
 class Structureelement : public QStandardItem
 {
 public:
-    Structureelement(QString name, QUrl url, MyItemType typeEX);
-    Structureelement(QString name, QUrl url, int time, qint32 size, MyItemType typeEX = fileItem);
-    Structureelement(QString name, QString cid, MyItemType typeEX);
+    Structureelement(QString name, QUrl url = QUrl(), int time = 0, qint32 size = 0, QString cid = "", MyItemType typeEX = fileItem);
 
-    int type() const;
+    int type() const { return typeEX; }
 
     bool operator< (const QStandardItem& other) const;
 
@@ -73,16 +65,24 @@ protected:
 
     /// Ob die Datei in den Download eingebunden wird
     bool        included;
+
+    /// Url für die API
     QUrl        url;
+
+    /// Veranstaltungs ID
     QString     cid;
+
+    /// Änderungsdatum
     QDateTime   time;
+
+    /// Type des Elements
     MyItemType  typeEX;
+
+    /// Status der Synchronisation
     enum synchroniseStatus  synchronised;
 
 private:
     void chooseIcon();
-
-
 };
 
 #endif // STRUKTURELEMENT_H

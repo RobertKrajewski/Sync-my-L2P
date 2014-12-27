@@ -15,103 +15,81 @@
 ** along with Sync-my-L2P.  If not, see <http://www.gnu.org/licenses/>.
 ****************************************************************************/
 
+
+#include <QStringBuilder>
+#include <QClipboard>
+#include <QApplication>
+
 #include "structureelement.h"
 
-Structureelement::Structureelement(QString name, QUrl url, MyItemType typeEX)
-    :QStandardItem(name), included(true), url(url), typeEX(typeEX)
-{
-    synchronised = NOT_SYNCHRONISED;
-    size = 0;
-    chooseIcon();
-}
-
-Structureelement::Structureelement(QString name, QUrl url, int time, qint32 size, MyItemType typeEX)
+Structureelement::Structureelement(QString name, QUrl url, int time, qint32 size, QString cid, MyItemType typeEX)
     :QStandardItem(name),
      included(true),
      url(url),
      time(QDateTime::fromMSecsSinceEpoch(qint64(1000) * time)),
      size(size),
-     typeEX(typeEX)
+     typeEX(typeEX),
+     cid(cid)
 {
-    chooseIcon();
-}
-
-Structureelement::Structureelement(QString name, QString cid, MyItemType typeEX)
-    :QStandardItem(name), included(true), url(), typeEX(typeEX), cid(cid)
-{
-    synchronised = NOT_SYNCHRONISED;
-    size = 0;
     chooseIcon();
 }
 
 QVariant Structureelement::data(int role) const
 {
-    if (role == includeRole)
+    switch(role)
     {
+    case includeRole:
         return included;
-    }
-    else if (role == urlRole)
-    {
+    case urlRole:
         return url;
-    }
-    else if (role == sizeRole)
-    {
+    case sizeRole:
         return size;
-    }
-    else if (role == dateRole)
-    {
+    case dateRole:
         return time;
-    }
-    else if (role == synchronisedRole)
-    {
+    case synchronisedRole:
         return synchronised;
-    }
-    else if (role == cidRole)
-    {
+    case cidRole:
         return cid;
-    }
-    else if (role == Qt::StatusTipRole)
+    case Qt::StatusTipRole:
     {
         QString statustip;
-
         if (typeEX == fileItem)
         {
             statustip.append(text() % " - ");
             if (size > 1048576)
                 statustip.append(QString::number(size/1048576.0,'f',2) % " MB");
-            else if(size > 1024)
-                 statustip.append(QString::number(size/1024.0,'f',2) % " KB");
             else
-                 statustip.append(QString::number(size) % " Byte");
+                 statustip.append(QString::number(size/1024.0,'f',2) % " KB");
 
             statustip.append(" - " % time.toString("ddd dd.MM.yy hh:mm"));
-
-            return statustip;
         }
         return statustip;
     }
-    else if (role == Qt::FontRole)
-    {
-        if (typeEX == courseItem)
-        {
-            QFont BoldFont;
-            BoldFont.setBold(true);
-            return BoldFont;
-        }
-    }
-    else if(role == Qt::ForegroundRole)
-    {
+    case Qt::ForegroundRole:
         if (included)
+        {
             if (synchronised == NOW_SYNCHRONISED)
                 return QBrush(Qt::blue);
             else if (synchronised == SYNCHRONISED)
                 return QBrush(Qt::darkGreen);
             else
                 return QBrush(Qt::black);
+        }
         else
+        {
             return QBrush(Qt::red);
+        }
+    case Qt::FontRole:
+        // Semester und Veranstaltungen fett darstellen
+        if (typeEX == courseItem || typeEX == semesterItem)
+        {
+            QFont BoldFont;
+            BoldFont.setBold(true);
+            return BoldFont;
+        }
+    default:
+        return QStandardItem::data(role);
     }
-    return QStandardItem::data(role);
 }
 
 /// Icon anhand des Types und der Dateiendung auswählen
@@ -156,50 +134,49 @@ void Structureelement::chooseIcon()
     }
 }
 
-/// Vergleich zwischen zwei Items. Ordner haben Vorrang vor Dateien und sonst wird alphabetisch sortiert.
+/// Vergleich zwischen zwei Items für Sortierung.
+/// Ordner haben Vorrang vor Dateien und sonst wird alphabetisch sortiert.
 bool Structureelement::operator< (const QStandardItem& other) const
 {
-    if ((this->size == 0) && ((((Structureelement*)(&other))->size) != 0))
+
+    if ((typeEX != fileItem) && (other.type() == fileItem))
+    {
         return true;
-    else if ((this->size != 0) && ((((Structureelement*)(&other))->size) == 0))
+    }
+    else if ((typeEX == fileItem) && (other.type() != fileItem))
+    {
         return false;
+    }
     else
-        return (this->text().toLower() < (((Structureelement*)(&other))->text()).toLower());
+    {
+        return (text().toLower() < other.text().toLower());
+    }
 }
 
-int Structureelement::type() const
-{
-    return typeEX;
-}
-
+/// Überladene Funktion für das Setzen der Daten
 void Structureelement::setData(const QVariant &value, int role)
 {
-    if (role == includeRole)
+    switch(role)
     {
+    case includeRole:
         this->included = value.toBool();
-    }
-    else if (role == urlRole)
-    {
+        break;
+    case urlRole:
         this->url = value.toUrl();
-    }
-    else if (role == sizeRole)
-    {
+        break;
+    case sizeRole:
         this->size = value.toInt();
-    }
-    else if (role == dateRole)
-    {
+        break;
+    case dateRole:
         this->time = value.toDateTime();
-    }
-    else if (role == synchronisedRole)
-    {
-        this->synchronised = (synchroniseStatus) value.toInt();
-    }
-    else if (role == cidRole)
-    {
+        break;
+    case synchronisedRole:
+        this->synchronised = static_cast<synchroniseStatus>(value.toInt());
+        break;
+    case cidRole:
         this->cid = value.toString();
-    }
-    else
-    {
+        break;
+    default:
         QStandardItem::setData(value, role);
     }
 }

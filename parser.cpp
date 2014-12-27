@@ -39,7 +39,7 @@ void Parser::parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
         QString title = course["courseTitle"].toString();
         QString cid = course["uniqueid"].toString();
         QString semester = course["semester"].toString();
-        Structureelement *newCourse = new Structureelement(title, cid, courseItem);
+        Structureelement *newCourse = new Structureelement(title, QUrl(), 0, 0, cid, courseItem);
 
         Utils::getSemesterItem(itemModel, semester)->appendRow(newCourse);
 
@@ -89,9 +89,9 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
 
         Structureelement *dir = Utils::getDirectoryItem(currentCourse, urlParts);
 
-        Structureelement* newFile = new Structureelement(filename, QUrl(url), timestamp, filesize);
-
-        newFile->setData(currentCourse->data(cidRole), cidRole);
+        Structureelement* newFile = new Structureelement(filename, QUrl(url), timestamp, filesize,
+                                                         currentCourse->data(cidRole).toString(),
+                                                         fileItem);
 
         newFile->setData(NOT_SYNCHRONISED, synchronisedRole);
 
