@@ -247,7 +247,7 @@
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>Suchen</string>
+         <string>suchen</string>
         </property>
         <property name="icon">
          <iconset resource="icons/icons.qrc">
@@ -328,7 +328,7 @@
          </size>
         </property>
         <property name="text">
-         <string>runterladen</string>
+         <string>download</string>
         </property>
         <property name="icon">
          <iconset resource="icons/icons.qrc">
