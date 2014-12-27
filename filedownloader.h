@@ -47,7 +47,7 @@ public:
                              bool originalModifiedDate,
                              QWidget *parent= 0);
     ~FileDownloader();
-    int startNextDownload(QString, QString, QString, QUrl, int, int);
+    int startNextDownload(QString, QString, QString, QUrl, int, int, int time);
 
 private:
     void keyPressEvent(QKeyEvent *);
@@ -63,8 +63,8 @@ private:
     QFile output;
     utimbuf times;
 
-    QString dataUnitFromBytes(qint64 bytes);
-    qint64 roundBytes(qint64 bytes);
+    QString correctUnit(qint64 bytes);
+    qint64 correctSize(qint64 bytes);
 
 private slots:
     void downloadProgressSlot(qint64,qint64);

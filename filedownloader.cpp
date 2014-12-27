@@ -43,38 +43,35 @@ FileDownloader::~FileDownloader()
     delete ui;
 }
 
-int FileDownloader::startNextDownload(QString filename, QString event, QString verzeichnisPfad, QUrl url, int itemNummer, int itemSize)
+int FileDownloader::startNextDownload(QString fileName, QString courseName, QString filePath, QUrl fileUrl, int itemNummer, int itemSize, int time)
 {
     // Anpassen der Labels
-    // Aktualisieren der Itemnummer
     ui->progressLabel->setText(QString("Datei %1/%2").arg(itemNummer).arg(itemNumber));
-    // Aktualisieren des Veranstaltungsnamen
-    ui->veranstaltungLabel->setText(event);
-    // Aktualisieren des Dateinamens
-    ui->dateinameLabel->setText(filename);
+    ui->veranstaltungLabel->setText(courseName);
+    ui->dateinameLabel->setText(fileName);
+    ui->progressBar->setFormat(QString("%v ") % correctUnit(itemSize) % " / %m " % correctUnit(itemSize));
+    ui->progressBar->setMaximum(correctSize(itemSize));
+
+    times.actime = 0;
+    times.modtime = time;
 
     // Erstellen des Outputstreams
-    output.setFileName(verzeichnisPfad);
+    output.setFileName(filePath);
 
     // Öffnen des Ausgabestreams
     if(!output.open(QIODevice::WriteOnly))
     {
-        // Fehlerbehandlung
-        Utils::errorMessageBox("Fehler beim Öffnen mit Schreibberechtigung.", filename);
+        Utils::errorMessageBox("Fehler beim Öffnen mit Schreibberechtigung.", fileName);
         return 0;
     }
 
     // Start des Requests
-
-    QLOG_DEBUG() << url.toString();
-    reply = manager->get(QNetworkRequest(url));
-    ui->progressBar->setFormat(QString("%v ").append(dataUnitFromBytes(itemSize)).append(" / %m ").append(dataUnitFromBytes(itemSize)));
-    ui->progressBar->setMaximum(roundBytes(itemSize));
+    reply = manager->get(QNetworkRequest(fileUrl));
     QObject::connect(reply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(downloadProgressSlot(qint64,qint64)));
     QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(readyReadSlot()));
     QObject::connect(reply, SIGNAL(finished()), this, SLOT(finishedSlot()));
 
-    // Starten der Schleife, die vor sich hinläuft, bis der Download abgeschlossen ist
+    // Während des Downloads blockieren
     return(loop.exec());
 }
 
@@ -82,8 +79,10 @@ int FileDownloader::startNextDownload(QString filename, QString event, QString v
 void FileDownloader::downloadProgressSlot(qint64 bytesReceived, qint64 bytesTotal)
 {
     (void) bytesTotal;
+
     // Aktualisieren der Progressbar anhand der Größe der empfangenen Bytes
-    ui->progressBar->setValue(roundBytes(bytesReceived));
+    ui->progressBar->setValue(correctSize(bytesReceived));
+    ui->progressBar->update();
 }
 
 /// Abspeichern von empfangenen Dateiteilen
@@ -92,7 +91,7 @@ void FileDownloader::readyReadSlot()
     // Schreiben der runtergeladenen Bytes in die Datei
     if (output.write(reply->readAll()) == -1)
     {
-        Utils::errorMessageBox("Beim Schreiben einer Datei auf die Fesplatte ist ein Fehler aufgetreten.", ui->dateinameLabel->text());
+        Utils::errorMessageBox("Fehler beim Schreiben der Datei", ui->dateinameLabel->text());
         reply->abort();
     }
 }
@@ -103,12 +102,7 @@ void FileDownloader::finishedSlot()
     output.flush();
     output.close();
 
-    if (originalModifiedDate)
-    {
-        times.actime = 0;
-        times.modtime = reply->header(QNetworkRequest::LastModifiedHeader).toDateTime().toTime_t();
-        utime(output.fileName().toLocal8Bit(), &times);
-    }
+    utime(output.fileName().toLocal8Bit(), &times);
 
     QObject::disconnect(reply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(downloadProgressSlot(qint64,qint64)));
     QObject::disconnect(reply, SIGNAL(readyRead()), this, SLOT(readyReadSlot()));
@@ -117,7 +111,6 @@ void FileDownloader::finishedSlot()
     // Freigabe des Speichers
     reply->deleteLater();
 
-    // Fehlerbehandlung
     if(reply->error())
     {
         QMessageBox messageBox;
@@ -129,7 +122,6 @@ void FileDownloader::finishedSlot()
         output.remove();
         loop.exit(0);
     }
-    // Kein Fehler
     else
     {
         loop.exit(1);
@@ -158,7 +150,7 @@ void FileDownloader::keyPressEvent(QKeyEvent *event)
 }
 
 /// Erzeugung der passenden Größeneinheit von der Dateigröße
-QString FileDownloader::dataUnitFromBytes(qint64 bytes)
+QString FileDownloader::correctUnit(qint64 bytes)
 {
     if(bytes > 1024 * 1024 * 5)
     {
@@ -175,7 +167,7 @@ QString FileDownloader::dataUnitFromBytes(qint64 bytes)
 }
 
 /// Dateigröße in lesbare Größe umwandeln
-qint64 FileDownloader::roundBytes(qint64 bytes)
+qint64 FileDownloader::correctSize(qint64 bytes)
 {
     if(bytes > 1024 * 1024 * 5)
     {

@@ -20,6 +20,7 @@
 #include "ui_mymainwindow.h"
 
 #include "qslog/QsLog.h"
+#include "utils.h"
 
 
 MyMainWindow::MyMainWindow(QWidget *parent):
@@ -50,7 +51,7 @@ MyMainWindow::MyMainWindow(QWidget *parent):
     this->show();
 
     // Zentrieren des Fensters
-    centerOnDesktop();
+    Utils::centerWidgetOnDesktop(this);
 
     // Erzeugt das Icon für das Tray im minimierten Zustand
     createTrayIcon();
@@ -151,14 +152,5 @@ void MyMainWindow::trayClickedSlot(QSystemTrayIcon::ActivationReason reason)
         this->setWindowState(Qt::WindowActive);
         trayIcon->hide();
     }
-}
-
-/// Zentrieren des Programms auf dem Desktop
-void MyMainWindow::centerOnDesktop()
-{
-    QRect desktopRect = QApplication::desktop()->screenGeometry();
-    QRect windowRect = this->frameGeometry();
-    move((desktopRect.width()  - windowRect.width())  / 2,
-         (desktopRect.height() - windowRect.height()) / 2);
 }
 
