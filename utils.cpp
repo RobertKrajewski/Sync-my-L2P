@@ -1,5 +1,8 @@
 #include <QStringBuilder>
 #include <QApplication>
+#include <QClipboard>
+#include <QMessageBox>
+#include <QDesktopWidget>
 
 #include "utils.h"
 
@@ -126,4 +129,12 @@ Structureelement *Utils::getDirectoryItem(Structureelement *courseItem, QStringL
     }
 
     return currentItem;
+}
+
+/// Zentrieren eines Fenster auf dem Desktops
+void Utils::centerWidgetOnDesktop(QWidget *widget)
+{
+    QRect desktopRect = QApplication::desktop()->screenGeometry();
+    QRect windowRect  = widget->frameGeometry();
+    widget->move((desktopRect.width()-windowRect.width())/2+desktopRect.x(), (desktopRect.height()-windowRect.height())/2+desktopRect.y());
 }

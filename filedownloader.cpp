@@ -27,24 +27,19 @@ FileDownloader::FileDownloader(  int itemNumber,
     QDialog(parent, Qt::FramelessWindowHint),
     ui(new Ui::DateiDownloader),
     originalModifiedDate(originalModifiedDate),
-    itemNumber(itemNumber)
+    itemNumber(itemNumber),
+    manager(new QNetworkAccessManager(this))
 {
     ui->setupUi(this);
 
-    manager = new QNetworkAccessManager(this);
-
-    QObject::connect(manager, SIGNAL(authenticationRequired(QNetworkReply*, QAuthenticator*))
-                     , this, SLOT(authenticate(QNetworkReply*, QAuthenticator*)));
     this->show();
 
-    // Zentrieren des Fensters
-    QRect desktopRect = QApplication::desktop()->screenGeometry();/*parentWidget()->frameGeometry();*/
-    QRect windowRect  = this->frameGeometry();
-    move((desktopRect.width()-windowRect.width())/2+desktopRect.x(), (desktopRect.height()-windowRect.height())/2+desktopRect.y());
+    Utils::centerWidgetOnDesktop(this);
 }
 
 FileDownloader::~FileDownloader()
 {
+    delete manager;
     delete ui;
 }
 

@@ -19,9 +19,10 @@ public:
     static Structureelement *getSemesterItem(QStandardItemModel *itemModel, QString semester);
 
     static Structureelement *getDirectoryItem(Structureelement *courseItem, QStringList path);
-signals:
-    
-public slots:
+
+    static void centerWidgetOnDesktop(QWidget* widget);
+private:
+    explicit Utils(QObject *parent = 0);
 
 };
 
