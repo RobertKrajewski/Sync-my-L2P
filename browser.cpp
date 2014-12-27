@@ -303,6 +303,8 @@ void Browser::on_syncPushButton_clicked()
         return;
     }
 
+
+
     // Hinzufügen aller eingebundenen Elemente
     QLinkedList<Structureelement *> elementList;
 
@@ -325,86 +327,60 @@ void Browser::on_syncPushButton_clicked()
             this);
 
     // Iterieren über alle Elemente
-    Structureelement *currentDirectory = elementList.first();
     int changedCounter = 0;
-    bool neueVeranstaltung = false;
     QString veranstaltungName;
 
     QItemSelection newSelection;
     ui->dataTreeView->collapseAll();
 
-    for (QLinkedList < Structureelement * >::iterator iterator =
-             elementList.begin(); iterator != elementList.end(); iterator++)
+    foreach(Structureelement *currentElement, elementList)
     {
-        Structureelement* currentElement = *iterator;
-        if (currentElement->parent() != 0)
+        if(currentElement->type() != fileItem)
         {
-            while (!currentElement->data(urlRole).toUrl().
-                   toString().contains(currentDirectory->data(urlRole).
-                                       toUrl().toString(),
-                                       Qt::CaseSensitive))
-            {
-                currentDirectory = (Structureelement *) currentDirectory->parent();
-                verzeichnis.cdUp();
-            }
-        }
-        else
-        {
-            verzeichnis.setPath(options->downloadFolderLineEditText());
-            neueVeranstaltung = true;
+            continue;
         }
 
-        // 1. Fall: Ordner
-        if (currentElement->type() != fileItem)
+        QString directoryPath = Utils::getElementLocalPath(currentElement, downloadPath, false, false);
+        QDir directory(directoryPath);
+
+        // Ordner ggf. erstellen
+        if(!directory.mkpath(directoryPath))
         {
-            if (!verzeichnis.exists(currentElement->text()))
-            {
-                if (!verzeichnis.mkdir(currentElement->text()))
-                {
-                    Utils::errorMessageBox("Beim Erstellen eines Ordners ist ein Fehler aufgetreten.", currentElement->text());
-                    break;
-                }
-            }
-
-            if (neueVeranstaltung)
-            {
-                veranstaltungName = currentElement->text();
-                neueVeranstaltung = false;
-            }
-
-            currentDirectory = *iterator;
-            verzeichnis.cd(currentElement->text());
+            Utils::errorMessageBox("Verzeichnis nicht erstellbar!", "Kann folgendes Verzeichnis nicht erstellen: " + directoryPath);
+            QLOG_ERROR() << "Verzeichnis nicht erstellbar: " << directoryPath;
+            break;
         }
-        // 2. Fall: Datei
-        else
+
+        QString filename = currentElement->text();
+
+        // Datei existiert noch nicht
+        if (!directory.exists(filename) ||
+            (QFileInfo(directory, filename).size()
+             != (currentElement->data(sizeRole).toInt())))
         {
-            // Datei existiert noch nicht
-            // counter++;
-            if (!verzeichnis.exists(currentElement->text()) ||
-                (QFileInfo(verzeichnis, currentElement->text()).size()
-                 != (*((Structureelement *) (*iterator))).data(sizeRole).toInt()))
+            QString url = QString("https://www3.elearning.rwth-aachen.de/_vti_bin/l2pservices/api.svc/v1/") %
+                    QString("downloadFile/") %
+                    currentElement->text() %
+                    QString("?accessToken=") %
+                    options->getAccessToken() %
+                    QString("&cid=") %
+                    currentElement->data(cidRole).toString() %
+                    QString("&downloadUrl=") %
+                    currentElement->data(urlRole).toString();
+
+            if (!loader->startNextDownload(filename,
+                                           veranstaltungName,
+                                           directory.absoluteFilePath(filename),
+                                           QUrl(url),
+                                           changedCounter++,
+                                           currentElement->data(sizeRole).toInt()))
             {
-                QString url = QString("https://www3.elearning.rwth-aachen.de/_vti_bin/l2pservices/api.svc/v1/") %
-                        QString("downloadFile/") %
-                        currentElement->text() %
-                        QString("?accessToken=") %
-                        options->getAccessToken() %
-                        QString("&cid=") %
-                        currentElement->data(cidRole).toString() %
-                        QString("&downloadUrl=") %
-                        currentElement->data(urlRole).toString();
-
-                if (!loader->startNextDownload(currentElement->text(),
-                                               veranstaltungName,
-                                               verzeichnis.
-                                               absoluteFilePath(currentElement->text()), QUrl(url), changedCounter + 1, currentElement->data(sizeRole).toInt()))
-                    break;
-
-                changedCounter++;
-                currentElement->setData(NOW_SYNCHRONISED, synchronisedRole);
-                ui->dataTreeView->scrollTo(proxyModel.mapFromSource(currentElement->index()));
-                newSelection.select(currentElement->index(), currentElement->index());
+                break;
             }
+
+            currentElement->setData(NOW_SYNCHRONISED, synchronisedRole);
+            ui->dataTreeView->scrollTo(proxyModel.mapFromSource(currentElement->index()));
+            newSelection.select(currentElement->index(), currentElement->index());
         }
     }
 

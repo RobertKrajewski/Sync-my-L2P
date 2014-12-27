@@ -14,22 +14,33 @@ Utils::Utils(QObject *parent) :
 }
 
 /// Bestimmung des lokalen Pfads für ein Element
-QString Utils::getElementLocalPath(Structureelement *item, QString downloadDirectoryPath)
+QString Utils::getElementLocalPath(Structureelement *item, QString downloadDirectoryPath, bool includeFilname, bool includePrefix)
 {
-        QString elementPath;
-
-        // Dateiname
-        elementPath.append(item->text());
+        QString path;
 
         // Zwischenverzeichnisse
         Structureelement* parent = item;
         while ((parent = (Structureelement*) parent->parent()) != 0)
-            elementPath.push_front(parent->text() % "/");
+        {
+            path.push_front(parent->text() % "/");
+        }
 
         // Downloadverzeichnis
-        elementPath.push_front("file:///" % downloadDirectoryPath % "/");
+        path.push_front(downloadDirectoryPath % "/");
 
-        return elementPath;
+        // Fileprefix hinzufügen
+        if(includePrefix)
+        {
+            path.push_front("file:///");
+        }
+
+        // Dateiname
+        if(includeFilname)
+        {
+            path.append(item->text());
+        }
+
+        return path;
 }
 
 void Utils::copyTextToClipboard(QString text)
