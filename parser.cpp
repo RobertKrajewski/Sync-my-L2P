@@ -3,8 +3,6 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonArray>
-#include <QMap>
-#include <QFile>
 
 #include "utils.h"
 #include "qslog/QsLog.h"
@@ -39,6 +37,12 @@ void Parser::parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
         QString title = course["courseTitle"].toString();
         QString cid = course["uniqueid"].toString();
         QString semester = course["semester"].toString();
+
+        // Erstellen eines RegExps  für unzulässige Buchstaben im Veranstaltungsnamen
+        QString escapePattern = "(:|<|>|/|\\\\|\\||\\*|\\^|\\?|\\\")";
+        QRegExp escapeRegExp(escapePattern, Qt::CaseSensitive);
+        title.replace(escapeRegExp, "").trimmed();
+
         Structureelement *newCourse = new Structureelement(title, QUrl(), 0, 0, cid, courseItem);
 
         Utils::getSemesterItem(itemModel, semester)->appendRow(newCourse);
@@ -93,8 +97,7 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
                                                          currentCourse->data(cidRole).toString(),
                                                          fileItem);
 
-        newFile->setData(NOT_SYNCHRONISED, synchronisedRole);
-
+        // Element hinzufügen
         dir->appendRow(newFile);
     }
 }
