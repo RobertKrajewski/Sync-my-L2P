@@ -373,7 +373,8 @@ void Browser::on_syncPushButton_clicked()
                                            directory.absoluteFilePath(filename),
                                            QUrl(url),
                                            changedCounter++,
-                                           currentElement->data(sizeRole).toInt()))
+                                           currentElement->data(sizeRole).toInt(),
+                                           currentElement->data(dateRole).toDateTime().toMSecsSinceEpoch()/1000))
             {
                 break;
             }

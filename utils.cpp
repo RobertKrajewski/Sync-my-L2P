@@ -61,6 +61,8 @@ void Utils::errorMessageBox(QString message, QString detailMessage)
     messageBox.setInformativeText(detailMessage);
     messageBox.setStandardButtons(QMessageBox::Ok);
     messageBox.exec();
+
+    QLOG_ERROR() << message << ": " << detailMessage;
 }
 
 /// Erstellung einer Liste mit allen Veransaltungen

@@ -103,8 +103,6 @@ void Options::saveSettings()
     }
 }
 
-
-
 void Options::on_loginPushButton_clicked()
 {
     LoginDialog ld;
@@ -251,7 +249,7 @@ void Options::loginResultSlot(int result)
         ui->autoLoginOnStartCheckBox->setEnabled(true);
         ui->userDataSaveCheckBox->setEnabled(true);
 
-        //emit switchTab(0);
+        emit switchTab(0);
         // Sofortiges Aktualisiern der Daten
         browser->on_refreshPushButton_clicked();
     }
