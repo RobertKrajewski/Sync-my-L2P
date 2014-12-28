@@ -1,39 +1,15 @@
 ﻿Sync-my-L2P
 ===========
 
+Sync-my-L2P ist ein Programm, das von Studenten der RWTH Aachen für den komfortablen Download aller zur Verfügung gestellten Dateien in ihrem Lernportal "L²P" geschaffen wurde. Sie ermöglicht dir, sehr einfach die Daten aus deinen virtuellen Lernräumen mit deiner Festplatte zu spiegeln, so dass diese auch ohne Internet zur Verfügung stehen.
 
-Sync-my-L2P ist eine Software, die von Studenten der RWTH Aachen für die komfortable Synchronisation ihres Lernportals "L²P" mit ihrem eigenen Rechner geschaffen wurde. Sie ermöglicht dir, sehr einfach die Daten aus deinen virtuellen Lernräumen mit deiner Festplatte zu spiegeln, so dass diese auch ohne Internet zur Verfügung stehen.
+Kompilieren
+----------------
 
-![Screenshot](http://sync-my-l2p.de/preview/browser.jpg)
-
-Features
---------
-
-
-Hast du einen Vorschlag für ein neues Feature? Dann trage ihn doch [hier](https://github.com/Sync-my-L2P/Sync-my-L2P/wiki/Neue-Features) ein.
-Hier eine (unvollständige) Liste der Features, die bereits implementiert wurden:
-
-+   Automatische Synchronisation mit dem L2P
-+   Intuitive Oberfläche
-+   Einfache Konfiguration
-+   Speichern der Logindaten
-+   Automatischer Login beim Programmstart
-+   Unterstützung aller gängigen Betriebssysteme
-+   Doppelklick öffnet Datei lokal/im L2P
-+   Einbinden der Übungen und Strukturierten Materialien
-+   Verbesserung der Oberfläche
-+   Automatische Synchronisation beim Programmstart
-
-
-Mitmachen
----------
-
-
-Jeder ist herzlich willkommen, einen Beitrag zu Sync-my-L2P zu leisten. Dies kann in verschiedenen Formen erfolgen.
-So muss man nicht nur unbedingt Fehler ausmerzen oder eins der [gewünschten Featurs](https://github.com/Sync-my-L2P/Sync-my-L2P/wiki/Neue-Features) implementieren. Jede Art von Werbung für das Projekt ist ebenso wichtig.
-
+Für das Kompilieren benötigt man folgende Bibliotheken: QT (5.4 oder höher), OpenSSL.
+Am einfachsten ist es, die .pro Datei in Qt Creator zu laden und dort zu kompilieren. Über die Konsole kann stattdessen auch qmake (mit entsprechenden Argumenten) und dann der bevorzugte C++ Compiler ausgeführt werden.
 
 Fehler gefunden?
 ----------------
 
-Solltest du einen Fehler entdeckt haben, so sende bitte eine Email an die auf [unserer Seite](http://www.sync-my-l2p.de/) hinterlegten Emailadresse.
+Solltest du einen Fehler gefunden haben, füge diesen bitte dem Issue-Tracker hinzu.
