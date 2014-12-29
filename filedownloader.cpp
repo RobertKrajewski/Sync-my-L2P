@@ -51,6 +51,7 @@ int FileDownloader::startNextDownload(QString fileName, QString courseName, QStr
     ui->dateinameLabel->setText(fileName);
     ui->progressBar->setFormat(QString("%v ") % correctUnit(itemSize) % " / %m " % correctUnit(itemSize));
     ui->progressBar->setMaximum(correctSize(itemSize));
+    ui->downloadSpeedLabel->setText("");
 
     times.actime = 0;
     times.modtime = time;
@@ -64,6 +65,8 @@ int FileDownloader::startNextDownload(QString fileName, QString courseName, QStr
         Utils::errorMessageBox("Fehler beim Öffnen mit Schreibberechtigung.", fileName);
         return 0;
     }
+
+    downloadTime.start();
 
     // Start des Requests
     reply = manager->get(QNetworkRequest(fileUrl));
@@ -83,6 +86,10 @@ void FileDownloader::downloadProgressSlot(qint64 bytesReceived, qint64 bytesTota
     // Aktualisieren der Progressbar anhand der Größe der empfangenen Bytes
     ui->progressBar->setValue(correctSize(bytesReceived));
     ui->progressBar->update();
+
+    // Downloadgeschwindigkeit in kB/s
+    int downloadSpeed = bytesReceived * 1000 / downloadTime.elapsed() / 1024;
+    ui->downloadSpeedLabel->setText(QString::number(downloadSpeed) % " kB/s");
 }
 
 /// Abspeichern von empfangenen Dateiteilen

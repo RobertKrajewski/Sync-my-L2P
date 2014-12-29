@@ -66,6 +66,8 @@ private:
     QString correctUnit(qint64 bytes);
     qint64 correctSize(qint64 bytes);
 
+    QTime downloadTime;
+
 private slots:
     void downloadProgressSlot(qint64,qint64);
     void readyReadSlot();
