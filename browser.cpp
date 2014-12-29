@@ -39,6 +39,42 @@ void Browser::init(Options *options)
     this->options = options;
 }
 
+void Browser::loadStructureelementFromXml(QDomElement item, QStandardItem *parentItem)
+{
+    if(item.isNull())
+    {
+        return;
+    }
+
+    QStandardItem *newChild;
+    if(item.tagName() == "item")
+    {
+        QString name = item.attribute("name", "");
+        QUrl url = QUrl(item.attribute("url", ""));
+        int time = item.attribute("time", "0").toInt();
+        int size = item.attribute("size", "0").toInt();
+        QString cid = item.attribute("cid", "");
+        MyItemType type = static_cast<MyItemType>(item.attribute("type", "").toInt());
+        bool included = item.attribute("included", "0").toInt();
+
+        newChild = new Structureelement(name, url, time, size, cid, type);
+        newChild->setData(included, includeRole);
+
+        parentItem->appendRow(newChild);
+    }
+    else if(item.tagName() == "root")
+    {
+        newChild = parentItem;
+    }
+
+    // Alle Kindknoten hinzufügen
+    QDomNodeList children = item.childNodes();
+    for(int i=0; i < children.length(); i++)
+    {
+        loadStructureelementFromXml(children.item(i).toElement(), newChild);
+    }
+}
+#include <iostream>
 void Browser::loadSettings()
 {
     QSettings settings;
@@ -53,6 +89,26 @@ void Browser::loadSettings()
     ui->minDateEdit->setDate(settings.value("minDate", QDate(2000, 1, 1)).toDate());
     ui->maxDateEdit->setDate(settings.value("maxDate", QDate(2042, 1, 1)).toDate());
     settings.endGroup();
+
+    QFile file("data.xml");
+    if(!file.open(QIODevice::ReadWrite))
+    {
+        QLOG_ERROR() << "Kann keine Daten von Festplatte laden.";
+        return;
+    }
+    QTextStream ts(&file);
+
+    QDomDocument domDoc;
+    QString errorMessage;
+    if(!domDoc.setContent(ts.readAll(), &errorMessage))
+    {
+        QLOG_ERROR() << "Kann Daten von Festplatte nicht parsen: " << errorMessage;
+        return;
+    }
+    file.close();
+
+    QDomElement root = domDoc.documentElement();
+    loadStructureelementFromXml(root, itemModel->invisibleRootItem());
 }
 
 void Browser::saveSettings()
@@ -70,6 +126,18 @@ void Browser::saveSettings()
     settings.setValue("mindate",        ui->minDateEdit->date());
     settings.setValue("maxDate",        ui->maxDateEdit->date());
     settings.endGroup();
+
+    QDomDocument domDoc;
+    saveStructureelementToXml(domDoc, itemModel->invisibleRootItem(), NULL);
+
+    QFile file("data.xml");
+    if(!file.open(QIODevice::WriteOnly))
+    {
+        return;
+    }
+    QTextStream ts(&file);
+    ts << domDoc.toString();
+    file.close();
 }
 
 void Browser::downloadDirectoryLineEditChangedSlot(QString downloadDirectory)
@@ -274,6 +342,8 @@ void Browser::filesRecieved(QNetworkReply *reply)
         {
             on_syncPushButton_clicked();
         }
+
+        itemModel->sort(0);
     }
 }
 
@@ -608,6 +678,35 @@ int Browser::getFileCount(QLinkedList < Structureelement * > &items)
     }
 
     return fileCounter;
+}
+
+void Browser::saveStructureelementToXml(QDomDocument &domDoc, QStandardItem *item, QDomElement *parentItem)
+{
+    QDomElement xmlItem;
+
+    // Das Root-item auslassen
+    if(item->text().isEmpty())
+    {
+        xmlItem = domDoc.createElement("root");
+        domDoc.appendChild(xmlItem);
+    }
+    else
+    {
+        xmlItem = domDoc.createElement("item");
+        xmlItem.setAttribute("name", item->text());
+        xmlItem.setAttribute("url", item->data(urlRole).toUrl().toString());
+        xmlItem.setAttribute("time", item->data(dateRole).toDateTime().toMSecsSinceEpoch()/1000);
+        xmlItem.setAttribute("size", item->data(sizeRole).toInt());
+        xmlItem.setAttribute("cid", item->data(cidRole).toString());
+        xmlItem.setAttribute("type", item->type());
+        xmlItem.setAttribute("included", item->data(includeRole).toBool());
+        parentItem->appendChild(xmlItem);
+    }
+
+    for(int i=0; i < item->rowCount(); i++)
+    {
+        saveStructureelementToXml(domDoc, item->child(i), &xmlItem);
+    }
 }
 
 

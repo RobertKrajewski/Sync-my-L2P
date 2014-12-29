@@ -9,7 +9,7 @@
 #include <QUrl>
 
 #include <QRegExp>
-#include <QXmlStreamReader>
+#include <QDomDocument>
 
 #include <QStringBuilder>
 #include <QList>
@@ -57,6 +57,7 @@ public:
     void loadSettings();
     void saveSettings();
 
+    void loadStructureelementFromXml(QDomElement item, QStandardItem *parentItem);
 public slots:
     void on_refreshPushButton_clicked();
     void downloadDirectoryLineEditChangedSlot(QString downloadDirectory);
@@ -73,6 +74,8 @@ private:
     void getStructureelementsList(Structureelement *topElement, QLinkedList <Structureelement *> &list);
 
     int getFileCount(QLinkedList<Structureelement*>& items);
+
+    void saveStructureelementToXml(QDomDocument &domDoc, QStandardItem *item, QDomElement *parentItem);
 
 
     void updateButtons();
