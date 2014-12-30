@@ -44,7 +44,6 @@ class FileDownloader : public QDialog
 
 public:
     explicit FileDownloader(int itemNumber,
-                             bool originalModifiedDate,
                              QWidget *parent= 0);
     ~FileDownloader();
     int startNextDownload(QString, QString, QString, QUrl, int, int, int time);

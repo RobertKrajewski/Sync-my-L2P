@@ -42,7 +42,6 @@ void Options::loadSettings()
     settings.endGroup();
 
     ui->downloadFolderlineEdit->setText(            settings.value("downloadFolder", "").toString());
-    ui->originalModifiedDateCheckBox->setChecked(   settings.value("originalModifiedDate", true).toBool());
 
     settings.beginGroup("documentFilter");
     ui->learningMaterialsCheckBox->setChecked(              settings.value("documents", true).toBool());
@@ -78,7 +77,6 @@ void Options::saveSettings()
         settings.remove("loginData");
 
     settings.setValue("downloadFolder",     ui->downloadFolderlineEdit->text());
-    settings.setValue("originalModifiedDate", ui->originalModifiedDateCheckBox->isChecked());
 
     settings.beginGroup("documentFilter");
     settings.setValue("documents",          ui->learningMaterialsCheckBox->isChecked());
@@ -192,11 +190,6 @@ bool Options::isLearningMaterialsCheckBoxChecked()
 bool Options::isAutoSyncOnStartCheckBoxChecked()
 {
     return ui->autoSyncOnStartCheckBox->isChecked();
-}
-
-bool Options::isOriginalModifiedDateCheckBoxChecked()
-{
-    return ui->originalModifiedDateCheckBox->isChecked();
 }
 
 bool Options::isMinimizeInTrayCheckBoxChecked()
