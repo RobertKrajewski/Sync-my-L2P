@@ -37,6 +37,7 @@ public:
     bool isMinimizeInTrayCheckBoxChecked();
     bool isAutoCloseAfterSyncCheckBoxChecked();
     bool isAutoBackgroundSyncCheckBoxChecked();
+    bool isOverrideFilesCheckBoxChecked();
 
     QString getAccessToken() const;
 

@@ -221,6 +221,16 @@
         </property>
        </widget>
       </item>
+      <item row="1" column="1">
+       <widget class="QCheckBox" name="overrideFilesCheckBox">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wenn im L2P eine neue Version einer Datei vorhanden ist, wird die alte Version auf der Festplatte überschrieben.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;ACHTUNG:&lt;/span&gt; Beim Überschreiben gehen eigene Änderungen an den Dateien (Kommentare, etc.) verloren.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Dateien überschreiben</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
