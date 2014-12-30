@@ -70,7 +70,7 @@ QVariant Structureelement::data(int role) const
         if (included)
         {
             if (synchronised == NOW_SYNCHRONISED)
-                return QBrush(Qt::blue);
+                return QBrush(Qt::green);
             else if (synchronised == SYNCHRONISED)
                 return QBrush(Qt::darkGreen);
             else
