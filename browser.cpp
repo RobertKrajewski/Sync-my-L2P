@@ -456,10 +456,12 @@ void Browser::on_syncPushButton_clicked()
 
         QString filename = currentElement->text();
 
+        bool downloadFile = options->isOverrideFilesCheckBoxChecked() &&
+                QFileInfo(directory, filename).lastModified().toMSecsSinceEpoch()/1000 < currentElement->data(dateRole).toInt();
+        downloadFile = downloadFile || !directory.exists(filename);
+
         // Datei existiert noch nicht
-        if (!directory.exists(filename) ||
-            (QFileInfo(directory, filename).size()
-             != (currentElement->data(sizeRole).toInt())))
+        if(downloadFile)
         {
             QString url = QString("https://www3.elearning.rwth-aachen.de/_vti_bin/l2pservices/api.svc/v1/") %
                     QString("downloadFile/") %

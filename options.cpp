@@ -202,6 +202,11 @@ bool Options::isAutoCloseAfterSyncCheckBoxChecked()
     return ui->autoCloseAfterSyncCheckBox->isChecked();
 }
 
+bool Options::isOverrideFilesCheckBoxChecked()
+{
+    return ui->overrideFilesCheckBox->isChecked();
+}
+
 QString Options::getAccessToken() const
 {
     return accessToken;
