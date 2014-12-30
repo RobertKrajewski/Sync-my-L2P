@@ -88,6 +88,7 @@ private:
     QNetworkAccessManager   *manager;
     MySortFilterProxyModel  proxyModel;
     QStandardItemModel      *itemModel;
+    QStandardItemModel      *oldItemModel;
     Structureelement        *iter;
     QFile                   output;
     QMap<QNetworkReply*, Structureelement*> replies;

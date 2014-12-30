@@ -157,8 +157,10 @@ void Browser::on_refreshPushButton_clicked()
 {
     refreshCounter++;
 
-    // Löschen der alten Veranstaltungsliste
-    itemModel->clear();
+    oldItemModel = itemModel;
+
+    itemModel = new QStandardItemModel();
+    proxyModel.setSourceModel(itemModel);
 
     // Zurücksetzen der freigeschalteten Schaltflächen
     updateButtons();
@@ -344,6 +346,38 @@ void Browser::filesRecieved(QNetworkReply *reply)
         }
 
         itemModel->sort(0);
+
+        QLinkedList<Structureelement*> items;
+
+        QStandardItem* root = itemModel->invisibleRootItem();
+        for( int i=0; i < root->rowCount(); i++)
+        {
+            getStructureelementsList(static_cast<Structureelement*>(root->child(i)), items);
+        }
+
+        QLinkedList<Structureelement*> oldItems;
+        root = oldItemModel->invisibleRootItem();
+        for( int i=0; i < root->rowCount(); i++)
+        {
+            getStructureelementsList(static_cast<Structureelement*>(root->child(i)), oldItems);
+        }
+
+        foreach(Structureelement *item, items)
+        {
+            for(QLinkedList<Structureelement*>::iterator it = oldItems.begin(); it != oldItems.end(); it++)
+            {
+                Structureelement *oldItem = *it;
+                if(item->data(urlRole) == oldItem->data(urlRole) && item->text() == oldItem->text())
+                {
+                    item->setData(oldItem->data(includeRole), includeRole);
+                    oldItems.erase(it);
+                    break;
+                }
+            }
+        }
+
+        oldItemModel->deleteLater();
+        oldItemModel = 0;
     }
 }
 
