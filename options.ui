@@ -100,16 +100,6 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QCheckBox" name="originalModifiedDateCheckBox">
-        <property name="text">
-         <string>Dateiänderungsdatum von Server übernehmen</string>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="1">
        <widget class="QPushButton" name="downloadFolderPushButton">
         <property name="text">

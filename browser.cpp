@@ -427,7 +427,6 @@ void Browser::on_syncPushButton_clicked()
     int counter = getFileCount(elementList);
     FileDownloader *loader = new FileDownloader(
             counter,
-            options->isOriginalModifiedDateCheckBoxChecked(),
             this);
 
     // Iterieren über alle Elemente

@@ -21,8 +21,7 @@
 
 #include "qslog/QsLog.h"
 
-FileDownloader::FileDownloader(  int itemNumber,
-                                 bool originalModifiedDate,
+FileDownloader::FileDownloader(int itemNumber,
                                  QWidget *parent) :
     QDialog(parent, Qt::FramelessWindowHint),
     ui(new Ui::DateiDownloader),
