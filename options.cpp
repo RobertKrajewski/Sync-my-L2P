@@ -59,8 +59,9 @@ void Options::loadSettings()
     settings.beginGroup("misc");
     ui->minimizeInTrayCheckBox->setChecked(         settings.value("minimizeInTray", false).toBool());
     settings.endGroup();
-}
 
+    login.init();
+}
 
 // Speichert lokal alle Einstellungen ab, die in unter Einstellungen getroffen wurden
 void Options::saveSettings()
@@ -106,7 +107,6 @@ void Options::on_loginPushButton_clicked()
     LoginDialog ld;
     QObject::connect(&ld, SIGNAL(finished(int)), this, SLOT(loginResultSlot(int)));
 
-    login.init();
     ld.run(&login);
     ld.exec();
 
