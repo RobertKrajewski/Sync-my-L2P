@@ -34,7 +34,7 @@
     <item row="0" column="1">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="Browser" name="browserTab">
        <attribute name="icon">
@@ -65,6 +65,26 @@
        <attribute name="title">
         <string>Log</string>
        </attribute>
+      </widget>
+      <widget class="QWidget" name="tutorialTab">
+       <attribute name="title">
+        <string>Anleitung</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QLabel" name="tutorialLabel">
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Willkommen bei Sync-my-L²P!&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;In diesem Tab findet sich eine kurze Anleitung für Erstbenutzer dieses Programms.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Schnellstart&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Wenn du sofort loslegen willst, führe einfach folgende drei Schritte durch:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline;&quot;&gt;1. Einloggen&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Klicke im Tab &amp;quot;Einstellungen&amp;quot; auf den Knopf auf den Knopf &amp;quot;Einloggen&amp;quot;. Kurz darauf wird sich dein Browser einloggen und du wirst aufgefordert, dich mit deiner Tim-Kennung zu authentifizieren. Danach musst du Sync-my-L²P authorisieren, damit das Programm auf deine Daten im L²P zugreifen kann. Sobald du auch dies erledigt hast, kannst du den Browser schließen und zum Programm zurückkehren.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline;&quot;&gt;2. Daten aktualisieren und auswählen&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Nach dem erfolgreichen Login werden automatisch die Daten aller deiner Kurse im L²P abgerufen. Dies kann einen Moment dauern. Sobald die Aktualisierung fertig ist, kannst du die abgerufenen Daten ansehen und einzelne Dateien/Verzeichnisse/Kurse/Semester von dem Download ausschließen. Auch kannst du Filter für Größe und Änderungsdatum setzen.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline;&quot;&gt;3. Download&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Um nun deine Dateien runterzuladen musst du noch ein Downloadverzeichnis setzen. Hierfür klickst du im Tab &amp;quot;Einstellungen&amp;quot; auf den Knopf &amp;quot;Durchsuchen&amp;quot; und wählst ein Ordner aus. Nun musst du nur noch im Tab &amp;quot;Dateibrowser&amp;quot; auf den Knopf &amp;quot;downloaden&amp;quot; drücken und Sync-my-L²P lädt alle ausgewählten Dateien für dich herrunter.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Tips und Tricks&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Die &lt;/span&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline;&quot;&gt;Farbe der Dateien&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; gibt dir Auskunft über den aktuellen Status der Dateien. Rot bedeutet &amp;quot;nicht downloaden&amp;quot;, Schwarz sind neue, nicht runtergeladene Dateien und Grün wird für bereits auf deiner Festplatte vorhandene Dateien benutzt.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Du kannst durch einen &lt;/span&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline;&quot;&gt;Doppelklick&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; auf Dateien diese einfach öffnen.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Im Tab &lt;/span&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline;&quot;&gt;Einstellungen&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; finden sich einige Optionen, mit denen du Sync-my-L²P noch komfortabler machen kannst.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignJustify|Qt::AlignTop</set>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
