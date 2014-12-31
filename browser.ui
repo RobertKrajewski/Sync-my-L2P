@@ -80,7 +80,7 @@
       <item>
        <widget class="QPushButton" name="showNewDataPushButton">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="text">
          <string>neue Dateien anzeigen</string>
@@ -90,7 +90,7 @@
       <item>
        <widget class="QPushButton" name="expandPushButton">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="text">
          <string>alle expandieren</string>
@@ -100,7 +100,7 @@
       <item>
        <widget class="QPushButton" name="contractPushButton">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="text">
          <string>alle kontrahieren</string>
@@ -110,7 +110,7 @@
       <item>
        <widget class="QCheckBox" name="sizeLimitCheckBox">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="text">
          <string>Dateigrößenfilter</string>
@@ -120,7 +120,7 @@
       <item>
        <widget class="QSpinBox" name="sizeLimitSpinBox">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -148,7 +148,7 @@
       <item>
        <widget class="QCheckBox" name="dateFilterCheckBox">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="text">
          <string>Datumsfilter</string>
@@ -158,7 +158,7 @@
       <item>
        <widget class="QDateEdit" name="minDateEdit">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -181,7 +181,7 @@
       <item>
        <widget class="QDateEdit" name="maxDateEdit">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -222,7 +222,7 @@
       <item>
        <widget class="QLineEdit" name="searchLineEdit">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -244,7 +244,7 @@
       <item>
        <widget class="QPushButton" name="searchPushButton">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="text">
          <string>suchen</string>
