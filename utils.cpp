@@ -151,3 +151,30 @@ void Utils::centerWidgetOnDesktop(QWidget *widget)
     QRect windowRect  = widget->frameGeometry();
     widget->move((desktopRect.width()-windowRect.width())/2+desktopRect.x(), (desktopRect.height()-windowRect.height())/2+desktopRect.y());
 }
+
+/// Überprüfung aller Dateien, ob diese auf der Festplatte bereits existieren
+void Utils::checkAllFilesIfSynchronised(QLinkedList<Structureelement*> items, QString downloadDirectory)
+{
+    foreach(Structureelement* item, items)
+    {
+        if(item->type() != fileItem)
+        {
+            continue;
+        }
+
+        QString filePath = getElementLocalPath(item, downloadDirectory, true, false);
+        QFileInfo fileInfo(filePath);
+
+        // Vergleich der Dateigröße sowie des Änderungsdatums
+        if(fileInfo.exists() && fileInfo.isFile() &&
+           fileInfo.size() == item->data(sizeRole).toInt()/* &&
+           fileInfo.lastModified() == item->data(dateRole).toDateTime()*/)
+        {
+            item->setData(SYNCHRONISED, synchronisedRole);
+        }
+        else
+        {
+            item->setData(NOT_SYNCHRONISED, synchronisedRole);
+        }
+    }
+}
