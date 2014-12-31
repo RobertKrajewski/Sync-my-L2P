@@ -83,8 +83,8 @@ void MyMainWindow::loadSettings()
     // Einstellungen alter Versionen entfernen
     removeOldSettings();
 
-    ui->browserTab->loadSettings();
     ui->optionsTab->loadSettings();
+    ui->browserTab->loadSettings();    
     ui->logTab->loadSettings();
 }
 
