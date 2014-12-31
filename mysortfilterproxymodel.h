@@ -24,9 +24,12 @@
 
 class MySortFilterProxyModel : public QSortFilterProxyModel
 {
+    Q_OBJECT
+
 public:
      MySortFilterProxyModel(QObject *parent = 0);
 
+public slots:
      QDate filterMinimumDate() const { return minDate; }
      void setFilterMinimumDate(const QDate &date);
 
@@ -36,7 +39,7 @@ public:
      void setInRangeDateFilter(const bool filter);
 
      qint32 filterMaximumSize() const { return maxSize; }
-     void setMaximumSize(const qint32 size);
+     void setMaximumSize(const int size);
 
      void setMaximumSizeFilter(const bool filter);
 
