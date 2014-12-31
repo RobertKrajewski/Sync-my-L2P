@@ -3,6 +3,8 @@
 #include <QClipboard>
 #include <QMessageBox>
 #include <QDesktopWidget>
+#include <QFileInfo>
+#include <QLinkedList>
 
 #include "utils.h"
 
@@ -41,6 +43,17 @@ QString Utils::getElementLocalPath(Structureelement *item, QString downloadDirec
         }
 
         return path;
+}
+
+QString Utils::getElementRemotePath(Structureelement *item, QString baseUrl)
+{
+    QString remoteUrl = item->data(urlRole).toString();
+    // Ersten drei Zeichen entfernen, da der URL ein "|" vorangestellt ist
+    remoteUrl.remove(0,3);
+
+    remoteUrl.prepend(baseUrl);
+
+    return remoteUrl;
 }
 
 void Utils::copyTextToClipboard(QString text)

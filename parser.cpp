@@ -37,13 +37,14 @@ void Parser::parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
         QString title = course["courseTitle"].toString();
         QString cid = course["uniqueid"].toString();
         QString semester = course["semester"].toString();
+        QString url = course["url"].toString();
 
         // Erstellen eines RegExps  für unzulässige Buchstaben im Veranstaltungsnamen
         QString escapePattern = "(:|<|>|/|\\\\|\\||\\*|\\^|\\?|\\\")";
         QRegExp escapeRegExp(escapePattern, Qt::CaseSensitive);
         title.replace(escapeRegExp, "").trimmed();
 
-        Structureelement *newCourse = new Structureelement(title, QUrl(), 0, 0, cid, courseItem);
+        Structureelement *newCourse = new Structureelement(title, QUrl(url), 0, 0, cid, courseItem);
 
         Utils::getSemesterItem(itemModel, semester)->appendRow(newCourse);
 

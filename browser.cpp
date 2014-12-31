@@ -835,20 +835,34 @@ void Browser::on_contractPushButton_clicked()
     ui->dataTreeView->collapseAll();
 }
 
+/// Dateien bei einem Doppelklick öffnen
 void Browser::on_dataTreeView_doubleClicked(const QModelIndex &index)
 {
-    Structureelement *element =
+    Structureelement *item =
         (Structureelement *) itemModel->
         itemFromIndex(proxyModel.mapToSource(index));
 
-    if (element->type() == fileItem)
-        if (!QDesktopServices::openUrl(QUrl
-                                       (Utils::getElementLocalPath(element,
-                                               options->downloadFolderLineEditText()),
-                                        QUrl::TolerantMode)))
+    if (item->type() == fileItem)
+    {
+        QFileInfo fileInfo(Utils::getElementLocalPath(item,
+                                                      options->downloadFolderLineEditText(),
+                                                      true,
+                                                      false));
+
+        QString fileUrl;
+
+        // Überprüfung, ob Datei lokal oder im L2P geöffnet werden soll
+        if(fileInfo.exists() && fileInfo.isFile())
         {
-            QDesktopServices::openUrl(element->data(urlRole).toUrl());
+            fileUrl = Utils::getElementLocalPath(item, options->downloadFolderLineEditText());
         }
+        else
+        {
+            fileUrl = Utils::getElementRemotePath(item, "https://www3.elearning.rwth-aachen.de/");
+        }
+
+        QDesktopServices::openUrl(QUrl(fileUrl));
+    }
 }
 
 void Browser::on_dataTreeView_customContextMenuRequested(const QPoint &pos)
@@ -861,7 +875,9 @@ void Browser::on_dataTreeView_customContextMenuRequested(const QPoint &pos)
     // Überprüfung, ob überhaupt auf ein Element geklickt wurde (oder
     // ins Leere)
     if (RightClickedItem == 0)
+    {
         return;
+    }
 
     // Speichern des geklickten Items
     lastRightClickItem = RightClickedItem;
@@ -871,21 +887,18 @@ void Browser::on_dataTreeView_customContextMenuRequested(const QPoint &pos)
     // Öffnen der Veranstaltungsseite im L2P
     if (RightClickedItem->type() == courseItem)
     {
-        QAction *openCourseAction = new QAction("Veranstaltungsseite oeffnen", this);
-        newCustomContextMenu.addAction(openCourseAction);
-        QObject::connect(openCourseAction, SIGNAL(triggered()), this,
-                         SLOT(openCourse()));
+        newCustomContextMenu.addAction("Veranstaltungsseite öffnen", this, SLOT(openCourse()));
     }
 
-    // Öffnen der Datei
-    QAction *openAction = new QAction("Oeffnen", this);
-    newCustomContextMenu.addAction(openAction);
-    QObject::connect(openAction, SIGNAL(triggered()), this, SLOT(openItem()));
+    // Öffnen des Elements lokal oder im L2P
+    newCustomContextMenu.addAction("Öffnen", this, SLOT(openFile()));
+
     // Kopieren der URL
-    QAction *copyAction = new QAction("Link kopieren", this);
-    newCustomContextMenu.addAction(copyAction);
-    QObject::connect(copyAction, SIGNAL(triggered()), this,
-                     SLOT(copyUrlToClipboardSlot()));
+    if(RightClickedItem->type() == courseItem || RightClickedItem->type() == fileItem)
+    {
+        newCustomContextMenu.addAction("Link kopieren", this, SLOT(copyUrlToClipboardSlot()));
+    }
+
     // Anzeigen des Menus an der Mausposition
     newCustomContextMenu.exec(ui->dataTreeView->mapToGlobal(pos));
 }
@@ -896,17 +909,28 @@ void Browser::openCourse()
     QDesktopServices::openUrl(lastRightClickItem->data(urlRole).toUrl());
 }
 
-void Browser::openItem()
+void Browser::openFile()
 {
-    QLOG_INFO() << Utils::getElementLocalPath(lastRightClickItem, options->downloadFolderLineEditText());
-    // Öffnen der Datei auf der Festplatte des mit der rechten Maustaste
-    // geklickten Items
-    if (!QDesktopServices::openUrl(QUrl(Utils::getElementLocalPath(lastRightClickItem, options->downloadFolderLineEditText()), QUrl::TolerantMode)))
+    QString baseUrl = "https://www3.elearning.rwth-aachen.de";
+
+    QFileInfo fileInfo(Utils::getElementLocalPath(lastRightClickItem,
+                                                  options->downloadFolderLineEditText(),
+                                                  true,
+                                                  false));
+
+    QString fileUrl;
+
+    // Überprüfung, ob Datei lokal oder im L2P geöffnet werden soll
+    if(fileInfo.exists())
     {
-        // Öffnen der Datei im L2P des mit der rechten Maustaste
-        // geklickten Items
-        QDesktopServices::openUrl(lastRightClickItem->data(urlRole).toUrl());
+        fileUrl = Utils::getElementLocalPath(lastRightClickItem, options->downloadFolderLineEditText());
     }
+    else
+    {
+        fileUrl = Utils::getElementRemotePath(lastRightClickItem, baseUrl);
+    }
+
+    QDesktopServices::openUrl(QUrl(fileUrl));
 }
 
 void Browser::on_sizeLimitSpinBox_valueChanged(int newMaximumSize)
@@ -960,7 +984,17 @@ void Browser::on_showNewDataPushButton_clicked()
 
 void Browser::copyUrlToClipboardSlot()
 {
-    Utils::copyTextToClipboard(lastRightClickItem->text());
+    QString url;
+    if(lastRightClickItem->type() == fileItem)
+    {
+        url = Utils::getElementRemotePath(lastRightClickItem, "https://www3.elearning.rwth-aachen.de");
+    }
+    else if(lastRightClickItem->type() == courseItem)
+    {
+        url = lastRightClickItem->data(urlRole).toString();
+    }
+
+    Utils::copyTextToClipboard(url);
 }
 
 void Browser::successfulLoginSlot()

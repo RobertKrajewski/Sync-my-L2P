@@ -57,7 +57,6 @@ public:
     void loadSettings();
     void saveSettings();
 
-    void loadStructureelementFromXml(QDomElement item, QStandardItem *parentItem);
 public slots:
     void on_refreshPushButton_clicked();
     void downloadDirectoryLineEditChangedSlot(QString downloadDirectory);
@@ -75,6 +74,7 @@ private:
 
     int getFileCount(QLinkedList<Structureelement*>& items);
 
+    void loadStructureelementFromXml(QDomElement item, QStandardItem *parentItem);
     void saveStructureelementToXml(QDomDocument &domDoc, QStandardItem *item, QDomElement *parentItem);
 
     void updateButtons();
@@ -100,7 +100,7 @@ private:
     int refreshCounter;
 
 private slots:
-    void openItem();
+    void openFile();
     void openCourse();
     void coursesRecieved(QNetworkReply*);
     void filesRecieved(QNetworkReply*);
