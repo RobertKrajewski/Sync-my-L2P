@@ -60,6 +60,7 @@ public:
 public slots:
     void on_refreshPushButton_clicked();
     void downloadDirectoryLineEditChangedSlot(QString downloadDirectory);
+    void clearItemModel();
 
 signals:
     void enableSignal(bool);

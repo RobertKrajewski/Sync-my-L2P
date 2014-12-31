@@ -233,6 +233,8 @@ void Options::on_loginErasePushButton_clicked()
     ui->autoLoginOnStartCheckBox->setChecked(false);
     ui->userDataSaveCheckBox->setEnabled(false);
     ui->userDataSaveCheckBox->setChecked(false);
+
+    browser->clearItemModel();
 }
 
 void Options::loginResultSlot(int result)

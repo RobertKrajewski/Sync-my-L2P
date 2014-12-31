@@ -759,21 +759,12 @@ void Browser::saveStructureelementToXml(QDomDocument &domDoc, QStandardItem *ite
 // Aktivierung oder Deaktivierung der Buttons in Abhängigkeit des Status
 void Browser::updateButtons()
 {
-    if(itemModel->rowCount() == 0)
+    if(itemModel->rowCount() == 0 || options->getAccessToken().isEmpty())
     {
         ui->refreshPushButton->setEnabled(false);
         ui->showNewDataPushButton->setEnabled(false);
         ui->expandPushButton->setEnabled(false);
         ui->contractPushButton->setEnabled(false);
-
-        ui->sizeLimitCheckBox->setEnabled(false);
-        ui->sizeLimitSpinBox->setEnabled(false);
-        ui->dateFilterCheckBox->setEnabled(false);
-        ui->minDateEdit->setEnabled(false);
-        ui->maxDateEdit->setEnabled(false);
-
-        ui->searchLineEdit->setEnabled(false);
-        ui->searchPushButton->setEnabled(false);
 
         ui->removeSelectionPushButton->setEnabled(false);
         ui->addSelectionPushButton->setEnabled(false);
@@ -786,20 +777,10 @@ void Browser::updateButtons()
         ui->expandPushButton->setEnabled(true);
         ui->contractPushButton->setEnabled(true);
 
-        ui->sizeLimitCheckBox->setEnabled(true);
-        ui->sizeLimitSpinBox->setEnabled(true);
-        ui->dateFilterCheckBox->setEnabled(true);
-        ui->minDateEdit->setEnabled(true);
-        ui->maxDateEdit->setEnabled(true);
-
-        ui->searchLineEdit->setEnabled(true);
-        ui->searchPushButton->setEnabled(true);
-
         ui->removeSelectionPushButton->setEnabled(true);
         ui->addSelectionPushButton->setEnabled(true);
         ui->syncPushButton->setEnabled(true);
     }
-
 }
 
 QNetworkRequest *Browser::apiRequest(Structureelement *course, QString apiExtension)
@@ -1002,3 +983,8 @@ void Browser::successfulLoginSlot()
     ui->refreshPushButton->setEnabled(true);
 }
 
+void Browser::clearItemModel()
+{
+    itemModel->clear();
+    updateButtons();
+}
