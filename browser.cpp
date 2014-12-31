@@ -27,6 +27,8 @@ Browser::Browser(QWidget *parent) :
     QObject::connect(ui->searchLineEdit, SIGNAL(returnPressed()), ui->searchPushButton, SLOT(click()));
 
     refreshCounter = 0;
+
+    setupSignalsSlots();
 }
 
 Browser::~Browser()
@@ -74,7 +76,7 @@ void Browser::loadStructureelementFromXml(QDomElement item, QStandardItem *paren
         loadStructureelementFromXml(children.item(i).toElement(), newChild);
     }
 }
-#include <iostream>
+
 void Browser::loadSettings()
 {
     QSettings settings;
@@ -783,6 +785,19 @@ void Browser::updateButtons()
     }
 }
 
+void Browser::setupSignalsSlots()
+{
+    connect(ui->expandPushButton, &QPushButton::clicked, ui->dataTreeView, &QTreeView::expandAll);
+    connect(ui->contractPushButton, &QPushButton::clicked, ui->dataTreeView, &QTreeView::collapseAll);
+
+    connect(ui->sizeLimitSpinBox, SIGNAL(valueChanged(int)), &proxyModel, SLOT(setMaximumSize(int)));
+    connect(ui->sizeLimitCheckBox, &QCheckBox::toggled, &proxyModel, &MySortFilterProxyModel::setMaximumSizeFilter);
+
+    connect(ui->dateFilterCheckBox, &QCheckBox::toggled, &proxyModel, &MySortFilterProxyModel::setInRangeDateFilter);
+    connect(ui->minDateEdit, &QDateEdit::dateChanged, &proxyModel, &MySortFilterProxyModel::setFilterMinimumDate);
+    connect(ui->maxDateEdit, &QDateEdit::dateChanged, &proxyModel, &MySortFilterProxyModel::setFilterMaximumDate);
+}
+
 QNetworkRequest *Browser::apiRequest(Structureelement *course, QString apiExtension)
 {
     QString baseUrl = "https://www3.elearning.rwth-aachen.de/_vti_bin/L2PServices/api.svc/v1/";
@@ -802,18 +817,6 @@ void Browser::on_openDownloadfolderPushButton_clicked()
                               ("file:///" %
                                options->downloadFolderLineEditText(),
                                QUrl::TolerantMode));
-}
-
-void Browser::on_expandPushButton_clicked()
-{
-    // Expandieren aller Zweige
-    ui->dataTreeView->expandAll();
-}
-
-void Browser::on_contractPushButton_clicked()
-{
-    // Reduktion aller Zweige
-    ui->dataTreeView->collapseAll();
 }
 
 /// Dateien bei einem Doppelklick öffnen
@@ -912,31 +915,6 @@ void Browser::openFile()
     }
 
     QDesktopServices::openUrl(QUrl(fileUrl));
-}
-
-void Browser::on_sizeLimitSpinBox_valueChanged(int newMaximumSize)
-{
-    proxyModel.setMaximumSize(newMaximumSize);
-}
-
-void Browser::on_sizeLimitCheckBox_toggled(bool checked)
-{
-    proxyModel.setMaximumSizeFilter(checked);
-}
-
-void Browser::on_dateFilterCheckBox_toggled(bool checked)
-{
-    proxyModel.setInRangeDateFilter(checked);
-}
-
-void Browser::on_minDateEdit_dateChanged(const QDate &date)
-{
-    proxyModel.setFilterMinimumDate(date);
-}
-
-void Browser::on_maxDateEdit_dateChanged(const QDate &date)
-{
-    proxyModel.setFilterMaximumDate(date);
 }
 
 void Browser::on_showNewDataPushButton_clicked()

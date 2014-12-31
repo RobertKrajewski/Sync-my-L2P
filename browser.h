@@ -79,6 +79,7 @@ private:
     void saveStructureelementToXml(QDomDocument &domDoc, QStandardItem *item, QDomElement *parentItem);
 
     void updateButtons();
+    void setupSignalsSlots();
 
     QNetworkRequest *webdavRequest(Structureelement *aktuelleVeranstaltung, QString urlExtension);
 
@@ -92,7 +93,6 @@ private:
     Structureelement        *iter;
     QFile                   output;
     QMap<QNetworkReply*, Structureelement*> replies;
-
 
     Structureelement* lastRightClickItem;
 
@@ -111,15 +111,8 @@ private slots:
     void on_addSelectionPushButton_clicked();
     void on_syncPushButton_clicked();
     void on_openDownloadfolderPushButton_clicked();
-    void on_expandPushButton_clicked();
-    void on_contractPushButton_clicked();
     void on_dataTreeView_doubleClicked(const QModelIndex &index);
     void on_dataTreeView_customContextMenuRequested(const QPoint &pos);
-    void on_sizeLimitSpinBox_valueChanged(int arg1);
-    void on_sizeLimitCheckBox_toggled(bool checked);
-    void on_dateFilterCheckBox_toggled(bool checked);
-    void on_minDateEdit_dateChanged(const QDate &date);
-    void on_maxDateEdit_dateChanged(const QDate &date);
     void on_showNewDataPushButton_clicked();
     void copyUrlToClipboardSlot();
     void successfulLoginSlot();
