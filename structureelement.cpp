@@ -63,6 +63,18 @@ QVariant Structureelement::data(int role) const
                  statustip.append(QString::number(size/1024.0,'f',2) % " KB");
 
             statustip.append(" - " % time.toString("ddd dd.MM.yy hh:mm"));
+
+            statustip.append(" - ");
+            switch(synchronised)
+            {
+            case NOW_SYNCHRONISED:
+            case SYNCHRONISED:
+                    statustip.append("synchronisert");
+                    break;
+            case NOT_SYNCHRONISED:
+            default:
+                statustip.append("nicht synchronisiert");
+            }
         }
         return statustip;
     }
