@@ -26,6 +26,7 @@ Logger::~Logger()
     delete ui;
 }
 
+/// Laden der Einstellungen
 void Logger::loadSettings()
 {
     QSettings settings;
@@ -34,6 +35,7 @@ void Logger::loadSettings()
     settings.endGroup();
 }
 
+/// Speichern der Einstellungen
 void Logger::saveSettings()
 {
     QSettings settings;
@@ -63,6 +65,7 @@ void Logger::on_logLevelCB_currentIndexChanged(const QString &logLevel)
     }
 }
 
+/// Speichern des gesamten Log in einer Datei
 void Logger::on_savePB_clicked()
 {
     QString textToWrite = getLogText();
@@ -90,11 +93,13 @@ void Logger::on_savePB_clicked()
     file.close();
 }
 
+/// Kopieren des gesamten Logs in die Zwischenablage
 void Logger::on_copyPB_clicked()
 {
     Utils::copyTextToClipboard(getLogText());
 }
 
+/// Wandelt alle Logs in einen einzigen String um
 QString Logger::getLogText()
 {
     QList<QListWidgetItem*> items = ui->logList->findItems("*", Qt::MatchWildcard);
