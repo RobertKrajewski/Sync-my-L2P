@@ -10,6 +10,7 @@ class Utils : public QObject
 public:
 
     static QString getElementLocalPath(Structureelement* item, QString path, bool includeFilname = true, bool includePrefix = true);
+    static QString getElementRemotePath(Structureelement* item, QString baseUrl);
     static void copyTextToClipboard(QString text);
     static void errorMessageBox(QString message, QString detailMessage);
 
