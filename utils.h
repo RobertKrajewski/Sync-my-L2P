@@ -19,6 +19,8 @@ public:
     static Structureelement *getDirectoryItem(Structureelement *courseItem, QStringList path);
 
     static void centerWidgetOnDesktop(QWidget* widget);
+
+    static void checkAllFilesIfSynchronised(QLinkedList<Structureelement *> items, QString downloadDirectory);
 private:
     explicit Utils(QObject *parent = 0);
 

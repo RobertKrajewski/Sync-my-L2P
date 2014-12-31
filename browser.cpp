@@ -109,6 +109,10 @@ void Browser::loadSettings()
 
     QDomElement root = domDoc.documentElement();
     loadStructureelementFromXml(root, itemModel->invisibleRootItem());
+
+    QLinkedList<Structureelement*> items;
+    getStructureelementsList(itemModel->invisibleRootItem(), items);
+    Utils::checkAllFilesIfSynchronised(items, options->downloadFolderLineEditText());
 }
 
 void Browser::saveSettings()
@@ -328,23 +332,6 @@ void Browser::filesRecieved(QNetworkReply *reply)
         QObject::disconnect(manager, SIGNAL(finished(QNetworkReply *)),
                             this,    SLOT(filesRecieved(QNetworkReply *)));
 
-        // Freischalten von Schaltflächen
-        updateButtons();
-
-        // Anzeigen aller neuen, unsynchronisierten Dateien
-        if (refreshCounter == 1)
-        {
-            on_showNewDataPushButton_clicked();
-        }
-
-        emit enableSignal(true);
-
-        // Automatische Synchronisation beim Programmstart
-        if (options->isAutoSyncOnStartCheckBoxChecked() && refreshCounter==1 && options->getLoginCounter()==1)
-        {
-            on_syncPushButton_clicked();
-        }
-
         itemModel->sort(0);
 
         QLinkedList<Structureelement*> items;
@@ -378,6 +365,25 @@ void Browser::filesRecieved(QNetworkReply *reply)
 
         oldItemModel->deleteLater();
         oldItemModel = 0;
+
+        Utils::checkAllFilesIfSynchronised(items, options->downloadFolderLineEditText());
+
+        // Freischalten von Schaltflächen
+        updateButtons();
+
+        // Anzeigen aller neuen, unsynchronisierten Dateien
+        if (refreshCounter == 1)
+        {
+            on_showNewDataPushButton_clicked();
+        }
+
+        emit enableSignal(true);
+
+        // Automatische Synchronisation beim Programmstart
+        if (options->isAutoSyncOnStartCheckBoxChecked() && refreshCounter==1 && options->getLoginCounter()==1)
+        {
+            on_syncPushButton_clicked();
+        }
     }
 }
 
@@ -692,11 +698,15 @@ void Browser::getStructureelementsList(Structureelement *currentElement, QLinked
     }
 }
 
-void Browser::getStructureelementsList(Structureelement *topElement, QLinkedList <Structureelement *> &list)
+void Browser::getStructureelementsList(QStandardItem *topElement, QLinkedList <Structureelement *> &list)
 {
-    list.append(topElement);
+    Structureelement *item = dynamic_cast<Structureelement*>(topElement);
+    if(item)
+    {
+        list.append(item);
+    }
     for (int i = 0; i < topElement->rowCount(); i++)
-        getStructureelementsList((Structureelement*) topElement->child(i), list);
+        getStructureelementsList(topElement->child(i), list);
 }
 
 /// Bestimmung der Zahl der Dateien in einer Liste
