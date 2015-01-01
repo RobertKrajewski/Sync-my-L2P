@@ -22,11 +22,8 @@
 #include <QDesktopWidget>
 #include <QDesktopServices>
 #include <QSystemTrayIcon>
-#include <QMenu>
 
 #include "browser.h"
-
-class Veranstaltung;
 
 namespace Ui {
     class MyMainWindow;

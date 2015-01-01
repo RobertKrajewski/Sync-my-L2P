@@ -86,6 +86,14 @@ void MyMainWindow::loadSettings()
     ui->optionsTab->loadSettings();
     ui->browserTab->loadSettings();    
     ui->logTab->loadSettings();
+
+    // Beim ersten Start Anleitung anzeigen
+    QSettings settings;
+    bool firstUse = settings.value("firstUse", "true").toBool();
+    if(firstUse)
+    {
+        ui->tabWidget->setCurrentIndex(3);
+    }
 }
 
 /// Speichern aller Einstellungen
@@ -94,6 +102,9 @@ void MyMainWindow::saveSettings()
     ui->browserTab->saveSettings();
     ui->optionsTab->saveSettings();
     ui->logTab->saveSettings();
+
+    QSettings settings;
+    settings.setValue("firstUse", "false");
 }
 
 /// Löschen alter Einstellungen
