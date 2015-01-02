@@ -2,7 +2,9 @@
 #include "ui_browser.h"
 
 #include "options.h"
-#include <QDebug>
+
+#include <QThread>
+#include <QTextCodec>
 
 #include "qslog/QsLog.h"
 
@@ -92,6 +94,8 @@ void Browser::loadSettings()
     ui->maxDateEdit->setDate(settings.value("maxDate", QDate(2042, 1, 1)).toDate());
     settings.endGroup();
 
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-16"));
+
     QFile file("data.xml");
     if(!file.open(QIODevice::ReadWrite))
     {
@@ -142,7 +146,7 @@ void Browser::saveSettings()
         return;
     }
     QTextStream ts(&file);
-    ts << domDoc.toString();
+    ts << domDoc.toByteArray();
     file.close();
 }
 
@@ -178,7 +182,7 @@ void Browser::on_refreshPushButton_clicked()
     QObject::connect(manager, SIGNAL(finished(QNetworkReply *)),
                      this, SLOT(coursesRecieved(QNetworkReply *)));
 
-    QLOG_INFO() << "Veranstaltungsrequest";
+    QLOG_DEBUG() << "Veranstaltungsrequest";
 
     QNetworkRequest request(QUrl("https://www3.elearning.rwth-aachen.de/_vti_bin/L2PServices/api.svc/v1/viewAllCourseInfo?accessToken=" % options->getAccessToken()));
 
@@ -190,7 +194,7 @@ void Browser::on_refreshPushButton_clicked()
 void Browser::coursesRecieved(QNetworkReply *reply)
 {
 
-    QLOG_INFO() << "Veranstaltungen empfangen";
+    QLOG_DEBUG() << "Veranstaltungen empfangen";
     // Prüfen auf Fehler beim Abruf
     if (!reply->error())
     {
@@ -199,7 +203,6 @@ void Browser::coursesRecieved(QNetworkReply *reply)
     else
     {
         Utils::errorMessageBox("Beim Abruf der Veranstaltungen ist ein Fehler aufgetreten", reply->errorString());
-        QLOG_ERROR() << "Veranstaltungen nicht abrufbar: " << reply->errorString();
     }
 
     // Veranstaltungen alphabetisch sortieren
@@ -310,6 +313,8 @@ void Browser::requestFileInformation()
 
 void Browser::filesRecieved(QNetworkReply *reply)
 {
+    QLOG_DEBUG() << "Itemrequest empfangen: " << reply->url().toString();
+
     // Prüfen auf Fehler
     if (!reply->error())
     {
@@ -806,6 +811,15 @@ QNetworkRequest *Browser::apiRequest(Structureelement *course, QString apiExtens
 
     QString url = baseUrl % apiExtension % access % cid;
     QNetworkRequest *request = new QNetworkRequest(QUrl(url));
+
+    QSslConfiguration conf = request->sslConfiguration();
+    conf.setPeerVerifyMode(QSslSocket::VerifyNone);
+    request->setSslConfiguration(conf);
+
+    QLOG_DEBUG() << "Itemrequest an API: " << url;
+
+    // Damit der L2P Server nicht überfordert wird...
+    QThread::msleep(10);
 
     return request;
 }
