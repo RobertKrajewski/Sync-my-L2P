@@ -54,6 +54,35 @@ void Parser::parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
 
 void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelement*> *replies, QString downloadDirectoryPath)
 {
+    QString url = reply->url().toString();
+
+    int responseCategory;
+
+    // Kategorie der Daten bestimmen, um richtigen Parser auszuwählen
+    if(url.contains("viewAllLearningMaterials"))
+    {
+        responseCategory = 0;
+    }
+    else if(url.contains("viewAllSharedDocuments"))
+    {
+        responseCategory = 1;
+    }
+    else if(url.contains("viewAllAssignments"))
+    {
+        responseCategory = 2;
+        return;
+    }
+    else if(url.contains("viewAllMediaLibrarys"))
+    {
+        responseCategory = 3;
+        return;
+    }
+    else
+    {
+        QLOG_ERROR() << "Antwort auf unbekannten Request erhalten: " << url;
+        return;
+    }
+
     Structureelement *currentCourse = replies->value(reply);
 
     QByteArray response = reply->readAll();
@@ -74,23 +103,76 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
     }
 
     QJsonArray files = object["dataSet"].toArray();
-
     foreach(QJsonValue element, files)
     {
         QJsonObject file = element.toObject();
-        QJsonObject fileInformation = file["fileInformation"].toObject();
+        QString filename;
+        int filesize;
+        int timestamp;
+        QString url;
+        QStringList urlParts;
 
-        QString filename = fileInformation["fileName"].toString();
-        int filesize = fileInformation["fileSize"].toString().toInt();
-        int timestamp = fileInformation["modifiedTimestamp"].toInt();
-        QString url = fileInformation["downloadUrl"].toString();
-        QStringList urlParts = url.split('/');
+        if(responseCategory == 0 || responseCategory == 3)
+        {
+            QJsonObject fileInformation = file["fileInformation"].toObject();
 
-        urlParts.removeFirst();
-        urlParts.removeFirst();
-        urlParts.removeFirst();
-        urlParts.removeFirst();
-        urlParts.removeLast();
+            filename = fileInformation["fileName"].toString();
+            filesize = fileInformation["fileSize"].toString().toInt();
+            timestamp = fileInformation["modifiedTimestamp"].toInt();
+            url = fileInformation["downloadUrl"].toString();
+            urlParts = url.split('/');
+
+            urlParts.removeFirst();
+            urlParts.removeFirst();
+            urlParts.removeFirst();
+            urlParts.removeFirst();
+            urlParts.removeLast();
+
+        }
+        else if(responseCategory == 1)
+        {
+            // Wir brauchen nur die Dateien
+            if(file["isDirectory"].toBool())
+            {
+                continue;
+            }
+
+            filename = file["name"].toString();
+            filesize = -1;
+            timestamp = file["modifiedTimestamp"].toInt();
+            url = file["downloadUrl"].toString();
+            urlParts = url.split('/');
+
+            urlParts.removeFirst();
+            urlParts.removeFirst();
+            urlParts.removeFirst();
+            urlParts.removeFirst();
+            urlParts.removeFirst();
+            urlParts.removeLast();
+        }
+        else if(responseCategory == 2)
+        {
+            QJsonArray assignmentDocs = file["assignmentDocuments"].toArray();
+
+            foreach(QJsonValue assignmentElement, assignmentDocs)
+            {
+                QJsonObject assignmentDoc = assignmentElement.toObject();
+
+                filename = assignmentDoc["fileName"].toString();
+                filesize = assignmentDoc["fileSize"].toInt();
+                timestamp = assignmentDoc["modifiedTimestamp"].toInt();
+                url = file["downloadUrl"].toString();
+                urlParts = url.split('/');
+
+                urlParts.removeFirst();
+                urlParts.removeFirst();
+                urlParts.removeFirst();
+                urlParts.removeFirst();
+                urlParts.removeFirst();
+                urlParts.removeLast();
+            }
+        }
+
 
         Structureelement *dir = Utils::getDirectoryItem(currentCourse, urlParts);
 
