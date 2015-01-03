@@ -173,6 +173,10 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
             }
         }
 
+        if(url.contains("Lehrproben"))
+        {
+            QLOG_INFO() << file["name"];
+        }
 
         Structureelement *dir = Utils::getDirectoryItem(currentCourse, urlParts);
 
