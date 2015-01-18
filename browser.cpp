@@ -94,7 +94,7 @@ void Browser::loadSettings()
     ui->maxDateEdit->setDate(settings.value("maxDate", QDate(2042, 1, 1)).toDate());
     settings.endGroup();
 
-    QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-16"));
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
 
     QFile file("data.xml");
     if(!file.open(QIODevice::ReadWrite))
