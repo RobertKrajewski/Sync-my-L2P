@@ -32,7 +32,12 @@
 
 #include "utils.h"
 #include <sys/types.h>
+
+#ifdef _WIN32
+#include <sys/utime.h>
+#else
 #include <utime.h>
+#endif
 
 namespace Ui {
     class DateiDownloader;
