@@ -64,9 +64,10 @@ OTHER_FILES += \
     Sync-my-L2P.icns \
     README.md \
     magnifier.ico \
-    icon.rc \
     COPYING.LESSER \
     .gitignore
 
 RESOURCES += \
     icons\icons.qrc
+
+RC_FILE = icon.rc
