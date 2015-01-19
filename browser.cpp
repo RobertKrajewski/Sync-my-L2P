@@ -102,7 +102,14 @@ void Browser::loadSettings()
         QLOG_ERROR() << "Kann keine Daten von Festplatte laden.";
         return;
     }
+
     QTextStream ts(&file);
+
+    if(ts.atEnd())
+    {
+        QLOG_INFO() << "Keine Dateiliste auf der Festplatte gefunden.";
+        return;
+    }
 
     QDomDocument domDoc;
     QString errorMessage;
