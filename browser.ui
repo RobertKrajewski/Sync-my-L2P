@@ -54,7 +54,7 @@
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>aktualisieren</string>
+         <string>Aktualisieren</string>
         </property>
         <property name="icon">
          <iconset resource="icons/icons.qrc">
@@ -83,7 +83,7 @@
          <bool>true</bool>
         </property>
         <property name="text">
-         <string>neue Dateien anzeigen</string>
+         <string>Neue Dateien anzeigen</string>
         </property>
        </widget>
       </item>
@@ -93,7 +93,7 @@
          <bool>true</bool>
         </property>
         <property name="text">
-         <string>alle expandieren</string>
+         <string>Alle expandieren</string>
         </property>
        </widget>
       </item>
@@ -103,7 +103,7 @@
          <bool>true</bool>
         </property>
         <property name="text">
-         <string>alle kontrahieren</string>
+         <string>Alle kontrahieren</string>
         </property>
        </widget>
       </item>
@@ -247,7 +247,7 @@
          <bool>true</bool>
         </property>
         <property name="text">
-         <string>suchen</string>
+         <string>Suchen</string>
         </property>
         <property name="icon">
          <iconset resource="icons/icons.qrc">
@@ -328,7 +328,7 @@
          </size>
         </property>
         <property name="text">
-         <string>download</string>
+         <string>Download</string>
         </property>
         <property name="icon">
          <iconset resource="icons/icons.qrc">
