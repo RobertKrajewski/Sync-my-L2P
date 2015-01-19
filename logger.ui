@@ -64,7 +64,7 @@
      <item>
       <widget class="QComboBox" name="logLevelCB">
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;standard&lt;/span&gt;: Alle wichtigen Ereignisse werden geloggt.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;erweitert&lt;/span&gt;: Neben den wichtigen Ereignissen werden auch solche geloggt, die zur Fehlerbehebung dienen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Standard&lt;/span&gt;: Alle wichtigen Ereignisse werden geloggt.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Erweitert&lt;/span&gt;: Neben den wichtigen Ereignissen werden auch solche geloggt, die zur Fehlerbehebung dienen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>
@@ -74,7 +74,7 @@
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Kopiert den gesamten Text in die Zwischenablage.&lt;/p&gt;&lt;p&gt;Um einzelne Elemente zu kopieren, müssen diese ausgewählt und mit der plattformtypischen Tastenkombination (Windows: Strg + C) kopiert werden&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
-        <string>kopieren</string>
+        <string>Kopieren</string>
        </property>
       </widget>
      </item>
@@ -84,7 +84,7 @@
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Speichert den gesamten Text in eine separate Datei.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
-        <string>speichern</string>
+        <string>Speichern</string>
        </property>
       </widget>
      </item>
