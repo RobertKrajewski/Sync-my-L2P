@@ -330,9 +330,7 @@ void Browser::filesRecieved(QNetworkReply *reply)
     }
     else
     {
-        Utils::errorMessageBox("Beim Abruf des Inhalts einer Veranstaltung ist ein Fehler aufgetreten", reply->errorString());
-        QLOG_ERROR() << "Fehler beim Abrufen der Dateien einer Veranstaltung: " << reply->errorString();
-        QLOG_ERROR() << reply->readAll();
+        Utils::errorMessageBox("Beim Abruf des Inhalts einer Veranstaltung ist ein Fehler aufgetreten", reply->errorString() % " ;" % reply->readAll());
     }
 
     // Löschen der Antwort aus der Liste der abzuarbeitenden Antworten
