@@ -48,7 +48,7 @@
            <bool>false</bool>
           </property>
           <property name="text">
-           <string>speichern</string>
+           <string>Speichern</string>
           </property>
           <property name="checked">
            <bool>false</bool>
@@ -61,14 +61,14 @@
            <bool>true</bool>
           </property>
           <property name="text">
-           <string>löschen</string>
+           <string>Löschen</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="loginPushButton">
           <property name="text">
-           <string>einloggen</string>
+           <string>Einloggen</string>
           </property>
           <property name="icon">
            <iconset resource="icons/icons.qrc">
