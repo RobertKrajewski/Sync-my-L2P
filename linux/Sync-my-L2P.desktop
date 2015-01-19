@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Sync-my-L2P
+Comment=Sync-my-L2P — L2P synchronisation tool
+Comment[de]=Sync-my-L2P – Synchronsiert deine Dokumente aus dem L2P mit deinem Rechner
+Exec=Sync-my-L2P
+Icon=Sync-my-L2P
+Terminal=false
+Type=Application
+Categories=Qt;FileTransfer;Network;
