@@ -298,8 +298,8 @@ void Browser::requestFileInformation()
             QNetworkRequest *request = apiRequest(course, "viewAllAssignments");
 
             // Einfügen und Absenden des Requests
-//            replies.insert(manager->get(*request),
-//                           course);
+            replies.insert(manager->get(*request),
+                           course);
 
             delete request;
         }
