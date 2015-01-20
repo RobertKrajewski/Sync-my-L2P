@@ -270,7 +270,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>abbrechen</string>
+    <string>Abbrechen</string>
    </property>
   </widget>
   <widget class="QLabel" name="downloadSpeedLabel">

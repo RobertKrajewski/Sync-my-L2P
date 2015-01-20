@@ -15,8 +15,8 @@ Logger::Logger(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->logLevelCB->addItem("standard");
-    ui->logLevelCB->addItem("erweitert");
+    ui->logLevelCB->addItem("Standard");
+    ui->logLevelCB->addItem("Erweitert");
 
     QsLogging::Logger::instance().addDestination(QsLogging::DestinationFactory::MakeFunctorDestination(this, SLOT(logSlot(QString,int))));
 }
@@ -53,15 +53,15 @@ void Logger::logSlot(QString message, int level)
 /// Ausgewählte Logstufe an den Logger weitergeben
 void Logger::on_logLevelCB_currentIndexChanged(const QString &logLevel)
 {
-    if(logLevel == QString("standard"))
+    if(logLevel == QString("Standard"))
     {
         QsLogging::Logger::instance().setLoggingLevel(QsLogging::InfoLevel);
-        QLOG_INFO() << "Setze Logging auf \"standard\".";
+        QLOG_INFO() << "Setze Logging auf \"Standard\".";
     }
-    else if(logLevel == QString("erweitert"))
+    else if(logLevel == QString("Erweitert"))
     {
         QsLogging::Logger::instance().setLoggingLevel(QsLogging::TraceLevel);
-        QLOG_INFO() << "Setze Logging auf \"erweitert\".";
+        QLOG_INFO() << "Setze Logging auf \"Erweitert\".";
     }
 }
 
