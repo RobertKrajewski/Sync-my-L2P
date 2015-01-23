@@ -70,12 +70,10 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
     else if(url.contains("viewAllAssignments"))
     {
         responseCategory = 2;
-        return;
     }
     else if(url.contains("viewAllMediaLibrarys"))
     {
         responseCategory = 3;
-        return;
     }
     else
     {
