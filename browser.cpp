@@ -231,7 +231,9 @@ void Browser::requestFileInformation()
     if (!options->isLearningMaterialsCheckBoxChecked()
         && !options->isSharedLearningmaterialsCheckBoxChecked()
         && !options->isAssignmentsCheckBoxChecked()
-        && !options->isMediaLibrarysCheckBoxChecked())
+        && !options->isMediaLibrarysCheckBoxChecked()
+        && !options->isEmailAttachmentsCheckBoxChecked()
+        && !options->isAnnouncementAttachmentsCheckBoxChecked())
     {
         // Freischalten von Schaltflächen
         emit enableSignal(true);
@@ -315,6 +317,31 @@ void Browser::requestFileInformation()
 
             delete request;
         }
+
+        // Ausführen des Requests für "Ankündigung Anhänge"
+        if (options->isAnnouncementAttachmentsCheckBoxChecked())
+        {
+            QNetworkRequest *request = apiRequest(course, "viewAllAnnouncements");
+
+            // Einfügen und Absenden des Requests
+            replies.insert(manager->get(*request),
+                           course);
+
+            delete request;
+        }
+
+        // Ausführen des Requests für "E-Mail Anhänge"
+        if (options->isEmailAttachmentsCheckBoxChecked())
+        {
+            QNetworkRequest *request = apiRequest(course, "viewAllEmails");
+
+            // Einfügen und Absenden des Requests
+            replies.insert(manager->get(*request),
+                           course);
+
+            delete request;
+        }
+
     }
 }
 
