@@ -149,27 +149,27 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
             urlParts.removeLast();
         }
         else if(responseCategory == 2)
-        {
-            QJsonArray assignmentDocs = file["assignmentDocuments"].toArray();
+               {
+                   QJsonArray assignmentDocs = file["assignmentDocuments"].toArray();
 
-            foreach(QJsonValue assignmentElement, assignmentDocs)
-            {
-                QJsonObject assignmentDoc = assignmentElement.toObject();
+                   foreach(QJsonValue assignmentElement, assignmentDocs)
+                   {
+                       QJsonObject assignmentDoc = assignmentElement.toObject();
 
-                filename = assignmentDoc["fileName"].toString();
-                filesize = assignmentDoc["fileSize"].toInt();
-                timestamp = assignmentDoc["modifiedTimestamp"].toInt();
-                url = file["downloadUrl"].toString();
-                urlParts = url.split('/');
+                       filename = assignmentDoc["fileName"].toString();
+                       filesize = assignmentDoc["fileSize"].toInt();
+                       timestamp = assignmentDoc["modifiedTimestamp"].toInt();
+                       url = assignmentDoc["downloadUrl"].toString();
+                       urlParts = url.split('/');
 
-                urlParts.removeFirst();
-                urlParts.removeFirst();
-                urlParts.removeFirst();
-                urlParts.removeFirst();
-                urlParts.removeFirst();
-                urlParts.removeLast();
-            }
-        }
+                       urlParts.removeFirst();
+                       urlParts.removeFirst();
+                       urlParts.removeFirst();
+                       urlParts.removeFirst();
+                       urlParts.removeFirst();
+                       urlParts.removeLast();
+                   }
+               }
 
         if(url.contains("Lehrproben"))
         {
