@@ -48,6 +48,9 @@ void Options::loadSettings()
     ui->sharedDocumentsCheckBox->setChecked(        settings.value("sharedMaterials", true).toBool());
     ui->assignmentsCheckBox->setChecked(              settings.value("exercises", true).toBool());
     ui->mediaLibrarysCheckBox->setChecked(             settings.value("literature", true).toBool());
+    ui->emailAttachmentsCheckBox->setChecked(             settings.value("email", true).toBool());
+    ui->announcementAttachmentsCheckBox->setChecked(             settings.value("announcement", true).toBool());
+
     settings.endGroup();
 
     settings.beginGroup("automation");
@@ -84,6 +87,8 @@ void Options::saveSettings()
     settings.setValue("sharedMaterials",    ui->sharedDocumentsCheckBox->isChecked());
     settings.setValue("exercises",          ui->assignmentsCheckBox->isChecked());
     settings.setValue("literature",         ui->mediaLibrarysCheckBox->isChecked());
+    settings.setValue("email",              ui->emailAttachmentsCheckBox->isChecked());
+    settings.setValue("announcement",       ui->announcementAttachmentsCheckBox->isChecked());
     settings.endGroup();
 
     settings.beginGroup("automation");
