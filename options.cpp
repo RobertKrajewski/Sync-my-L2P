@@ -177,6 +177,16 @@ bool Options::isMediaLibrarysCheckBoxChecked()
     return ui->mediaLibrarysCheckBox->isChecked();
 }
 
+bool Options::isEmailAttachmentsCheckBoxChecked()
+{
+    return ui->emailAttachmentsCheckBox->isChecked();
+}
+
+bool Options::isAnnouncementAttachmentsCheckBoxChecked()
+{
+    return ui->announcementAttachmentsCheckBox->isChecked();
+}
+
 bool Options::isSharedLearningmaterialsCheckBoxChecked()
 {
     return ui->sharedDocumentsCheckBox->isChecked();

@@ -75,6 +75,14 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
     {
         responseCategory = 3;
     }
+    else if(url.contains("viewAllAnnouncements"))
+    {
+        responseCategory = 4;
+    }
+    else if(url.contains("viewAllEmails"))
+    {
+        responseCategory = 5;
+    }
     else
     {
         QLOG_ERROR() << "Antwort auf unbekannten Request erhalten: " << url;
@@ -194,7 +202,31 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
             urlParts.removeLast();
 
         }
+        else if(responseCategory == 4 || responseCategory == 5)
+        {
+            if (!file["attachments"].isNull()) {
+                QJsonArray attachment = file["attachments"].toArray();
+                foreach(QJsonValue attachmentElement, attachment)
+                {
+                    QJsonObject fileInformation = attachmentElement.toObject();
+                    filename = fileInformation["fileName"].toString();
+                    filesize = fileInformation["fileSize"].toString().toInt();
+                    timestamp = fileInformation["modifiedTimestamp"].toInt();
+                    url = fileInformation["downloadUrl"].toString();
+                    urlParts = url.split('/');
+                    urlParts.removeFirst();
+                    urlParts.removeFirst();
+                    urlParts.removeFirst();
+                    urlParts.removeFirst();
+                    urlParts.removeLast();
+                    urlParts.removeLast();
 
+                }
+            }
+            else {
+                continue;
+            }
+        }
         if(url.contains("Lehrproben"))
         {
             QLOG_INFO() << file["name"];
