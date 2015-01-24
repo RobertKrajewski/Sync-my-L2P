@@ -118,6 +118,13 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
             filesize = fileInformation["fileSize"].toString().toInt();
             timestamp = fileInformation["modifiedTimestamp"].toInt();
             url = fileInformation["downloadUrl"].toString();
+
+            // Wir brauchen keine Vorschaubilder
+            if(url.contains("Preview%20Images"))
+                {
+                    continue;
+                }
+
             urlParts = url.split('/');
 
             urlParts.removeFirst();
