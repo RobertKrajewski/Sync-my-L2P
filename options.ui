@@ -71,7 +71,7 @@
            <string>Einloggen</string>
           </property>
           <property name="icon">
-           <iconset resource="icons/icons.qrc">
+           <iconset>
             <normaloff>:/icons/login.png</normaloff>:/icons/login.png</iconset>
           </property>
           <property name="default">
@@ -106,7 +106,7 @@
          <string>Durchsuchen</string>
         </property>
         <property name="icon">
-         <iconset resource="icons/icons.qrc">
+         <iconset>
           <normaloff>:/icons/downloadDirectory.png</normaloff>:/icons/downloadDirectory.png</iconset>
         </property>
        </widget>
@@ -120,6 +120,16 @@
       <string>Filter für Rubriken</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_4">
+      <item row="2" column="1">
+       <widget class="QCheckBox" name="assignmentsCheckBox">
+        <property name="text">
+         <string>Übungen</string>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="0">
        <widget class="QCheckBox" name="learningMaterialsCheckBox">
         <property name="text">
@@ -150,13 +160,17 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
-       <widget class="QCheckBox" name="assignmentsCheckBox">
+      <item row="3" column="0">
+       <widget class="QCheckBox" name="emailAttachmentsCheckBox">
         <property name="text">
-         <string>Übungen</string>
+         <string>E-Mail-Anhänge</string>
         </property>
-        <property name="checked">
-         <bool>false</bool>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QCheckBox" name="announcementAttachmentsCheckBox">
+        <property name="text">
+         <string>Ankündigungs-Anhänge</string>
         </property>
        </widget>
       </item>
@@ -300,8 +314,6 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="icons/icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

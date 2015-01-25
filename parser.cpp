@@ -75,6 +75,14 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
     {
         responseCategory = 3;
     }
+    else if(url.contains("viewAllAnnouncements"))
+    {
+        responseCategory = 4;
+    }
+    else if(url.contains("viewAllEmails"))
+    {
+        responseCategory = 5;
+    }
     else
     {
         QLOG_ERROR() << "Antwort auf unbekannten Request erhalten: " << url;
@@ -110,7 +118,7 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
         QString url;
         QStringList urlParts;
 
-        if(responseCategory == 0 || responseCategory == 3)
+        if(responseCategory == 0)
         {
             QJsonObject fileInformation = file["fileInformation"].toObject();
 
@@ -118,13 +126,6 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
             filesize = fileInformation["fileSize"].toString().toInt();
             timestamp = fileInformation["modifiedTimestamp"].toInt();
             url = fileInformation["downloadUrl"].toString();
-
-            // Wir brauchen keine Vorschaubilder
-            if(url.contains("Preview%20Images"))
-                {
-                    continue;
-                }
-
             urlParts = url.split('/');
 
             urlParts.removeFirst();
@@ -132,7 +133,6 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
             urlParts.removeFirst();
             urlParts.removeFirst();
             urlParts.removeLast();
-
         }
         else if(responseCategory == 1)
         {
@@ -156,40 +156,111 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
             urlParts.removeLast();
         }
         else if(responseCategory == 2)
-               {
-                   QJsonArray assignmentDocs = file["assignmentDocuments"].toArray();
+        {
+            QJsonArray assignmentDocs = file["assignmentDocuments"].toArray();
 
-                   foreach(QJsonValue assignmentElement, assignmentDocs)
-                   {
-                       QJsonObject assignmentDoc = assignmentElement.toObject();
+            foreach(QJsonValue assignmentElement, assignmentDocs)
+            {
+                QJsonObject assignmentDoc = assignmentElement.toObject();
 
-                       filename = assignmentDoc["fileName"].toString();
-                       filesize = assignmentDoc["fileSize"].toInt();
-                       timestamp = assignmentDoc["modifiedTimestamp"].toInt();
-                       url = assignmentDoc["downloadUrl"].toString();
-                       urlParts = url.split('/');
+                filename = assignmentDoc["fileName"].toString();
+                filesize = assignmentDoc["fileSize"].toInt();
+                timestamp = assignmentDoc["modifiedTimestamp"].toInt();
+                url = assignmentDoc["downloadUrl"].toString();
+                urlParts = url.split('/');
 
-                       urlParts.removeFirst();
-                       urlParts.removeFirst();
-                       urlParts.removeFirst();
-                       urlParts.removeFirst();
-                       urlParts.removeFirst();
-                       urlParts.removeLast();
-                   }
-               }
+                urlParts.removeFirst();
+                urlParts.removeFirst();
+                urlParts.removeFirst();
+                urlParts.removeFirst();
+                urlParts.removeFirst();
+                urlParts.removeLast();
 
+                Structureelement *dir = Utils::getDirectoryItem(currentCourse, urlParts);
+
+                Structureelement* newFile = new Structureelement(filename, QUrl(url), timestamp, filesize,
+                                                                 currentCourse->data(cidRole).toString(),
+                                                                 fileItem);
+
+                // Element hinzufügen
+                dir->appendRow(newFile);
+            }
+        }
+        else if(responseCategory == 3)
+        {
+            QJsonObject fileInformation = file["fileInformation"].toObject();
+
+            filename = fileInformation["fileName"].toString();
+            filesize = fileInformation["fileSize"].toString().toInt();
+            timestamp = fileInformation["modifiedTimestamp"].toInt();
+            url = fileInformation["downloadUrl"].toString();
+
+            // Wir brauchen keine Vorschaubilder
+            if(url.contains("Preview%20Images"))
+                {
+                    continue;
+                }
+
+            // Um eine lesbare Orderstruktur zu ermöglichen wird hier nicht die eigentliche URL, sondern folgender Konstrukt verwedet
+            QString readurl = "|"+file["sourceFolder"].toString()+"/"+file["title"].toString();
+            urlParts = readurl.split('/');
+            urlParts.removeFirst();
+            urlParts.removeFirst();
+            urlParts.removeFirst();
+            urlParts.removeFirst();
+            urlParts.removeLast();
+
+        }
+        else if(responseCategory == 4 || responseCategory == 5)
+        {
+            if (!file["attachments"].isNull()) {
+                QJsonArray attachment = file["attachments"].toArray();
+                foreach(QJsonValue attachmentElement, attachment)
+                {
+                    QJsonObject fileInformation = attachmentElement.toObject();
+                    filename = fileInformation["fileName"].toString();
+                    filesize = fileInformation["fileSize"].toString().toInt();
+                    timestamp = fileInformation["modifiedTimestamp"].toInt();
+                    url = fileInformation["downloadUrl"].toString();
+                    urlParts = url.split('/');
+                    urlParts.removeFirst();
+                    urlParts.removeFirst();
+                    urlParts.removeFirst();
+                    urlParts.removeFirst();
+                    urlParts.removeLast();
+                    urlParts.removeLast();
+
+                    Structureelement *dir = Utils::getDirectoryItem(currentCourse, urlParts);
+
+                    Structureelement* newFile = new Structureelement(filename, QUrl(url), timestamp, filesize,
+                                                                     currentCourse->data(cidRole).toString(),
+                                                                     fileItem);
+
+                    // Element hinzufügen
+                    dir->appendRow(newFile);
+
+                }
+            }
+            else {
+                continue;
+            }
+        }
         if(url.contains("Lehrproben"))
         {
             QLOG_INFO() << file["name"];
         }
 
-        Structureelement *dir = Utils::getDirectoryItem(currentCourse, urlParts);
+        // Wegen der inneren foreach-Schleife in den Kategorien 2,4 und 5 ist diese Übergabe nur noch für die Kategorie 1 und 3
+        if(responseCategory == 1 || responseCategory == 3){
 
-        Structureelement* newFile = new Structureelement(filename, QUrl(url), timestamp, filesize,
+            Structureelement *dir = Utils::getDirectoryItem(currentCourse, urlParts);
+
+            Structureelement* newFile = new Structureelement(filename, QUrl(url), timestamp, filesize,
                                                          currentCourse->data(cidRole).toString(),
                                                          fileItem);
 
-        // Element hinzufügen
-        dir->appendRow(newFile);
+            // Element hinzufügen
+            dir->appendRow(newFile);
+        }
     }
 }

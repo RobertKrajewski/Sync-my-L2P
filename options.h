@@ -32,6 +32,8 @@ public:
     bool isSharedLearningmaterialsCheckBoxChecked();
     bool isAssignmentsCheckBoxChecked();
     bool isMediaLibrarysCheckBoxChecked();
+    bool isEmailAttachmentsCheckBoxChecked();
+    bool isAnnouncementAttachmentsCheckBoxChecked();
     bool isAutoLoginOnStartCheckBoxChecked();
     bool isAutoSyncOnStartCheckBoxChecked();
     bool isMinimizeInTrayCheckBoxChecked();
