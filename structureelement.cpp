@@ -168,22 +168,13 @@ void Structureelement::chooseIcon()
 
             setIcon(QIcon(":/icons/picture.png"));
         }
-        // RAR
-        else if (filename.contains(QRegExp(".rar$", Qt::CaseInsensitive)))
+        // Archivefiles
+        else if (filename.contains(QRegExp(".rar$", Qt::CaseInsensitive))||
+                filename.contains(QRegExp(".zip$", Qt::CaseInsensitive))||
+                filename.contains(QRegExp(".jar$", Qt::CaseInsensitive)))
         {
-            setIcon(QIcon(":/icons/rar.png"));
+            setIcon(QIcon(":/icons/archive.png"));
         }
-        // ZIP
-        else if (filename.contains(QRegExp(".zip$", Qt::CaseInsensitive)))
-        {
-            setIcon(QIcon(":/icons/zip.png"));
-        }
-        // JAR
-        else if (filename.contains(QRegExp(".jar$", Qt::CaseInsensitive)))
-        {
-            setIcon(QIcon(":/icons/jar.png"));
-        }
-        // Sonstige
         else
         {
             setIcon(QIcon(":/icons/otherFile.png"));

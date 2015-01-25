@@ -18,9 +18,7 @@
         <file>sheet.png</file>
         <file>document.png</file>
         <file>audio.png</file>
-        <file>jar.png</file>
         <file>picture.png</file>
-        <file>zip.png</file>
-        <file>rar.png</file>
+        <file>archive.png</file>
     </qresource>
 </RCC>
