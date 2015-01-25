@@ -70,12 +70,10 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
     else if(url.contains("viewAllAssignments"))
     {
         responseCategory = 2;
-        return;
     }
     else if(url.contains("viewAllMediaLibrarys"))
     {
         responseCategory = 3;
-        return;
     }
     else
     {
@@ -120,6 +118,13 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
             filesize = fileInformation["fileSize"].toString().toInt();
             timestamp = fileInformation["modifiedTimestamp"].toInt();
             url = fileInformation["downloadUrl"].toString();
+
+            // Wir brauchen keine Vorschaubilder
+            if(url.contains("Preview%20Images"))
+                {
+                    continue;
+                }
+
             urlParts = url.split('/');
 
             urlParts.removeFirst();
@@ -151,27 +156,27 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
             urlParts.removeLast();
         }
         else if(responseCategory == 2)
-        {
-            QJsonArray assignmentDocs = file["assignmentDocuments"].toArray();
+               {
+                   QJsonArray assignmentDocs = file["assignmentDocuments"].toArray();
 
-            foreach(QJsonValue assignmentElement, assignmentDocs)
-            {
-                QJsonObject assignmentDoc = assignmentElement.toObject();
+                   foreach(QJsonValue assignmentElement, assignmentDocs)
+                   {
+                       QJsonObject assignmentDoc = assignmentElement.toObject();
 
-                filename = assignmentDoc["fileName"].toString();
-                filesize = assignmentDoc["fileSize"].toInt();
-                timestamp = assignmentDoc["modifiedTimestamp"].toInt();
-                url = file["downloadUrl"].toString();
-                urlParts = url.split('/');
+                       filename = assignmentDoc["fileName"].toString();
+                       filesize = assignmentDoc["fileSize"].toInt();
+                       timestamp = assignmentDoc["modifiedTimestamp"].toInt();
+                       url = assignmentDoc["downloadUrl"].toString();
+                       urlParts = url.split('/');
 
-                urlParts.removeFirst();
-                urlParts.removeFirst();
-                urlParts.removeFirst();
-                urlParts.removeFirst();
-                urlParts.removeFirst();
-                urlParts.removeLast();
-            }
-        }
+                       urlParts.removeFirst();
+                       urlParts.removeFirst();
+                       urlParts.removeFirst();
+                       urlParts.removeFirst();
+                       urlParts.removeFirst();
+                       urlParts.removeLast();
+                   }
+               }
 
         if(url.contains("Lehrproben"))
         {
