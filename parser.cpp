@@ -193,8 +193,9 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
                     continue;
                 }
 
-            urlParts = url.split('/');
-
+            // Um eine lesbare Orderstruktur zu ermöglichen wird hier nicht die eigentliche URL, sondern folgender Konstrukt verwedet
+            QString readurl = "|"+file["sourceFolder"].toString()+"/"+file["title"].toString();
+            urlParts = readurl.split('/');
             urlParts.removeFirst();
             urlParts.removeFirst();
             urlParts.removeFirst();
