@@ -160,24 +160,13 @@ void Structureelement::chooseIcon()
                     setIcon(QIcon(":/icons/slideshow.png"));
                 }
         // BMP
-        else if (filename.contains(QRegExp(".bmp$", Qt::CaseInsensitive)))
+        else if (filename.contains(QRegExp(".bmp$", Qt::CaseInsensitive)) ||
+                 filename.contains(QRegExp(".jpg$", Qt::CaseInsensitive)) ||
+                 filename.contains(QRegExp(".png$", Qt::CaseInsensitive)) ||
+                 filename.contains(QRegExp(".gif$", Qt::CaseInsensitive)))
         {
-            setIcon(QIcon(":/icons/bmp.png"));
-        }
-        // JPG
-        else if (filename.contains(QRegExp(".jpg$", Qt::CaseInsensitive)))
-        {
-            setIcon(QIcon(":/icons/jpg.png"));
-        }
-        // PNG
-        else if (filename.contains(QRegExp(".png$", Qt::CaseInsensitive)))
-        {
-            setIcon(QIcon(":/icons/png.png"));
-        }
-        // GIF
-        else if (filename.contains(QRegExp(".gif$", Qt::CaseInsensitive)))
-        {
-            setIcon(QIcon(":/icons/gif.png"));
+
+            setIcon(QIcon(":/icons/picture.png"));
         }
         // RAR
         else if (filename.contains(QRegExp(".rar$", Qt::CaseInsensitive)))
