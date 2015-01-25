@@ -133,7 +133,6 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
             urlParts.removeFirst();
             urlParts.removeFirst();
             urlParts.removeLast();
-
         }
         else if(responseCategory == 1)
         {
@@ -176,6 +175,15 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
                 urlParts.removeFirst();
                 urlParts.removeFirst();
                 urlParts.removeLast();
+
+                Structureelement *dir = Utils::getDirectoryItem(currentCourse, urlParts);
+
+                Structureelement* newFile = new Structureelement(filename, QUrl(url), timestamp, filesize,
+                                                                 currentCourse->data(cidRole).toString(),
+                                                                 fileItem);
+
+                // Element hinzufügen
+                dir->appendRow(newFile);
             }
         }
         else if(responseCategory == 3)
@@ -222,6 +230,15 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
                     urlParts.removeLast();
                     urlParts.removeLast();
 
+                    Structureelement *dir = Utils::getDirectoryItem(currentCourse, urlParts);
+
+                    Structureelement* newFile = new Structureelement(filename, QUrl(url), timestamp, filesize,
+                                                                     currentCourse->data(cidRole).toString(),
+                                                                     fileItem);
+
+                    // Element hinzufügen
+                    dir->appendRow(newFile);
+
                 }
             }
             else {
@@ -233,13 +250,17 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
             QLOG_INFO() << file["name"];
         }
 
-        Structureelement *dir = Utils::getDirectoryItem(currentCourse, urlParts);
+        // Wegen der inneren foreach-Schleife in den Kategorien 2,4 und 5 ist diese Übergabe nur noch für die Kategorie 1 und 3
+        if(responseCategory == 1 || responseCategory == 3){
 
-        Structureelement* newFile = new Structureelement(filename, QUrl(url), timestamp, filesize,
+            Structureelement *dir = Utils::getDirectoryItem(currentCourse, urlParts);
+
+            Structureelement* newFile = new Structureelement(filename, QUrl(url), timestamp, filesize,
                                                          currentCourse->data(cidRole).toString(),
                                                          fileItem);
 
-        // Element hinzufügen
-        dir->appendRow(newFile);
+            // Element hinzufügen
+            dir->appendRow(newFile);
+        }
     }
 }
