@@ -177,10 +177,12 @@ void Utils::checkAllFilesIfSynchronised(QLinkedList<Structureelement*> items, QS
 
         QString filePath = getElementLocalPath(item, downloadDirectory, true, false);
         QFileInfo fileInfo(filePath);
+        QString url = item->data(urlRole).toUrl().toString();
 
-        // Vergleich der Dateigröße sowie des Änderungsdatums
-        if(fileInfo.exists() && fileInfo.isFile() &&
-           fileInfo.size() == item->data(sizeRole).toInt()/* &&
+        // Für Gemeinsame Dokumente gibt es keine Information über die Dateigröße
+        if(url.contains("collaboration")) {
+        if(fileInfo.exists() && fileInfo.isFile()/* &&
+           fileInfo.size() == item->data(sizeRole).toInt() &&
            fileInfo.lastModified() == item->data(dateRole).toDateTime()*/)
         {
             item->setData(SYNCHRONISED, synchronisedRole);
@@ -188,6 +190,21 @@ void Utils::checkAllFilesIfSynchronised(QLinkedList<Structureelement*> items, QS
         else
         {
             item->setData(NOT_SYNCHRONISED, synchronisedRole);
+        }
+        }
+        // bei allen anderen Dateien hingegen schon
+        else
+        {
+            if(fileInfo.exists() && fileInfo.isFile() &&
+                fileInfo.size() == item->data(sizeRole).toInt()/* &&
+                fileInfo.lastModified() == item->data(dateRole).toDateTime()*/)
+            {
+                item->setData(SYNCHRONISED, synchronisedRole);
+            }
+            else
+            {
+                item->setData(NOT_SYNCHRONISED, synchronisedRole);
+            }
         }
     }
 }
