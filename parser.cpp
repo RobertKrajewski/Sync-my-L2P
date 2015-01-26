@@ -164,7 +164,7 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
                 QJsonObject assignmentDoc = assignmentElement.toObject();
 
                 filename = assignmentDoc["fileName"].toString();
-                filesize = assignmentDoc["fileSize"].toInt();
+                filesize = assignmentDoc["fileSize"].toString().toInt();
                 timestamp = assignmentDoc["modifiedTimestamp"].toInt();
                 url = assignmentDoc["downloadUrl"].toString();
                 urlParts = url.split('/');
