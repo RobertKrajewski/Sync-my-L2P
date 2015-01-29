@@ -15,8 +15,8 @@ Logger::Logger(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->logLevelCB->addItem("Standard");
-    ui->logLevelCB->addItem("Erweitert");
+    ui->logLevelCB->addItem(tr("Standard"));
+    ui->logLevelCB->addItem(tr("Erweitert"));
 
     QsLogging::Logger::instance().addDestination(QsLogging::DestinationFactory::MakeFunctorDestination(this, SLOT(logSlot(QString,int))));
 }
@@ -53,15 +53,15 @@ void Logger::logSlot(QString message, int level)
 /// Ausgewählte Logstufe an den Logger weitergeben
 void Logger::on_logLevelCB_currentIndexChanged(const QString &logLevel)
 {
-    if(logLevel == QString("Standard"))
+    if(logLevel == QString(tr("Standard")))
     {
         QsLogging::Logger::instance().setLoggingLevel(QsLogging::InfoLevel);
-        QLOG_INFO() << "Setze Logging auf \"Standard\".";
+        QLOG_INFO() << tr("Setze Logging auf \"Standard\".");
     }
-    else if(logLevel == QString("Erweitert"))
+    else if(logLevel == QString(tr("Erweitert")))
     {
         QsLogging::Logger::instance().setLoggingLevel(QsLogging::TraceLevel);
-        QLOG_INFO() << "Setze Logging auf \"Erweitert\".";
+        QLOG_INFO() << tr("Setze Logging auf \"Erweitert\".");
     }
 }
 
@@ -75,18 +75,18 @@ void Logger::on_savePB_clicked()
                                                     "",
                                                     "Textdateien (*.txt)");
 
-    QLOG_DEBUG() << "Ausgewählter Speicherort für das Logfile: " << filepath;
+    QLOG_DEBUG() << tr("Ausgewählter Speicherort für das Logfile: ") << filepath;
 
     QFile file(filepath);
     if(!file.open(QIODevice::WriteOnly))
     {
-        QLOG_ERROR() << "Fehler beim initialisieren des Logfiles: " << file.errorString();
+        QLOG_ERROR() << tr("Fehler beim initialisieren des Logfiles: ") << file.errorString();
         return;
     }
 
     if(file.write(textToWrite.toLatin1()) == -1)
     {
-        QLOG_ERROR() << "Fehler beim Schreiben des Logfiles: " << file.errorString();
+        QLOG_ERROR() << tr("Fehler beim Schreiben des Logfiles: ") << file.errorString();
         return;
     }
 

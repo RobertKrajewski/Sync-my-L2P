@@ -37,13 +37,13 @@ void LoginDialog::run(Login *login)
     QObject::connect(&manager, SIGNAL(finished(QNetworkReply*)),
                      this, SLOT(availabilitySlot(QNetworkReply*)));
 
-    QLOG_INFO() << "Erreichbarkeitsrequest";
+    QLOG_INFO() << tr("Erreichbarkeitsrequest");
     manager.get(request);
 }
 
 void LoginDialog::availabilitySlot(QNetworkReply * reply)
 {
-    QLOG_INFO() << "Erreichbarkeit festgestellt";
+    QLOG_INFO() << tr("Erreichbarkeit festgestellt");
     QObject::disconnect(&manager, SIGNAL(finished(QNetworkReply*)),
                         this, SLOT(availabilitySlot(QNetworkReply*)));
 
@@ -51,7 +51,7 @@ void LoginDialog::availabilitySlot(QNetworkReply * reply)
 
     if( reply->error() )
     {
-        QLOG_DEBUG() << "Fehler: L2P nicht erreichbar. Genauer Fehler: " << reply->errorString();
+        QLOG_DEBUG() << tr("Fehler: L2P nicht erreichbar. Genauer Fehler: ") << reply->errorString();
     }
 
     if(response.contains("die die Kommunikation vereinfachen und verschiedene Assessment-Optionen bieten"))

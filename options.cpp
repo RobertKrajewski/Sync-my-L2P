@@ -239,7 +239,7 @@ int Options::getLoginCounter()
 
 void Options::on_loginErasePushButton_clicked()
 {
-    ui->loginStatusLabel->setText("Status: ausgeloggt");
+    ui->loginStatusLabel->setText(tr("Status: ausgeloggt"));
 
     login.deleteAccess();
     ui->loginErasePushButton->setEnabled(false);
@@ -256,7 +256,7 @@ void Options::loginResultSlot(int result)
 {
     if(result == QDialog::Accepted)
     {
-        ui->loginStatusLabel->setText("Status: Login erfolgreich");
+        ui->loginStatusLabel->setText(tr("Status: Login erfolgreich"));
 
         // Aktualisieren der Buttons
         ui->loginErasePushButton->setEnabled(true);
@@ -270,7 +270,7 @@ void Options::loginResultSlot(int result)
     }
     else
     {
-        ui->loginStatusLabel->setText("Status: Login fehlgeschlagen");
+        ui->loginStatusLabel->setText(tr("Status: Login fehlgeschlagen"));
     }
 }
 
