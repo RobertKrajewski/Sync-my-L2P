@@ -141,7 +141,7 @@ void MyMainWindow::changeEvent(QEvent *event)
                 QSystemTrayIcon::isSystemTrayAvailable())
         {
             trayIcon->show();
-            trayIcon->showMessage("Sync-my-L2P", "Läuft im Hintergrund weiter.");
+            trayIcon->showMessage("Sync-my-L2P", tr("Läuft im Hintergrund weiter."));
             QTimer::singleShot(0, this, SLOT(hide()));
             event->ignore();
         }
