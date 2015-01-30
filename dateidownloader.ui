@@ -283,7 +283,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>1321 kB/s</string>
+    <string notr="true">1321 kB/s</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

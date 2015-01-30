@@ -99,7 +99,7 @@ QList<Structureelement*> Utils::getAllCourseItems(QStandardItemModel *itemModel)
         }
         else
         {
-            QLOG_ERROR() << "Unbekanntes Element auf der Ebene der Veranstaltungen: " << element->text();
+            QLOG_ERROR() << tr("Unbekanntes Element auf der Ebene der Veranstaltungen: ") << element->text();
         }
     }
 
@@ -133,6 +133,25 @@ Structureelement *Utils::getDirectoryItem(Structureelement *courseItem, QStringL
     // Iteriere entlang der Elemente des Pfads und erstelle diese ggf.
     foreach(QString item, path)
     {
+        if (item.contains("SharedDocuments")) {
+            item = "Gemeinsame Dokumente";
+        }
+        else if (item.contains("StructuredMaterials")) {
+            item = "Lernmaterialien";
+        }
+        else if (item.contains("LA_AssignmentDocuments")) {
+            item = "Übungsdokumente";
+        }
+        else if (item.contains("EmailAttachments")) {
+            item = "E-Mail-Anhänge";
+        }
+        else if (item.contains("MediaLibrary")) {
+            item = "Medienbibliothek";
+        }
+        else if (item.contains("AnnouncementDocuments")) {
+            item = "Anküdigungs-Anhänge";
+        }
+
         bool correctChildFound = false;
         for(int row=0; row < currentItem->rowCount(); ++row)
         {
