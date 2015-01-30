@@ -99,7 +99,7 @@ QList<Structureelement*> Utils::getAllCourseItems(QStandardItemModel *itemModel)
         }
         else
         {
-            QLOG_ERROR() << "Unbekanntes Element auf der Ebene der Veranstaltungen: " << element->text();
+            QLOG_ERROR() << tr("Unbekanntes Element auf der Ebene der Veranstaltungen: ") << element->text();
         }
     }
 

@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>662</width>
-    <height>601</height>
+    <height>744</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string notr="true">Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0" rowspan="5">
@@ -57,7 +57,7 @@
          <string>Aktualisieren</string>
         </property>
         <property name="icon">
-         <iconset resource="icons/icons.qrc">
+         <iconset>
           <normaloff>:/icons/refresh.png</normaloff>:/icons/refresh.png</iconset>
         </property>
        </widget>
@@ -250,7 +250,7 @@
          <string>Suchen</string>
         </property>
         <property name="icon">
-         <iconset resource="icons/icons.qrc">
+         <iconset>
           <normaloff>:/icons/magnifier.png</normaloff>:/icons/magnifier.png</iconset>
         </property>
        </widget>
@@ -331,7 +331,7 @@
          <string>Download</string>
         </property>
         <property name="icon">
-         <iconset resource="icons/icons.qrc">
+         <iconset>
           <normaloff>:/icons/download.png</normaloff>:/icons/download.png</iconset>
         </property>
         <property name="default">
@@ -344,8 +344,6 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="icons/icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

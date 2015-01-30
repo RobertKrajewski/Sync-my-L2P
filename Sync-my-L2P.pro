@@ -10,6 +10,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Sync-my-L2P
 TEMPLATE = app
 
+TRANSLATIONS = lang/sync-my-l2p_de.ts \
+               lang/sync-my-l2p_en.ts
 
 SOURCES += main.cpp\
         mymainwindow.cpp \
@@ -68,6 +70,7 @@ OTHER_FILES += \
     .gitignore
 
 RESOURCES += \
-    icons\icons.qrc
+    icons\icons.qrc \
+    lang\translation.qrc
 
 RC_FILE = icon.rc
