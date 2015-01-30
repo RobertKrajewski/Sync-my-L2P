@@ -16,13 +16,13 @@ void Parser::parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
 
     if(object.isEmpty())
     {
-        QLOG_INFO() << "Kursinformationen leer bzw. nicht lesbar.";
+        QLOG_INFO() << tr("Kursinformationen leer bzw. nicht lesbar.");
         return;
     }
 
     if(!object["Status"].toBool())
     {
-        QLOG_ERROR() << "Status der Kursinformationen nicht ok.";
+        QLOG_ERROR() << tr("Status der Kursinformationen nicht ok.");
         return;
     }
 
@@ -48,7 +48,7 @@ void Parser::parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
 
         Utils::getSemesterItem(itemModel, semester)->appendRow(newCourse);
 
-        QLOG_INFO() << "Veranstaltung " << title << " (" << cid << ") hinzugefügt.";
+        QLOG_INFO() << tr("Veranstaltung ") << title << " (" << cid << tr(") hinzugefügt.");
     }
 }
 
@@ -85,7 +85,7 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
     }
     else
     {
-        QLOG_ERROR() << "Antwort auf unbekannten Request erhalten: " << url;
+        QLOG_ERROR() << tr("Antwort auf unbekannten Request erhalten: ") << url;
         return;
     }
 
@@ -98,13 +98,13 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
 
     if(object.isEmpty())
     {
-        QLOG_DEBUG() << "Kursinformationen leer bzw. nicht lesbar.";
+        QLOG_DEBUG() << tr("Kursinformationen leer bzw. nicht lesbar.");
         return;
     }
 
     if(!object["Status"].toBool())
     {
-        QLOG_ERROR() << "Status der Kursinformationen nicht ok.";
+        QLOG_ERROR() << tr("Status der Kursinformationen nicht ok.");
         return;
     }
 

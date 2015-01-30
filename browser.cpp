@@ -99,7 +99,7 @@ void Browser::loadSettings()
     QFile file("data.xml");
     if(!file.open(QIODevice::ReadWrite))
     {
-        QLOG_ERROR() << "Kann keine Daten von Festplatte laden.";
+        QLOG_ERROR() << tr("Kann keine Daten von Festplatte laden");
         return;
     }
 
@@ -107,7 +107,7 @@ void Browser::loadSettings()
 
     if(ts.atEnd())
     {
-        QLOG_INFO() << "Keine Dateiliste auf der Festplatte gefunden.";
+        QLOG_INFO() << tr("Keine Dateiliste auf der Festplatte gefunden.");
         return;
     }
 
@@ -115,7 +115,7 @@ void Browser::loadSettings()
     QString errorMessage;
     if(!domDoc.setContent(ts.readAll(), &errorMessage))
     {
-        QLOG_ERROR() << "Kann Daten von Festplatte nicht parsen: " << errorMessage;
+        QLOG_ERROR() << tr("Kann Daten von Festplatte nicht parsen: ") << errorMessage;
         return;
     }
     file.close();
@@ -209,7 +209,7 @@ void Browser::coursesRecieved(QNetworkReply *reply)
     }
     else
     {
-        Utils::errorMessageBox("Beim Abruf der Veranstaltungen ist ein Fehler aufgetreten", reply->errorString());
+        Utils::errorMessageBox(tr("Beim Abruf der Veranstaltungen ist ein Fehler aufgetreten"), reply->errorString());
     }
 
     // Veranstaltungen alphabetisch sortieren
@@ -357,7 +357,7 @@ void Browser::filesRecieved(QNetworkReply *reply)
     }
     else
     {
-        Utils::errorMessageBox("Beim Abruf des Inhalts einer Veranstaltung ist ein Fehler aufgetreten", reply->errorString() % " ;" % reply->readAll());
+        Utils::errorMessageBox(tr("Beim Abruf des Inhalts einer Veranstaltung ist ein Fehler aufgetreten"), reply->errorString() % " ;" % reply->readAll());
     }
 
     // Löschen der Antwort aus der Liste der abzuarbeitenden Antworten
@@ -435,7 +435,7 @@ void Browser::on_syncPushButton_clicked()
     if (downloadPath.isEmpty())
     {
         Utils::errorMessageBox("Downloadverzeichnis fehlt!", "Download unmöglich, da kein Zielverzeichnis angegeben wurde.");
-        QLOG_ERROR() << "Kann nicht synchronisieren, da kein Downloadverzeichnis angegeben wurde";
+        QLOG_ERROR() << tr("Kann nicht synchronisieren, da kein Downloadverzeichnis angegeben wurde");
         emit switchTab(1);
         emit enableSignal(true);
         return;
@@ -447,7 +447,7 @@ void Browser::on_syncPushButton_clicked()
     // erstellt werden kann
     if (!verzeichnis.exists() && !verzeichnis.mkpath(verzeichnis.path()))
     {
-        QLOG_ERROR() << "Kann Verzeichnis nicht erzeugen. Download abgebrochen.";
+        QLOG_ERROR() << tr("Kann Verzeichnis nicht erzeugen. Download abgebrochen.");
         emit enableSignal(true);
         return;
     }
@@ -494,8 +494,8 @@ void Browser::on_syncPushButton_clicked()
         // Ordner ggf. erstellen
         if(!directory.mkpath(directoryPath))
         {
-            Utils::errorMessageBox("Verzeichnis nicht erstellbar!", "Kann folgendes Verzeichnis nicht erstellen: " + directoryPath);
-            QLOG_ERROR() << "Verzeichnis nicht erstellbar: " << directoryPath;
+            Utils::errorMessageBox(tr("Verzeichnis nicht erstellbar!"), tr("Kann folgendes Verzeichnis nicht erstellen: ") + directoryPath);
+            QLOG_ERROR() << tr("Verzeichnis nicht erstellbar: ") << directoryPath;
             break;
         }
 
@@ -551,10 +551,10 @@ void Browser::on_syncPushButton_clicked()
     QMessageBox messageBox(this);
     QTimer::singleShot(10000, &messageBox, SLOT(accept()));
     messageBox.setText
-    ("Synchronisation mit dem L2P der RWTH Aachen abgeschlossen.");
+    (tr("Synchronisation mit dem L2P der RWTH Aachen abgeschlossen."));
     messageBox.setIcon(QMessageBox::NoIcon);
     messageBox.setInformativeText(QString
-                                  ("Es wurden %1 von %2 eingebundenen Dateien synchronisiert.\n(Dieses Fenster schließt nach 10 Sek. automatisch.)").arg
+                                  (tr("Es wurden %1 von %2 eingebundenen Dateien synchronisiert.\n(Dieses Fenster schließt nach 10 Sek. automatisch.)")).arg
                                   (QString::number(changedCounter),
                                    QString::number(counter)));
     messageBox.setStandardButtons(QMessageBox::Ok);
@@ -917,16 +917,16 @@ void Browser::on_dataTreeView_customContextMenuRequested(const QPoint &pos)
     // Öffnen der Veranstaltungsseite im L2P
     if (RightClickedItem->type() == courseItem)
     {
-        newCustomContextMenu.addAction("Veranstaltungsseite öffnen", this, SLOT(openCourse()));
+        newCustomContextMenu.addAction(tr("Veranstaltungsseite öffnen"), this, SLOT(openCourse()));
     }
 
     // Öffnen des Elements lokal oder im L2P
-    newCustomContextMenu.addAction("Öffnen", this, SLOT(openFile()));
+    newCustomContextMenu.addAction(tr("Öffnen"), this, SLOT(openFile()));
 
     // Kopieren der URL
     if(RightClickedItem->type() == courseItem || RightClickedItem->type() == fileItem)
     {
-        newCustomContextMenu.addAction("Link kopieren", this, SLOT(copyUrlToClipboardSlot()));
+        newCustomContextMenu.addAction(tr("Link kopieren"), this, SLOT(copyUrlToClipboardSlot()));
     }
 
     // Anzeigen des Menus an der Mausposition

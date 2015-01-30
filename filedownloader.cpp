@@ -61,7 +61,7 @@ int FileDownloader::startNextDownload(QString fileName, QString courseName, QStr
     // Öffnen des Ausgabestreams
     if(!output.open(QIODevice::WriteOnly))
     {
-        Utils::errorMessageBox("Fehler beim Öffnen mit Schreibberechtigung.", fileName);
+        Utils::errorMessageBox(tr("Fehler beim Öffnen mit Schreibberechtigung."), fileName);
         return 0;
     }
 
@@ -97,7 +97,7 @@ void FileDownloader::readyReadSlot()
     // Schreiben der runtergeladenen Bytes in die Datei
     if (output.write(reply->readAll()) == -1)
     {
-        Utils::errorMessageBox("Fehler beim Schreiben der Datei", ui->dateinameLabel->text());
+        Utils::errorMessageBox(tr("Fehler beim Schreiben der Datei"), ui->dateinameLabel->text());
         reply->abort();
     }
 }
@@ -120,7 +120,7 @@ void FileDownloader::finishedSlot()
     if(reply->error())
     {
         QMessageBox messageBox;
-        messageBox.setText("Beim Download einer Datei ist ein Fehler aufgetreten.");
+        messageBox.setText(tr("Beim Download einer Datei ist ein Fehler aufgetreten."));
         messageBox.setInformativeText(ui->dateinameLabel->text());
         messageBox.setDetailedText(reply->errorString());
         messageBox.setStandardButtons(QMessageBox::Ok);
@@ -160,7 +160,7 @@ QString FileDownloader::correctUnit(qint64 bytes)
 {
     if(bytes > 1024 * 1024 * 5)
     {
-        return "mB";
+        return "MB";
     }
     else if (bytes > 1024 * 5)
     {

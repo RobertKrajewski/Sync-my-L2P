@@ -34,7 +34,7 @@ void Login::init()
     refreshToken = settings.value("refreshToken", "").toString();
     settings.endGroup();
 
-    QLOG_DEBUG() << "Geladenes RefreshToken: " << refreshToken;
+    QLOG_DEBUG() << tr("Geladenes RefreshToken: ") << refreshToken;
 }
 
 void Login::getAccess()
@@ -94,7 +94,7 @@ void Login::getUserCode()
 
 void Login::stopLoginSlot()
 {
-    QLOG_DEBUG() << "Stoppe Login";
+    QLOG_DEBUG() << tr("Stoppe Login");
 
     stopLoginTimer.stop();
 
@@ -107,7 +107,7 @@ void Login::stopLoginSlot()
 
 void Login::deleteAccess()
 {
-    QLOG_DEBUG() << "Lösche Zugriffsdaten.";
+    QLOG_DEBUG() << tr("Lösche Zugriffsdaten.");
 
     accessToken.clear();
     refreshToken.clear();
@@ -147,7 +147,7 @@ void Login::finishedSlot(QNetworkReply *reply)
 
     if(object.isEmpty())
     {
-        QLOG_ERROR() << "Keine lesbare Antwort erhalten.";
+        QLOG_ERROR() << tr("Keine lesbare Antwort erhalten.");
         stopLoginSlot();
         return;
     }
@@ -168,7 +168,7 @@ void Login::finishedSlot(QNetworkReply *reply)
             QUrl url;
             url.setUrl(verificationUrl);
 
-            QLOG_DEBUG() << "Öffne Browser für Verfikation. Url: " << url;
+            QLOG_DEBUG() << tr("Öffne Browser für Verfikation. Url: ") << url;
             QDesktopServices::openUrl(url);
 
             QTimer::singleShot(verification["interval"].toInt() * 1000, this, SLOT(checkForVerification()));
@@ -177,7 +177,7 @@ void Login::finishedSlot(QNetworkReply *reply)
         {
             // Zugriff gewährt
 
-            QLOG_DEBUG() << "Neuer Zugriff gewährt.";
+            QLOG_DEBUG() << tr("Neuer Zugriff gewährt.");
             refreshToken = object["refresh_token"].toString();
             accessToken = object["access_token"].toString();
 
@@ -191,18 +191,18 @@ void Login::finishedSlot(QNetworkReply *reply)
         {
             // Zugriff erneuert
 
-            QLOG_DEBUG() << "Zugriff durch Refreshtoken erneuert.";
+            QLOG_DEBUG() << tr("Zugriff durch Refreshtoken erneuert.");
             accessToken = object["access_token"].toString();
 
             QTimer::singleShot(object["expires_in"].toInt() * 1000, this, SLOT(refreshAccess()));
 
             stopLoginTimer.stop();
             emit newAccessToken(accessToken);
-            QLOG_DEBUG() << "Accesstoken: " << accessToken;
+            QLOG_DEBUG() << tr("Accesstoken: ") << accessToken;
         }
         else
         {
-            QLOG_ERROR() << "Status der Antwort ok, aber Antworttyp nicht bekannt.\n" << object;
+            QLOG_ERROR() << tr("Status der Antwort ok, aber Antworttyp nicht bekannt.\n")<< object;
 
             stopLoginSlot();
         }
