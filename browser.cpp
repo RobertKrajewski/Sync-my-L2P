@@ -11,6 +11,15 @@
 // Hauptadresse des Sharepointdienstes
 QString MainURL = "https://www3.elearning.rwth-aachen.de";
 
+#ifdef Q_OS_WIN32
+    QString dataPath = "data.xml";
+#elif Q_OS_LINUX
+    QString dataPath = "$HOME/.config/Sync-my-L2P/";
+#else
+    QString dataPath = "data.xml";
+#endif
+
+
 Browser::Browser(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Browser)
@@ -96,7 +105,7 @@ void Browser::loadSettings()
 
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
 
-    QFile file("data.xml");
+    QFile file(dataPath);
     if(!file.open(QIODevice::ReadWrite))
     {
         QLOG_ERROR() << "Kann keine Daten von Festplatte laden.";
@@ -147,7 +156,7 @@ void Browser::saveSettings()
     QDomDocument domDoc;
     saveStructureelementToXml(domDoc, itemModel->invisibleRootItem(), NULL);
 
-    QFile file("data.xml");
+    QFile file(dataPath);
     if(!file.open(QIODevice::WriteOnly))
     {
         return;
