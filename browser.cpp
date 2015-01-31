@@ -108,7 +108,7 @@ void Browser::loadSettings()
     QFile file(dataPath);
     if(!file.open(QIODevice::ReadWrite))
     {
-        QLOG_ERROR() << tr("Kann keine Daten von Festplatte laden");
+        QLOG_ERROR() << tr("Kann keine Daten von Festplatte laden") << ": " << file.errorString();
         return;
     }
 
