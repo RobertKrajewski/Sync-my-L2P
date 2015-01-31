@@ -197,17 +197,16 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
             filesize = fileInformation["fileSize"].toString().toInt();
             timestamp = fileInformation["modifiedTimestamp"].toInt();
             url = fileInformation["downloadUrl"].toString();
+            url = QByteArray::fromPercentEncoding(url.toLocal8Bit());
+
 
             // Wir brauchen keine Vorschaubilder
-            if(url.contains("Preview%20Images"))
+            if(url.contains("Preview Images"))
                 {
                     continue;
                 }
 
-            // Um eine lesbare Orderstruktur zu ermöglichen wird hier nicht die eigentliche URL, sondern folgender Konstrukt verwedet
-            QString readurl = "|"+file["sourceFolder"].toString()+"/"+file["title"].toString();
-            url = QByteArray::fromPercentEncoding(url.toLocal8Bit());
-            urlParts = readurl.split('/');
+            urlParts = url.split('/');
             urlParts.removeFirst();
             urlParts.removeFirst();
             urlParts.removeFirst();
