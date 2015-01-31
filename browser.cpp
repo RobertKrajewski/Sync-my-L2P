@@ -13,8 +13,8 @@ QString MainURL = "https://www3.elearning.rwth-aachen.de";
 
 #ifdef Q_OS_WIN32
     QString dataPath = "data.xml";
-#elif Q_OS_LINUX
-    QString dataPath = "$HOME/.config/Sync-my-L2P/";
+#elif __linux
+    QString dataPath = QDir::homePath() % "/.config/Sync-my-L2P/data.xml";
 #else
     QString dataPath = "data.xml";
 #endif
