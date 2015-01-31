@@ -41,6 +41,8 @@ void Logger::saveSettings()
     QSettings settings;
     settings.beginGroup("logger");
     settings.setValue("logLevel", ui->logLevelCB->currentText());
+    settings.endGroup();
+
 }
 
 /// Empfänger für alle Nachrichten, die im Log auftauchen sollen
