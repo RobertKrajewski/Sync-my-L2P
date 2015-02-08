@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="de_DE" sourcelanguage="de_DE">
+<TS version="2.1" language="de_DE" sourcelanguage="de_DE">
 <context>
     <name>AutoCloseDialog</name>
     <message>
@@ -126,78 +126,78 @@
         <translation>Download</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="102"/>
+        <location filename="../browser.cpp" line="111"/>
         <source>Kann keine Daten von Festplatte laden</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="110"/>
+        <location filename="../browser.cpp" line="119"/>
         <source>Keine Dateiliste auf der Festplatte gefunden.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="118"/>
+        <location filename="../browser.cpp" line="127"/>
         <source>Kann Daten von Festplatte nicht parsen: </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="212"/>
+        <location filename="../browser.cpp" line="221"/>
         <source>Beim Abruf der Veranstaltungen ist ein Fehler aufgetreten</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="360"/>
+        <location filename="../browser.cpp" line="369"/>
         <source>Beim Abruf des Inhalts einer Veranstaltung ist ein Fehler aufgetreten</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="438"/>
+        <location filename="../browser.cpp" line="447"/>
         <source>Kann nicht synchronisieren, da kein Downloadverzeichnis angegeben wurde</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="450"/>
+        <location filename="../browser.cpp" line="459"/>
         <source>Kann Verzeichnis nicht erzeugen. Download abgebrochen.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="497"/>
+        <location filename="../browser.cpp" line="506"/>
         <source>Verzeichnis nicht erstellbar!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="497"/>
+        <location filename="../browser.cpp" line="506"/>
         <source>Kann folgendes Verzeichnis nicht erstellen: </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="498"/>
+        <location filename="../browser.cpp" line="507"/>
         <source>Verzeichnis nicht erstellbar: </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="554"/>
+        <location filename="../browser.cpp" line="570"/>
         <source>Synchronisation mit dem L2P der RWTH Aachen abgeschlossen.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="557"/>
+        <location filename="../browser.cpp" line="573"/>
         <source>Es wurden %1 von %2 eingebundenen Dateien synchronisiert.
 (Dieses Fenster schließt nach 10 Sek. automatisch.)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="920"/>
+        <location filename="../browser.cpp" line="936"/>
         <source>Veranstaltungsseite öffnen</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="924"/>
+        <location filename="../browser.cpp" line="940"/>
         <source>Öffnen</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="929"/>
+        <location filename="../browser.cpp" line="945"/>
         <source>Link kopieren</source>
         <translation></translation>
     </message>
@@ -286,38 +286,38 @@
     </message>
     <message>
         <location filename="../logger.cpp" line="18"/>
-        <location filename="../logger.cpp" line="56"/>
+        <location filename="../logger.cpp" line="58"/>
         <source>Standard</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../logger.cpp" line="19"/>
-        <location filename="../logger.cpp" line="61"/>
+        <location filename="../logger.cpp" line="63"/>
         <source>Erweitert</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../logger.cpp" line="59"/>
+        <location filename="../logger.cpp" line="61"/>
         <source>Setze Logging auf &quot;Standard&quot;.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../logger.cpp" line="64"/>
+        <location filename="../logger.cpp" line="66"/>
         <source>Setze Logging auf &quot;Erweitert&quot;.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../logger.cpp" line="78"/>
+        <location filename="../logger.cpp" line="80"/>
         <source>Ausgewählter Speicherort für das Logfile: </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../logger.cpp" line="83"/>
+        <location filename="../logger.cpp" line="85"/>
         <source>Fehler beim initialisieren des Logfiles: </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../logger.cpp" line="89"/>
+        <location filename="../logger.cpp" line="91"/>
         <source>Fehler beim Schreiben des Logfiles: </source>
         <translation></translation>
     </message>
@@ -384,17 +384,17 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../logindialog.cpp" line="40"/>
+        <location filename="../logindialog.cpp" line="41"/>
         <source>Erreichbarkeitsrequest</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../logindialog.cpp" line="46"/>
+        <location filename="../logindialog.cpp" line="47"/>
         <source>Erreichbarkeit festgestellt</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../logindialog.cpp" line="54"/>
+        <location filename="../logindialog.cpp" line="55"/>
         <source>Fehler: L2P nicht erreichbar. Genauer Fehler: </source>
         <translation></translation>
     </message>
@@ -432,9 +432,14 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../mymainwindow.cpp" line="144"/>
+        <location filename="../mymainwindow.cpp" line="146"/>
         <source>Läuft im Hintergrund weiter.</source>
         <translation></translation>
+    </message>
+    <message>
+        <location filename="../mymainwindow.cpp" line="172"/>
+        <source>Systemsprache</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -450,7 +455,7 @@
     </message>
     <message>
         <location filename="../options.ui" line="26"/>
-        <location filename="../options.cpp" line="242"/>
+        <location filename="../options.cpp" line="254"/>
         <source>Status: ausgeloggt</source>
         <translation></translation>
     </message>
@@ -561,31 +566,41 @@
     </message>
     <message>
         <location filename="../options.ui" line="254"/>
+        <source>Sprachauswahl</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../options.ui" line="286"/>
         <source>Kontakt</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../options.ui" line="260"/>
+        <location filename="../options.ui" line="292"/>
         <source>Offizielle Webseite: &lt;html&gt;&lt;a style=&apos;text-decoration:none&apos; href=&apos;http://www.Sync-my-L2P.de&apos;&gt;http://www.Sync-my-L2P.de&lt;/a&gt;&lt;/html&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../options.ui" line="276"/>
+        <location filename="../options.ui" line="308"/>
         <source>Offizielle Facebookpage: &lt;html&gt; &lt;a style=&apos;text-decoration:none&apos; href=&apos;http://www.Facebook.de/Sync-my-L2P&apos;&gt;http://www.Facebook.de/Sync-my-L2P&lt;/a&gt;&lt;/html&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../options.ui" line="289"/>
+        <location filename="../options.ui" line="321"/>
         <source>Quellcode: &lt;html&gt; &lt;a style=&apos;text-decoration:none&apos; href=&apos;https://github.com/Sync-my-L2P/Sync-my-L2P&apos;&gt;https://github.com/Sync-my-L2P/Sync-my-L2P&lt;/a&gt;&lt;/html&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../options.cpp" line="259"/>
+        <location filename="../options.cpp" line="21"/>
+        <source>Systemsprache</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../options.cpp" line="271"/>
         <source>Status: Login erfolgreich</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../options.cpp" line="273"/>
+        <location filename="../options.cpp" line="285"/>
         <source>Status: Login fehlgeschlagen</source>
         <translation></translation>
     </message>
