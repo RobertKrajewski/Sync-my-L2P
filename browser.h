@@ -61,6 +61,7 @@ public slots:
     void on_refreshPushButton_clicked();
     void downloadDirectoryLineEditChangedSlot(QString downloadDirectory);
     void clearItemModel();
+    void retranslate();
 
 signals:
     void enableSignal(bool);

@@ -59,6 +59,7 @@ signals:
 
 public slots:
     void on_loginPushButton_clicked();
+    void retranslate();
     
 private:
     Ui::Options *ui;
@@ -77,7 +78,6 @@ private slots:
     void on_downloadFolderPushButton_clicked();
     void on_autoLoginOnStartCheckBox_stateChanged(int arg1);
     void on_downloadFolderlineEdit_textChanged(const QString);
-    void on_langCB_currentIndexChanged(const QString &lang);
     void on_loginErasePushButton_clicked();
     void loginResultSlot(int result);
     void accessTokenChanged(QString newAccessToken);

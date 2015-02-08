@@ -115,3 +115,7 @@ QString Logger::getLogText()
 
     return logText;
 }
+void Logger::retranslate()
+{
+    ui->retranslateUi(this);
+}
