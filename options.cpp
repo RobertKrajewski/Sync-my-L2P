@@ -18,6 +18,7 @@ Options::Options(QWidget *parent) :
     if (QSystemTrayIcon::isSystemTrayAvailable())
         ui->minimizeInTrayCheckBox->setEnabled(true);
 
+    // Verfügbare Sprachen; Falls neue verfügbar, bitte hier und in der mymainwindow.cpp ergänzen!
     ui->langCB->addItem(tr("Systemsprache"));
     ui->langCB->addItem("Deutsch");
     ui->langCB->addItem("English");
