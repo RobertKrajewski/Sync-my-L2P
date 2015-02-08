@@ -1028,3 +1028,8 @@ void Browser::clearItemModel()
     itemModel->clear();
     updateButtons();
 }
+
+void Browser::retranslate()
+{
+    ui->retranslateUi(this);
+}

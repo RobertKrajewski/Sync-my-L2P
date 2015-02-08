@@ -18,7 +18,7 @@ Options::Options(QWidget *parent) :
     if (QSystemTrayIcon::isSystemTrayAvailable())
         ui->minimizeInTrayCheckBox->setEnabled(true);
 
-    ui->langCB->addItem("Systemsprache");
+    ui->langCB->addItem(tr("Systemsprache"));
     ui->langCB->addItem("Deutsch");
     ui->langCB->addItem("English");
 }
@@ -68,7 +68,7 @@ void Options::loadSettings()
     settings.endGroup();
 
     settings.beginGroup("language");
-   // ui->langCB->setCurrentText(                     settings.value("language", "Systemsprache").toStringList());
+    ui->langCB->setCurrentText(                     settings.value("language", "Systemsprache").toString());
     settings.endGroup();
 
     login.init();
@@ -291,7 +291,7 @@ void Options::accessTokenChanged(QString newAccessToken)
     accessToken = newAccessToken;
 }
 
-void Options::on_langCB_currentIndexChanged(const QString &language)
+void Options::retranslate()
 {
-
+    ui->retranslateUi(this);
 }

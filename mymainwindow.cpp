@@ -16,6 +16,8 @@
 ** along with Sync-my-L2P.  If not, see <http://www.gnu.org/licenses/>.
 ****************************************************************************/
 
+#include <QLocale>
+#include <QTranslator>
 #include "mymainwindow.h"
 #include "ui_mymainwindow.h"
 
@@ -163,5 +165,27 @@ void MyMainWindow::trayClickedSlot(QSystemTrayIcon::ActivationReason reason)
         this->setWindowState(Qt::WindowActive);
         trayIcon->hide();
     }
+}
+
+void MyMainWindow::on_langCB_currentIndexChanged(const QString &lang){
+    qApp->removeTranslator(&m_translator);
+    if (lang == tr("Systemsprache"))
+        m_translator.load(QLocale::system().name());
+    else if (lang == "Deutsch")
+        m_translator.load(":/lang/sync-my-l2p_de");
+    else if (lang == "English")
+        m_translator.load(":/lang/sync-my-l2p_en");
+    else
+        m_translator.load(":/lang/sync-my-l2p_en");
+    qApp->installTranslator(&m_translator);
+    retranslate();
+}
+
+void MyMainWindow::retranslate()
+{
+    ui->retranslateUi(this);
+    ui->optionsTab->retranslate();
+    ui->browserTab->retranslate();
+    ui->logTab->retranslate();
 }
 
