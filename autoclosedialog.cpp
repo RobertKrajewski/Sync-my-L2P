@@ -6,6 +6,7 @@ AutoCloseDialog::AutoCloseDialog(QWidget *parent) :
     ui(new Ui::AutoCloseDialog)
 {
     ui->setupUi(this);
+    ui->retranslateUi(this);
     QTimer::singleShot(5000, this, SLOT(reject()));
 }
 
