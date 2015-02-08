@@ -61,19 +61,19 @@ void LoginDialog::availabilitySlot(QNetworkReply * reply)
     }
     else
     {
-        ui->statusLabel->setText("Fehler: L2P nicht erreichbar.");
+        ui->statusLabel->setText(tr("Fehler: L2P nicht erreichbar."));
     }
 }
 
 void LoginDialog::failedSlot()
 {
-    ui->statusLabel->setText("Login fehlgeschlagen.");
+    ui->statusLabel->setText(tr("Login fehlgeschlagen."));
 }
 
 void LoginDialog::succededSlot()
 {
     ui->progressBar->setValue(3);
-    ui->statusLabel->setText("Login erfolgreich abgeschlossen!");
+    ui->statusLabel->setText(tr("Login erfolgreich abgeschlossen!"));
 
     QTimer::singleShot(1500, this, SLOT(accept()));
 }
@@ -86,13 +86,13 @@ void LoginDialog::checkForAuthentification()
     if(!login->isRefreshTokenAvailable())
     {
         ui->progressBar->setValue(1);
-        ui->statusLabel->setText("Authentifizierung notwendig. Browser öffnet automatisch.");
+        ui->statusLabel->setText(tr("Authentifizierung notwendig. Browser öffnet automatisch."));
         QTimer::singleShot(3000, login, SLOT(getAccess()));
     }
     else
     {
         ui->progressBar->setValue(2);
-        ui->statusLabel->setText("Einloggen...");
+        ui->statusLabel->setText(tr("Einloggen..."));
         QTimer::singleShot(300, login, SLOT(getAccess()));
     }
 }

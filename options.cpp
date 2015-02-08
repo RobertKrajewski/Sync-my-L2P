@@ -166,7 +166,7 @@ void Options::on_downloadFolderPushButton_clicked()
 {
     // Aufruf des Ordnerdialogs
     QString newDirectory = QFileDialog::getExistingDirectory(this,
-                           "Downloadverkzeichnis auswählen",
+                           tr("Downloadverkzeichnis auswählen"),
                            QDir::rootPath(),
                            QFileDialog::ShowDirsOnly |
                            QFileDialog::DontResolveSymlinks);
