@@ -232,7 +232,7 @@ void Login::finishedSlot(QNetworkReply *reply)
     }
     else
     {
-        QLOG_ERROR() << "Unerwarteter Antwortstatus: " << status;
+        QLOG_ERROR() << tr("Unerwarteter Antwortstatus: ") << status;
 
         stopLoginSlot();
     }
