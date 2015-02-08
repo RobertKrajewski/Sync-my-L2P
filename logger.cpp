@@ -73,9 +73,9 @@ void Logger::on_savePB_clicked()
     QString textToWrite = getLogText();
 
     QString filepath = QFileDialog::getSaveFileName(this,
-                                                    "Speicherort für das Logfile",
+                                                    tr("Speicherort für das Logfile"),
                                                     "",
-                                                    "Textdateien (*.txt)");
+                                                    tr("Textdateien (*.txt)"));
 
     QLOG_DEBUG() << tr("Ausgewählter Speicherort für das Logfile: ") << filepath;
 

@@ -198,7 +198,7 @@ void Browser::on_refreshPushButton_clicked()
     QObject::connect(manager, SIGNAL(finished(QNetworkReply *)),
                      this, SLOT(coursesRecieved(QNetworkReply *)));
 
-    QLOG_DEBUG() << "Veranstaltungsrequest";
+    QLOG_DEBUG() << tr("Veranstaltungsrequest");
 
     QNetworkRequest request(QUrl("https://www3.elearning.rwth-aachen.de/_vti_bin/L2PServices/api.svc/v1/viewAllCourseInfo?accessToken=" % options->getAccessToken()));
 
@@ -210,7 +210,7 @@ void Browser::on_refreshPushButton_clicked()
 void Browser::coursesRecieved(QNetworkReply *reply)
 {
 
-    QLOG_DEBUG() << "Veranstaltungen empfangen";
+    QLOG_DEBUG() << tr("Veranstaltungen empfangen");
     // Prüfen auf Fehler beim Abruf
     if (!reply->error())
     {
@@ -356,7 +356,7 @@ void Browser::requestFileInformation()
 
 void Browser::filesRecieved(QNetworkReply *reply)
 {
-    QLOG_DEBUG() << "Itemrequest empfangen: " << reply->url().toString();
+    QLOG_DEBUG() << tr("Itemrequest empfangen: ") << reply->url().toString();
 
     // Prüfen auf Fehler
     if (!reply->error())
@@ -443,7 +443,7 @@ void Browser::on_syncPushButton_clicked()
     // Falls noch kein Downloadverzeichnis angegeben wurde, abbrechen
     if (downloadPath.isEmpty())
     {
-        Utils::errorMessageBox("Downloadverzeichnis fehlt!", "Download unmöglich, da kein Zielverzeichnis angegeben wurde.");
+        Utils::errorMessageBox(tr("Downloadverzeichnis fehlt!"), tr("Download unmöglich, da kein Zielverzeichnis angegeben wurde."));
         QLOG_ERROR() << tr("Kann nicht synchronisieren, da kein Downloadverzeichnis angegeben wurde");
         emit switchTab(1);
         emit enableSignal(true);
@@ -864,7 +864,7 @@ QNetworkRequest *Browser::apiRequest(Structureelement *course, QString apiExtens
     conf.setPeerVerifyMode(QSslSocket::VerifyNone);
     request->setSslConfiguration(conf);
 
-    QLOG_DEBUG() << "Itemrequest an API: " << url;
+    QLOG_DEBUG() << tr("Itemrequest an API: ") << url;
 
     // Damit der L2P Server nicht überfordert wird...
     QThread::msleep(10);
