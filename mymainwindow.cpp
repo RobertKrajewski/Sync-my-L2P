@@ -31,6 +31,15 @@ MyMainWindow::MyMainWindow(QWidget *parent):
                 WindowTitleHint | Qt::WindowCloseButtonHint | Qt::
                 WindowMinimizeButtonHint), ui(new Ui::MyMainWindow), trayIcon(NULL)
 {
+    // Sprache installieren
+    QString locale = QLocale::system().name();
+
+    if(!m_translator.load(":/lang/sync-my-l2p_" +locale))
+    {
+        m_translator.load(":/lang/sync-my-l2p_en");
+    }
+    qApp->installTranslator(&m_translator);
+
     // Fenster und Tabs initialisieren
     ui->setupUi(this);
     init();
@@ -172,7 +181,12 @@ void MyMainWindow::trayClickedSlot(QSystemTrayIcon::ActivationReason reason)
 void MyMainWindow::on_langCB_currentIndexChanged(const QString &lang){
     qApp->removeTranslator(&m_translator);
     if (lang == tr("Systemsprache"))
-        m_translator.load(QLocale::system().name());
+    {
+        if(!m_translator.load(":/lang/sync-my-l2p_" + QLocale::system().name()))
+        {
+            m_translator.load(":/lang/sync-my-l2p_en");
+        }
+    }
     else if (lang == "Deutsch")
         m_translator.load(":/lang/sync-my-l2p_de");
     else if (lang == "English")
