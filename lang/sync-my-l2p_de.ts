@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="de_DE" sourcelanguage="de_DE">
+<TS version="2.0" language="de_DE" sourcelanguage="de_DE">
 <context>
     <name>AutoCloseDialog</name>
     <message>
@@ -143,93 +143,93 @@
     <message>
         <location filename="../browser.cpp" line="201"/>
         <source>Veranstaltungsrequest</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="213"/>
         <source>Veranstaltungen empfangen</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="221"/>
         <source>Beim Abruf der Veranstaltungen ist ein Fehler aufgetreten</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="359"/>
         <source>Itemrequest empfangen: </source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="369"/>
         <source>Beim Abruf des Inhalts einer Veranstaltung ist ein Fehler aufgetreten</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="446"/>
         <source>Downloadverzeichnis fehlt!</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="446"/>
         <source>Download unmöglich, da kein Zielverzeichnis angegeben wurde.</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="447"/>
         <source>Kann nicht synchronisieren, da kein Downloadverzeichnis angegeben wurde</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="459"/>
         <source>Kann Verzeichnis nicht erzeugen. Download abgebrochen.</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="506"/>
         <source>Verzeichnis nicht erstellbar!</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="506"/>
         <source>Kann folgendes Verzeichnis nicht erstellen: </source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="507"/>
         <source>Verzeichnis nicht erstellbar: </source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="570"/>
         <source>Synchronisation mit dem L2P der RWTH Aachen abgeschlossen.</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="573"/>
         <source>Es wurden %1 von %2 eingebundenen Dateien synchronisiert.
 (Dieses Fenster schließt nach 10 Sek. automatisch.)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="867"/>
         <source>Itemrequest an API: </source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="936"/>
         <source>Veranstaltungsseite öffnen</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="940"/>
         <source>Öffnen</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="945"/>
         <source>Link kopieren</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -339,12 +339,12 @@
     <message>
         <location filename="../logger.cpp" line="76"/>
         <source>Speicherort für das Logfile</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../logger.cpp" line="78"/>
         <source>Textdateien (*.txt)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../logger.cpp" line="80"/>
@@ -413,7 +413,7 @@
     <message>
         <location filename="../login.cpp" line="235"/>
         <source>Unerwarteter Antwortstatus: </source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -446,27 +446,27 @@
     <message>
         <location filename="../logindialog.cpp" line="64"/>
         <source>Fehler: L2P nicht erreichbar.</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../logindialog.cpp" line="70"/>
         <source>Login fehlgeschlagen.</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../logindialog.cpp" line="76"/>
         <source>Login erfolgreich abgeschlossen!</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../logindialog.cpp" line="89"/>
         <source>Authentifizierung notwendig. Browser öffnet automatisch.</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../logindialog.cpp" line="95"/>
         <source>Einloggen...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -509,7 +509,7 @@
     <message>
         <location filename="../mymainwindow.cpp" line="174"/>
         <source>Systemsprache</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -637,7 +637,7 @@
     <message>
         <location filename="../options.ui" line="254"/>
         <source>Sprachauswahl</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../options.ui" line="286"/>
@@ -662,12 +662,12 @@
     <message>
         <location filename="../options.cpp" line="22"/>
         <source>Systemsprache</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../options.cpp" line="169"/>
         <source>Downloadverkzeichnis auswählen</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../options.cpp" line="272"/>
