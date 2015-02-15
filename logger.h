@@ -18,6 +18,10 @@ public:
     void saveSettings();
 
     void loadSettings();
+
+public slots:
+    void retranslate();
+
 private slots:
     void logSlot(QString message, int level);
 
