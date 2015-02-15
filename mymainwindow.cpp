@@ -16,6 +16,8 @@
 ** along with Sync-my-L2P.  If not, see <http://www.gnu.org/licenses/>.
 ****************************************************************************/
 
+#include <QLocale>
+#include <QTranslator>
 #include "mymainwindow.h"
 #include "ui_mymainwindow.h"
 
@@ -29,6 +31,15 @@ MyMainWindow::MyMainWindow(QWidget *parent):
                 WindowTitleHint | Qt::WindowCloseButtonHint | Qt::
                 WindowMinimizeButtonHint), ui(new Ui::MyMainWindow), trayIcon(NULL)
 {
+    // Sprache installieren
+    QString locale = QLocale::system().name();
+
+    if(!m_translator.load(":/lang/sync-my-l2p_" +locale))
+    {
+        m_translator.load(":/lang/sync-my-l2p_en");
+    }
+    qApp->installTranslator(&m_translator);
+
     // Fenster und Tabs initialisieren
     ui->setupUi(this);
     init();
@@ -163,5 +174,35 @@ void MyMainWindow::trayClickedSlot(QSystemTrayIcon::ActivationReason reason)
         this->setWindowState(Qt::WindowActive);
         trayIcon->hide();
     }
+}
+
+// Installiert die neue Übersetzung, wenn eine andere Sprache gewählt wurde
+// Falls neue Sprachen ergänzt werden sollen, müssen diese hier und in der options.cpp ergänzt werden.
+void MyMainWindow::on_langCB_currentIndexChanged(const QString &lang){
+    qApp->removeTranslator(&m_translator);
+    if (lang == tr("Systemsprache"))
+    {
+        if(!m_translator.load(":/lang/sync-my-l2p_" + QLocale::system().name()))
+        {
+            m_translator.load(":/lang/sync-my-l2p_en");
+        }
+    }
+    else if (lang == "Deutsch")
+        m_translator.load(":/lang/sync-my-l2p_de");
+    else if (lang == "English")
+        m_translator.load(":/lang/sync-my-l2p_en");
+    else
+        m_translator.load(":/lang/sync-my-l2p_en");
+    qApp->installTranslator(&m_translator);
+    retranslate();
+}
+
+// Läd die neuen Übersetzungen für die GUI Elemente.
+void MyMainWindow::retranslate()
+{
+    ui->retranslateUi(this);
+    ui->optionsTab->retranslate();
+    ui->browserTab->retranslate();
+    ui->logTab->retranslate();
 }
 

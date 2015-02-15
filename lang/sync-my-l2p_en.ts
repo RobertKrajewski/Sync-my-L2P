@@ -126,78 +126,108 @@
         <translation>Download</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="102"/>
+        <location filename="../browser.cpp" line="111"/>
         <source>Kann keine Daten von Festplatte laden</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="110"/>
+        <location filename="../browser.cpp" line="119"/>
         <source>Keine Dateiliste auf der Festplatte gefunden.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="118"/>
+        <location filename="../browser.cpp" line="127"/>
         <source>Kann Daten von Festplatte nicht parsen: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="212"/>
+        <location filename="../browser.cpp" line="201"/>
+        <source>Veranstaltungsrequest</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../browser.cpp" line="213"/>
+        <source>Veranstaltungen empfangen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../browser.cpp" line="221"/>
         <source>Beim Abruf der Veranstaltungen ist ein Fehler aufgetreten</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="360"/>
+        <location filename="../browser.cpp" line="359"/>
+        <source>Itemrequest empfangen: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../browser.cpp" line="369"/>
         <source>Beim Abruf des Inhalts einer Veranstaltung ist ein Fehler aufgetreten</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="438"/>
+        <location filename="../browser.cpp" line="446"/>
+        <source>Downloadverzeichnis fehlt!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../browser.cpp" line="446"/>
+        <source>Download unmöglich, da kein Zielverzeichnis angegeben wurde.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../browser.cpp" line="447"/>
         <source>Kann nicht synchronisieren, da kein Downloadverzeichnis angegeben wurde</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="450"/>
+        <location filename="../browser.cpp" line="459"/>
         <source>Kann Verzeichnis nicht erzeugen. Download abgebrochen.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="497"/>
+        <location filename="../browser.cpp" line="506"/>
         <source>Verzeichnis nicht erstellbar!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="497"/>
+        <location filename="../browser.cpp" line="506"/>
         <source>Kann folgendes Verzeichnis nicht erstellen: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="498"/>
+        <location filename="../browser.cpp" line="507"/>
         <source>Verzeichnis nicht erstellbar: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="554"/>
+        <location filename="../browser.cpp" line="570"/>
         <source>Synchronisation mit dem L2P der RWTH Aachen abgeschlossen.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="557"/>
+        <location filename="../browser.cpp" line="573"/>
         <source>Es wurden %1 von %2 eingebundenen Dateien synchronisiert.
 (Dieses Fenster schließt nach 10 Sek. automatisch.)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="920"/>
+        <location filename="../browser.cpp" line="867"/>
+        <source>Itemrequest an API: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../browser.cpp" line="936"/>
         <source>Veranstaltungsseite öffnen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="924"/>
+        <location filename="../browser.cpp" line="940"/>
         <source>Öffnen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="929"/>
+        <location filename="../browser.cpp" line="945"/>
         <source>Link kopieren</source>
         <translation type="unfinished"></translation>
     </message>
@@ -286,38 +316,48 @@
     </message>
     <message>
         <location filename="../logger.cpp" line="18"/>
-        <location filename="../logger.cpp" line="56"/>
+        <location filename="../logger.cpp" line="58"/>
         <source>Standard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../logger.cpp" line="19"/>
-        <location filename="../logger.cpp" line="61"/>
+        <location filename="../logger.cpp" line="63"/>
         <source>Erweitert</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../logger.cpp" line="59"/>
+        <location filename="../logger.cpp" line="61"/>
         <source>Setze Logging auf &quot;Standard&quot;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../logger.cpp" line="64"/>
+        <location filename="../logger.cpp" line="66"/>
         <source>Setze Logging auf &quot;Erweitert&quot;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../logger.cpp" line="76"/>
+        <source>Speicherort für das Logfile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../logger.cpp" line="78"/>
+        <source>Textdateien (*.txt)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../logger.cpp" line="80"/>
         <source>Ausgewählter Speicherort für das Logfile: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../logger.cpp" line="83"/>
+        <location filename="../logger.cpp" line="85"/>
         <source>Fehler beim initialisieren des Logfiles: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../logger.cpp" line="89"/>
+        <location filename="../logger.cpp" line="91"/>
         <source>Fehler beim Schreiben des Logfiles: </source>
         <translation type="unfinished"></translation>
     </message>
@@ -370,6 +410,11 @@
 </source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../login.cpp" line="235"/>
+        <source>Unerwarteter Antwortstatus: </source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>LoginDialog</name>
@@ -384,18 +429,43 @@
         <translation>Check connection to L2P…</translation>
     </message>
     <message>
-        <location filename="../logindialog.cpp" line="40"/>
+        <location filename="../logindialog.cpp" line="41"/>
         <source>Erreichbarkeitsrequest</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../logindialog.cpp" line="46"/>
+        <location filename="../logindialog.cpp" line="47"/>
         <source>Erreichbarkeit festgestellt</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../logindialog.cpp" line="54"/>
+        <location filename="../logindialog.cpp" line="55"/>
         <source>Fehler: L2P nicht erreichbar. Genauer Fehler: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../logindialog.cpp" line="64"/>
+        <source>Fehler: L2P nicht erreichbar.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../logindialog.cpp" line="70"/>
+        <source>Login fehlgeschlagen.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../logindialog.cpp" line="76"/>
+        <source>Login erfolgreich abgeschlossen!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../logindialog.cpp" line="89"/>
+        <source>Authentifizierung notwendig. Browser öffnet automatisch.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../logindialog.cpp" line="95"/>
+        <source>Einloggen...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -432,8 +502,13 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mymainwindow.cpp" line="144"/>
+        <location filename="../mymainwindow.cpp" line="146"/>
         <source>Läuft im Hintergrund weiter.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mymainwindow.cpp" line="174"/>
+        <source>Systemsprache</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -450,7 +525,7 @@
     </message>
     <message>
         <location filename="../options.ui" line="26"/>
-        <location filename="../options.cpp" line="242"/>
+        <location filename="../options.cpp" line="255"/>
         <source>Status: ausgeloggt</source>
         <translation>Status: logged off</translation>
     </message>
@@ -561,31 +636,46 @@
     </message>
     <message>
         <location filename="../options.ui" line="254"/>
+        <source>Sprachauswahl</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../options.ui" line="286"/>
         <source>Kontakt</source>
         <translation>Contact</translation>
     </message>
     <message>
-        <location filename="../options.ui" line="260"/>
+        <location filename="../options.ui" line="292"/>
         <source>Offizielle Webseite: &lt;html&gt;&lt;a style=&apos;text-decoration:none&apos; href=&apos;http://www.Sync-my-L2P.de&apos;&gt;http://www.Sync-my-L2P.de&lt;/a&gt;&lt;/html&gt;</source>
         <translation>Official Homepage: &lt;html&gt;&lt;a style=&apos;text-decoration:none&apos; href=&apos;http://www.Sync-my-L2P.de&apos;&gt;http://www.Sync-my-L2P.de&lt;/a&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../options.ui" line="276"/>
+        <location filename="../options.ui" line="308"/>
         <source>Offizielle Facebookpage: &lt;html&gt; &lt;a style=&apos;text-decoration:none&apos; href=&apos;http://www.Facebook.de/Sync-my-L2P&apos;&gt;http://www.Facebook.de/Sync-my-L2P&lt;/a&gt;&lt;/html&gt;</source>
         <translation>Official Facebookpage: &lt;html&gt; &lt;a style=&apos;text-decoration:none&apos; href=&apos;http://www.Facebook.de/Sync-my-L2P&apos;&gt;http://www.Facebook.de/Sync-my-L2P&lt;/a&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../options.ui" line="289"/>
+        <location filename="../options.ui" line="321"/>
         <source>Quellcode: &lt;html&gt; &lt;a style=&apos;text-decoration:none&apos; href=&apos;https://github.com/Sync-my-L2P/Sync-my-L2P&apos;&gt;https://github.com/Sync-my-L2P/Sync-my-L2P&lt;/a&gt;&lt;/html&gt;</source>
         <translation>Source code: &lt;html&gt; &lt;a style=&apos;text-decoration:none&apos; href=&apos;https://github.com/Sync-my-L2P/Sync-my-L2P&apos;&gt;https://github.com/Sync-my-L2P/Sync-my-L2P&lt;/a&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../options.cpp" line="259"/>
+        <location filename="../options.cpp" line="22"/>
+        <source>Systemsprache</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../options.cpp" line="169"/>
+        <source>Downloadverkzeichnis auswählen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../options.cpp" line="272"/>
         <source>Status: Login erfolgreich</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../options.cpp" line="273"/>
+        <location filename="../options.cpp" line="286"/>
         <source>Status: Login fehlgeschlagen</source>
         <translation type="unfinished"></translation>
     </message>
