@@ -60,6 +60,7 @@ signals:
 public slots:
     void on_loginPushButton_clicked();
     void retranslate();
+    void on_aboutButton_clicked();
     
 private:
     Ui::Options *ui;
