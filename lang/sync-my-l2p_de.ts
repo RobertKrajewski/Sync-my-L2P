@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="de_DE" sourcelanguage="de_DE">
+<TS version="2.1" language="de_DE" sourcelanguage="de_DE">
 <context>
     <name>AutoCloseDialog</name>
     <message>
@@ -279,6 +279,82 @@
     </message>
 </context>
 <context>
+    <name>Info</name>
+    <message>
+        <location filename="../info.ui" line="20"/>
+        <source>Über Sync-my-L2P</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../info.ui" line="73"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Sync-my-L2P&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../info.ui" line="80"/>
+        <source>Version: 2.0.0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../info.ui" line="87"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Synchronsiere mit wenigen &lt;br/&gt;Klicks deine Dokumente&lt;br/&gt;aus dem L²P der RWTH &lt;br/&gt;Aachen mit deinem Rechner.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../info.ui" line="122"/>
+        <source>Kontakt</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../info.ui" line="137"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offizielle Webseite: &lt;br/&gt;&lt;a href=&quot;http://www.Sync-my-L2P.de&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;http://www.Sync-my-L2P.de&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../info.ui" line="147"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offizielle Facebookpage: &lt;br/&gt;&lt;a href=&quot;http://www.facebook.de/Sync-my-L2P&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;http://www.facebook.de/Sync-my-L2P&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../info.ui" line="157"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Quellcode: &lt;br/&gt;&lt;a href=&quot;https://github.com/Sync-my-L2P/Sync-my-L2P&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://github.com/Sync-my-L2P/Sync-my-L2P&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../info.ui" line="167"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sync-my-L2P übersetzen:&lt;br/&gt;&lt;a href=&quot;https://sync-my-l2p.oneskyapp.com/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://sync-my-l2p.oneskyapp.com/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../info.ui" line="177"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;© 2012-2015 Robert Krajewski &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../info.ui" line="186"/>
+        <source>Lizenz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../info.ui" line="264"/>
+        <source>Mitwirkende</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../info.ui" line="282"/>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Cantarell&apos;; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Dieses Projekt wurde unterstützt von:&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Stefan Ahlers  (&lt;a href=&quot;https://github.com/justin-time&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;github&lt;/span&gt;&lt;/a&gt;),&lt;br /&gt;Marcel Partap (&lt;a href=&quot;https://github.com/eMPee584&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;github&lt;/span&gt;&lt;/a&gt;),&lt;br /&gt;David Kolossa (&lt;a href=&quot;https://github.com/yayachiken&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;github&lt;/span&gt;&lt;/a&gt;),&lt;br /&gt;Max Beikirch   (&lt;a href=&quot;https://github.com/Mitmischer&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;github&lt;/span&gt;&lt;/a&gt;),&lt;br /&gt;&lt;a href=&quot;http://www.itc.rwth-aachen.de/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;ITC RWTH&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Diese Anwendung verwendet Icons vom GNOME Project (&lt;a href=&quot;http://www.gnome.org&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;http://www.gnome.org&lt;/span&gt;&lt;/a&gt;). Die Icons stehen, wie die gesamte Anwendung, unter der LGPLv3.&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Die Icons können &lt;a href=&quot;https://download.gnome.org/sources/adwaita-icon-theme/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;hier&lt;/span&gt;&lt;/a&gt; heruntergeladen werden.&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Vielen Dank an alle Helfer, die auf &lt;a href=&quot; https://sync-my-l2p.oneskyapp.com/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;sync-my-l2p.oneskyapp.com&lt;/span&gt;&lt;/a&gt;&lt;a href=&quot;https://sync-my-l2p.oneskyapp.com/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt; &lt;/span&gt;&lt;/a&gt;mitgeholfen haben das Programm zu übersetzten!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Logger</name>
     <message>
         <source>Form</source>
@@ -502,12 +578,12 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../mymainwindow.cpp" line="146"/>
+        <location filename="../mymainwindow.cpp" line="155"/>
         <source>Läuft im Hintergrund weiter.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mymainwindow.cpp" line="174"/>
+        <location filename="../mymainwindow.cpp" line="185"/>
         <source>Systemsprache</source>
         <translation></translation>
     </message>
@@ -525,7 +601,7 @@
     </message>
     <message>
         <location filename="../options.ui" line="26"/>
-        <location filename="../options.cpp" line="255"/>
+        <location filename="../options.cpp" line="257"/>
         <source>Status: ausgeloggt</source>
         <translation></translation>
     </message>
@@ -660,22 +736,27 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../options.cpp" line="22"/>
+        <location filename="../options.ui" line="350"/>
+        <source>Über Sync-my-L2P</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../options.cpp" line="24"/>
         <source>Systemsprache</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../options.cpp" line="169"/>
+        <location filename="../options.cpp" line="171"/>
         <source>Downloadverkzeichnis auswählen</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../options.cpp" line="272"/>
+        <location filename="../options.cpp" line="274"/>
         <source>Status: Login erfolgreich</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../options.cpp" line="286"/>
+        <location filename="../options.cpp" line="288"/>
         <source>Status: Login fehlgeschlagen</source>
         <translation></translation>
     </message>
