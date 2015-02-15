@@ -364,6 +364,12 @@ void Browser::filesRecieved(QNetworkReply *reply)
         Parser::parseFiles(reply, &replies,
                            options->downloadFolderLineEditText());
     }
+    // Fängt alle Fehlermeldungen die mit der viewAllAssignments API zusammenhängen ab und verband diese ins LOG.
+    else if (reply->url().toString().contains("viewAllAssignments"))
+    {
+        QString message = "Beim Abruf des Inhalts einer Veranstaltung ist ein Fehler aufgetreten: \n " + reply->readAll();
+        QLOG_ERROR() << "Fehlermeldung: " << message;
+    }
     else
     {
         Utils::errorMessageBox(tr("Beim Abruf des Inhalts einer Veranstaltung ist ein Fehler aufgetreten"), reply->errorString() % " ;" % reply->readAll());
