@@ -184,7 +184,7 @@ void MyMainWindow::on_langCB_currentIndexChanged(const QString &lang){
     qApp->removeTranslator(&m_translator);
     if (lang == tr("Systemsprache"))
     {
-        if(!m_translator.load("/sync-my-l2p_" + QLocale::system().name(), ":/lang"))
+        if(!m_translator.load("sync-my-l2p_" + QLocale::system().name(), ":/lang"))
         {
             m_translator.load("sync-my-l2p_en", ":/lang");
         }
