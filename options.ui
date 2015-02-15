@@ -71,7 +71,7 @@
            <string>Einloggen</string>
           </property>
           <property name="icon">
-           <iconset>
+           <iconset resource="icons/icons.qrc">
             <normaloff>:/icons/login.png</normaloff>:/icons/login.png</iconset>
           </property>
           <property name="default">
@@ -106,7 +106,7 @@
          <string>Durchsuchen</string>
         </property>
         <property name="icon">
-         <iconset>
+         <iconset resource="icons/icons.qrc">
           <normaloff>:/icons/downloadDirectory.png</normaloff>:/icons/downloadDirectory.png</iconset>
         </property>
        </widget>
@@ -245,104 +245,38 @@
         </property>
        </widget>
       </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="gridGroupBox">
-     <property name="title">
-      <string>Sprachauswahl</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="0">
-       <spacer name="horizontalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="langCB">
-        <property name="minimumSize">
-         <size>
-          <width>300</width>
-          <height>0</height>
-         </size>
-        </property>
-       </widget>
+      <item row="3" column="0">
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QLabel" name="langLabel">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Sprache:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="langCB">
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="contact">
-     <property name="title">
-      <string>Kontakt</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_7">
-      <item>
-       <widget class="QLabel" name="Webpage">
-        <property name="text">
-         <string>Offizielle Webseite: &lt;html&gt;&lt;a style='text-decoration:none' href='http://www.Sync-my-L2P.de'&gt;http://www.Sync-my-L2P.de&lt;/a&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-        <property name="openExternalLinks">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="Facebookpage">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="text">
-         <string>Offizielle Facebookpage: &lt;html&gt; &lt;a style='text-decoration:none' href='http://www.Facebook.de/Sync-my-L2P'&gt;http://www.Facebook.de/Sync-my-L2P&lt;/a&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-        <property name="openExternalLinks">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="Githubpage">
-        <property name="text">
-         <string>Quellcode: &lt;html&gt; &lt;a style='text-decoration:none' href='https://github.com/Sync-my-L2P/Sync-my-L2P'&gt;https://github.com/Sync-my-L2P/Sync-my-L2P&lt;/a&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-        <property name="openExternalLinks">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
    </item>
    <item>
     <widget class="QPushButton" name="aboutButton">
@@ -366,6 +300,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="icons/icons.qrc"/>
+ </resources>
  <connections/>
 </ui>
