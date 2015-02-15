@@ -4,6 +4,8 @@
 #include "ui_options.h"
 #include "browser.h"
 #include "logindialog.h"
+#include "info.h"
+
 
 Options::Options(QWidget *parent) :
     QWidget(parent),
@@ -295,4 +297,10 @@ void Options::accessTokenChanged(QString newAccessToken)
 void Options::retranslate()
 {
     ui->retranslateUi(this);
+}
+
+void Options::on_aboutButton_clicked()
+{
+    Info info;
+    info.exec();
 }
