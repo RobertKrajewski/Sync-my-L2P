@@ -49,7 +49,28 @@ void Logger::saveSettings()
 void Logger::logSlot(QString message, int level)
 {
     (void) level;
-    ui->logList->addItem(message);
+
+    // Füge eine Leerzeile und färbe Nachrichten entsprechend des Typs ein
+    if (message.contains("DEBUG")){
+        ui->logList->addItem(message);
+        ui->logList->item(ui->logList->count()-1)->setForeground(Qt::gray);
+        ui->logList->addItem("");
+
+    }
+    else  if (message.contains("ERROR")){
+        ui->logList->addItem(message);
+        ui->logList->item(ui->logList->count()-1)->setForeground(Qt::red);
+        ui->logList->addItem("");
+
+    }
+    else
+    {
+        ui->logList->addItem(message);
+        ui->logList->item(ui->logList->count()-1)->setForeground(Qt::black);
+        ui->logList->addItem("");
+
+    }
+
 }
 
 /// Ausgewählte Logstufe an den Logger weitergeben
