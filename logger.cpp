@@ -41,6 +41,8 @@ void Logger::saveSettings()
     QSettings settings;
     settings.beginGroup("logger");
     settings.setValue("logLevel", ui->logLevelCB->currentText());
+    settings.endGroup();
+
 }
 
 /// Empfänger für alle Nachrichten, die im Log auftauchen sollen
@@ -71,9 +73,9 @@ void Logger::on_savePB_clicked()
     QString textToWrite = getLogText();
 
     QString filepath = QFileDialog::getSaveFileName(this,
-                                                    "Speicherort für das Logfile",
+                                                    tr("Speicherort für das Logfile"),
                                                     "",
-                                                    "Textdateien (*.txt)");
+                                                    tr("Textdateien (*.txt)"));
 
     QLOG_DEBUG() << tr("Ausgewählter Speicherort für das Logfile: ") << filepath;
 
@@ -112,4 +114,8 @@ QString Logger::getLogText()
     }
 
     return logText;
+}
+void Logger::retranslate()
+{
+    ui->retranslateUi(this);
 }

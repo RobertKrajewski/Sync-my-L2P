@@ -17,6 +17,11 @@ Options::Options(QWidget *parent) :
 
     if (QSystemTrayIcon::isSystemTrayAvailable())
         ui->minimizeInTrayCheckBox->setEnabled(true);
+
+    // Verfügbare Sprachen; Falls neue verfügbar, bitte hier und in der mymainwindow.cpp ergänzen!
+    ui->langCB->addItem(tr("Systemsprache"));
+    ui->langCB->addItem("Deutsch");
+    ui->langCB->addItem("English");
 }
 
 Options::~Options()
@@ -63,6 +68,10 @@ void Options::loadSettings()
     ui->minimizeInTrayCheckBox->setChecked(         settings.value("minimizeInTray", false).toBool());
     settings.endGroup();
 
+    settings.beginGroup("language");
+    ui->langCB->setCurrentText(                     settings.value("language", "Systemsprache").toString());
+    settings.endGroup();
+
     login.init();
 }
 
@@ -99,6 +108,10 @@ void Options::saveSettings()
 
     settings.beginGroup("misc");
     settings.setValue("minimizeInTray",     ui->minimizeInTrayCheckBox->isChecked());
+    settings.endGroup();
+
+    settings.beginGroup("language");
+    settings.setValue("language",           ui->langCB->currentText());
     settings.endGroup();
 
     if(ui->userDataSaveCheckBox->isChecked())
@@ -153,7 +166,7 @@ void Options::on_downloadFolderPushButton_clicked()
 {
     // Aufruf des Ordnerdialogs
     QString newDirectory = QFileDialog::getExistingDirectory(this,
-                           "Downloadverkzeichnis auswählen",
+                           tr("Downloadverkzeichnis auswählen"),
                            QDir::rootPath(),
                            QFileDialog::ShowDirsOnly |
                            QFileDialog::DontResolveSymlinks);
@@ -277,4 +290,9 @@ void Options::loginResultSlot(int result)
 void Options::accessTokenChanged(QString newAccessToken)
 {
     accessToken = newAccessToken;
+}
+
+void Options::retranslate()
+{
+    ui->retranslateUi(this);
 }

@@ -22,6 +22,7 @@
 #include <QDesktopWidget>
 #include <QDesktopServices>
 #include <QSystemTrayIcon>
+#include <QTranslator>
 
 #include "browser.h"
 
@@ -39,6 +40,8 @@ public:
 
 private slots:
     void trayClickedSlot(QSystemTrayIcon::ActivationReason);
+    void on_langCB_currentIndexChanged(const QString &lang);
+    void retranslate();
 
 private:
     void init();
@@ -55,6 +58,8 @@ private:
 
     QSystemTrayIcon *trayIcon;
     Ui::MyMainWindow*      ui;
+
+    QTranslator m_translator;
 };
 
 #endif // HAUPTFENSTER_H

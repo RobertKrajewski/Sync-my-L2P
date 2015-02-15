@@ -30,7 +30,7 @@ FileDownloader::FileDownloader(int itemNumber,
     manager(new QNetworkAccessManager(this))
 {
     ui->setupUi(this);
-
+    ui->retranslateUi(this);
     this->show();
 
     Utils::centerWidgetOnDesktop(this);
