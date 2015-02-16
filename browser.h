@@ -101,6 +101,8 @@ private:
 
     int refreshCounter;
 
+    bool sslSecureChannelBugOccured;
+
 private slots:
     void openFile();
     void openCourse();
