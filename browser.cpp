@@ -218,7 +218,7 @@ void Browser::coursesRecieved(QNetworkReply *reply)
     }
     else
     {
-        Utils::errorMessageBox(tr("Beim Abruf der Veranstaltungen ist ein Fehler aufgetreten"), reply->errorString());
+        Utils::errorMessageBox(tr("Beim Abruf der Veranstaltungen ist ein Fehler aufgetreten"), reply->errorString() % ";\n " % reply->readAll());
     }
 
     // Veranstaltungen alphabetisch sortieren
@@ -372,7 +372,7 @@ void Browser::filesRecieved(QNetworkReply *reply)
     }
     else
     {
-        Utils::errorMessageBox(tr("Beim Abruf des Inhalts einer Veranstaltung ist ein Fehler aufgetreten"), reply->errorString() % " ;" % reply->readAll());
+        Utils::errorMessageBox(tr("Beim Abruf des Inhalts einer Veranstaltung ist ein Fehler aufgetreten"), reply->errorString() % ";\n " % reply->readAll());
     }
 
     // Löschen der Antwort aus der Liste der abzuarbeitenden Antworten
