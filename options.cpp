@@ -17,8 +17,10 @@ Options::Options(QWidget *parent) :
 
     QObject::connect(&login, SIGNAL(newAccessToken(QString)), this, SLOT(accessTokenChanged(QString)));
 
+#ifdef _WIN32
     if (QSystemTrayIcon::isSystemTrayAvailable())
         ui->minimizeInTrayCheckBox->setEnabled(true);
+#endif
 
     // Verfügbare Sprachen; Falls neue verfügbar, bitte hier und in der mymainwindow.cpp ergänzen!
     ui->langCB->addItem(tr("Systemsprache"));
