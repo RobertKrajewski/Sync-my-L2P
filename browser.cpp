@@ -268,6 +268,7 @@ void Browser::requestFileInformation()
         return;
     }
 
+    sslSecureChannelBugOccured = false;
 
 
     //Anfordern aller Daten per APIRequest
@@ -372,7 +373,15 @@ void Browser::filesRecieved(QNetworkReply *reply)
     }
     else
     {
-        Utils::errorMessageBox(tr("Beim Abruf des Inhalts einer Veranstaltung ist ein Fehler aufgetreten"), reply->errorString() % ";\n " % reply->readAll());
+        QString replyMessage(reply->readAll());
+        if(replyMessage.contains("secure channel"))
+        {
+            sslSecureChannelBugOccured = true;
+        }
+        else
+        {
+            Utils::errorMessageBox(tr("Beim Abruf des Inhalts einer Veranstaltung ist ein Fehler aufgetreten"), reply->errorString() % ";\n " % reply->readAll());
+        }
     }
 
     // Löschen der Antwort aus der Liste der abzuarbeitenden Antworten
@@ -383,6 +392,13 @@ void Browser::filesRecieved(QNetworkReply *reply)
     // Prüfen, ob alle Antworten bearbeitet wurden
     if (replies.empty())
     {
+        if(sslSecureChannelBugOccured)
+        {
+            Utils::errorMessageBox(tr("Beim Abruf des Inhalts mindestens einer Veranstaltung ist ein Fehler aufgetreten"),
+                                   tr("Es können einige Dateien fehlen. Dieser Fehler wird nicht durch Sync-my-L2P verursacht."
+                                      " Klicke erneut auf Aktualisieren."));
+        }
+
         QObject::disconnect(manager, SIGNAL(finished(QNetworkReply *)),
                             this,    SLOT(filesRecieved(QNetworkReply *)));
 
@@ -434,7 +450,8 @@ void Browser::filesRecieved(QNetworkReply *reply)
         emit enableSignal(true);
 
         // Automatische Synchronisation beim Programmstart
-        if (options->isAutoSyncOnStartCheckBoxChecked() && refreshCounter==1 && options->getLoginCounter()==1)
+        if (options->isAutoSyncOnStartCheckBoxChecked() && refreshCounter==1 && options->getLoginCounter()==1
+                && !sslSecureChannelBugOccured)
         {
             on_syncPushButton_clicked();
         }
