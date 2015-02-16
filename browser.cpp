@@ -517,7 +517,7 @@ void Browser::on_syncPushButton_clicked()
         QString filename = currentElement->text();
 
         bool downloadFile = options->isOverrideFilesCheckBoxChecked() &&
-                QFileInfo(directory, filename).lastModified().toMSecsSinceEpoch()/1000 < currentElement->data(dateRole).toInt();
+                QFileInfo(directory, filename).lastModified().toMSecsSinceEpoch()/1000 < currentElement->data(dateRole).toDateTime().toMSecsSinceEpoch()/1000;
         downloadFile = downloadFile || !directory.exists(filename);
 
         // Datei existiert noch nicht
