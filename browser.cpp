@@ -230,7 +230,15 @@ void Browser::coursesRecieved(QNetworkReply *reply)
                         SLOT(coursesRecieved(QNetworkReply *)));
 
     // Aufruf der Funktion zur Aktualisierung der Dateien
-    requestFileInformation();
+    if(itemModel->rowCount() != 0)
+    {
+        requestFileInformation();
+    }
+    else
+    {
+        emit enableSignal(true);
+        updateButtons();
+    }
 }
 
 /// Anfordern der Dateien für jede Veranstaltung
@@ -839,7 +847,6 @@ void Browser::updateButtons()
 {
     if(itemModel->rowCount() == 0 || options->getAccessToken().isEmpty())
     {
-        ui->refreshPushButton->setEnabled(false);
         ui->showNewDataPushButton->setEnabled(false);
         ui->expandPushButton->setEnabled(false);
         ui->contractPushButton->setEnabled(false);
@@ -850,7 +857,6 @@ void Browser::updateButtons()
     }
     else
     {
-        ui->refreshPushButton->setEnabled(true);
         ui->showNewDataPushButton->setEnabled(true);
         ui->expandPushButton->setEnabled(true);
         ui->contractPushButton->setEnabled(true);
@@ -859,6 +865,8 @@ void Browser::updateButtons()
         ui->addSelectionPushButton->setEnabled(true);
         ui->syncPushButton->setEnabled(true);
     }
+
+    ui->refreshPushButton->setEnabled(!options->getAccessToken().isEmpty());
 }
 
 void Browser::setupSignalsSlots()
