@@ -556,12 +556,12 @@ void Browser::on_syncPushButton_clicked()
                     QString("&cid=") %
                     currentElement->data(cidRole).toString() %
                     QString("&downloadUrl=") %
-                    currentElement->data(urlRole).toString();
+                    currentElement->data(urlRole).toUrl().toDisplayString(QUrl::FullyDecoded);
 
             if (!loader->startNextDownload(filename,
                                            veranstaltungName,
                                            directory.absoluteFilePath(filename),
-                                           QUrl(url),
+                                           QUrl(QUrl::toPercentEncoding(url, ":/?=&")),
                                            changedCounter++,
                                            currentElement->data(sizeRole).toInt(),
                                            currentElement->data(dateRole).toDateTime().toMSecsSinceEpoch()/1000))
@@ -889,7 +889,7 @@ QNetworkRequest *Browser::apiRequest(Structureelement *course, QString apiExtens
     QString cid = "&cid=" % course->data(cidRole).toString();
 
     QString url = baseUrl % apiExtension % access % cid;
-    QNetworkRequest *request = new QNetworkRequest(QUrl(url));
+    QNetworkRequest *request = new QNetworkRequest(QUrl(QUrl::toPercentEncoding(url, ":/?=&")));
 
     QSslConfiguration conf = request->sslConfiguration();
     conf.setPeerVerifyMode(QSslSocket::VerifyNone);
