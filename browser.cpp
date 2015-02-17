@@ -373,22 +373,25 @@ void Browser::filesRecieved(QNetworkReply *reply)
         Parser::parseFiles(reply, &replies,
                            options->downloadFolderLineEditText());
     }
-    // Fängt alle Fehlermeldungen die mit der viewAllAssignments API zusammenhängen ab und verband diese ins LOG.
-    else if (reply->url().toString().contains("viewAllAssignments"))
-    {
-        QString message = "Beim Abruf des Inhalts einer Veranstaltung ist ein Fehler aufgetreten: \n " + reply->readAll();
-        QLOG_ERROR() << "Fehlermeldung: " << message;
-    }
     else
     {
         QString replyMessage(reply->readAll());
-        if(replyMessage.contains("secure channel"))
+
+        // Fange nicht existierende Übungsräume (viewAllAssignments) ab und zeigt kein Dialogfenster
+        bool emptyAssignment = reply->url().toString().contains("viewAllAssignments");
+        emptyAssignment = emptyAssignment && (replyMessage.contains("Es existiert keine Website") || replyMessage.contains("The system cannot find the file"));
+        if (emptyAssignment)
+        {
+            QLOG_DEBUG() << tr("Es wurden keine Übungen gefunden für: ") << reply->url().toString();
+        }
+        else if(replyMessage.contains("secure channel"))
         {
             sslSecureChannelBugOccured = true;
+            QLOG_DEBUG() << tr("SSL Fehler für: ") << reply->url().toString();
         }
         else
         {
-            Utils::errorMessageBox(tr("Beim Abruf des Inhalts einer Veranstaltung ist ein Fehler aufgetreten"), reply->errorString() % ";\n " % reply->readAll());
+            Utils::errorMessageBox(tr("Beim Abruf des Inhalts einer Veranstaltung ist ein Fehler aufgetreten"), reply->errorString() % ";\n " % replyMessage);
         }
     }
 
@@ -403,8 +406,8 @@ void Browser::filesRecieved(QNetworkReply *reply)
         if(sslSecureChannelBugOccured)
         {
             Utils::errorMessageBox(tr("Beim Abruf des Inhalts mindestens einer Veranstaltung ist ein Fehler aufgetreten"),
-                                   tr("Es können einige Dateien fehlen. Dieser Fehler wird nicht durch Sync-my-L2P verursacht."
-                                      " Klicke erneut auf Aktualisieren."));
+                                   tr("Es können einige Dateien fehlen. Dieser Fehler wird nicht durch Sync-my-L2P verschuldet und ist bekannt."
+                                      " Klicke erneut auf Aktualisieren bis dieser Fehler nicht mehr auftaucht."));
         }
 
         QObject::disconnect(manager, SIGNAL(finished(QNetworkReply *)),
