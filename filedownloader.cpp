@@ -119,12 +119,8 @@ void FileDownloader::finishedSlot()
 
     if(reply->error())
     {
-        QMessageBox messageBox;
-        messageBox.setText(tr("Beim Download einer Datei ist ein Fehler aufgetreten."));
-        messageBox.setInformativeText(ui->dateinameLabel->text());
-        messageBox.setDetailedText(reply->errorString());
-        messageBox.setStandardButtons(QMessageBox::Ok);
-        messageBox.exec();
+        Utils::errorMessageBox(tr("Beim Download der Datei %1 ist ein Fehler aufgetreten.").arg(output.fileName()),
+                               reply->errorString() % "; " % reply->readAll());
         output.remove();
         loop.exit(0);
     }
