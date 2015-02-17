@@ -6,19 +6,12 @@
 #include <QThread>
 #include <QTextCodec>
 
+#include <QStandardPaths>
+
 #include "qslog/QsLog.h"
 
 // Hauptadresse des Sharepointdienstes
 QString MainURL = "https://www3.elearning.rwth-aachen.de";
-
-#ifdef Q_OS_WIN32
-    QString dataPath = "data.xml";
-#elif __linux
-    QString dataPath = QDir::homePath() % "/.config/Sync-my-L2P/data.xml";
-#else
-    QString dataPath = "data.xml";
-#endif
-
 
 Browser::Browser(QWidget *parent) :
     QWidget(parent),
@@ -105,7 +98,15 @@ void Browser::loadSettings()
 
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
 
-    QFile file(dataPath);
+
+    QString dataPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    QLOG_DEBUG() << tr("Vermuteter Pfad der Progammdaten: ") << dataPath;
+
+    QDir dir(dataPath);
+    if (!dir.exists()) {
+        dir.mkpath(".");
+    }
+    QFile file(dataPath + "/data.xml");
     if(!file.open(QIODevice::ReadWrite))
     {
         QLOG_ERROR() << tr("Kann keine Daten von Festplatte laden") << ": " << file.errorString();
@@ -156,7 +157,7 @@ void Browser::saveSettings()
     QDomDocument domDoc;
     saveStructureelementToXml(domDoc, itemModel->invisibleRootItem(), NULL);
 
-    QFile file(dataPath);
+    QFile file(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/data.xml");
     if(!file.open(QIODevice::WriteOnly))
     {
         return;
