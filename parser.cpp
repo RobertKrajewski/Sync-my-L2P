@@ -248,10 +248,6 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
                 continue;
             }
         }
-        if(url.contains("Lehrproben"))
-        {
-            QLOG_INFO() << file["name"];
-        }
 
         // Wegen der inneren foreach-Schleife in den Kategorien 2,4 und 5 ist diese Übergabe nur noch für die Kategorie 0, 1 und 3
         if(responseCategory == 0 ||responseCategory == 1 || responseCategory == 3){
