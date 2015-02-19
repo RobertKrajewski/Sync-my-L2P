@@ -583,7 +583,6 @@ void Browser::on_syncPushButton_clicked()
     // Kurzes warten, da es sonst zu Fehldarstellungen unter Linux kommen kann,
     // wenn das Fenster zu schnell wieder geschlossen wird
     QThread::msleep(20);
-    QLOG_ERROR() << "LINUX";
 #endif
     loader->hide();
     loader->close();
