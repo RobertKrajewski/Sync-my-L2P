@@ -389,10 +389,20 @@ void Browser::filesRecieved(QNetworkReply *reply)
         // Fange nicht existierende Übungsräume (viewAllAssignments) ab und zeigt kein Dialogfenster
         bool emptyAssignment = reply->url().toString().contains("viewAllAssignments");
         emptyAssignment = emptyAssignment && (replyMessage.contains("Es existiert keine Website") || replyMessage.contains("The system cannot find the file"));
+
+        // Fange fehlende Medialibraries ab (?)
+        bool emptyMedia = reply->url().toString().contains("viewAllMediaLibrarys");
+        emptyMedia = emptyMedia && replyMessage.contains("Object reference not set to an instance of an object");
+
         if (emptyAssignment)
         {
             QLOG_DEBUG() << tr("Es wurden keine Übungen gefunden für: ") << reply->url().toString();
         }
+        else if (emptyMedia)
+        {
+            QLOG_DEBUG() << tr("Es wurden keine Medieninhalte gefunden für: ") << reply->url().toString();
+        }
+
         else if(replyMessage.contains("secure channel"))
         {
             sslSecureChannelBugOccured = true;
