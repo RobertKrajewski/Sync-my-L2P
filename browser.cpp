@@ -98,8 +98,11 @@ void Browser::loadSettings()
 
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
 
-
+#if QT_VERSION >= 0x050400
     QString dataPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+#else
+    QString dataPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+#endif
     QLOG_DEBUG() << tr("Vermuteter Pfad der Progammdaten: ") << dataPath;
 
     QDir dir(dataPath);
@@ -157,7 +160,12 @@ void Browser::saveSettings()
     QDomDocument domDoc;
     saveStructureelementToXml(domDoc, itemModel->invisibleRootItem(), NULL);
 
-    QFile file(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/data.xml");
+#if QT_VERSION >= 0x050400
+    QString dataPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+#else
+    QString dataPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+#endif
+    QFile file(dataPath + "/data.xml");
     if(!file.open(QIODevice::WriteOnly))
     {
         return;
