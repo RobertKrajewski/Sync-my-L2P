@@ -117,17 +117,64 @@ void Structureelement::chooseIcon()
         {
            setIcon(QIcon(":/icons/pdf.png"));
         }
-        // ZIP
-        else if (filename.contains(QRegExp(".zip$", Qt::CaseInsensitive)))
+        // Videos
+        else if (filename.contains(QRegExp(".mp4$", Qt::CaseInsensitive)) ||
+                 filename.contains(QRegExp(".wmv$", Qt::CaseInsensitive)) ||
+                 filename.contains(QRegExp(".webm$", Qt::CaseInsensitive)) ||
+                 filename.contains(QRegExp(".flv$", Qt::CaseInsensitive)) ||
+                 filename.contains(QRegExp(".ogv$", Qt::CaseInsensitive)) ||
+                 filename.contains(QRegExp(".mp4$", Qt::CaseInsensitive)) ||
+                 filename.contains(QRegExp(".avi$", Qt::CaseInsensitive)))
         {
-            setIcon(QIcon(":/icons/zip.png"));
+            setIcon(QIcon(":/icons/video.png"));
         }
-        // RAR
-        else if (filename.contains(QRegExp(".rar$", Qt::CaseInsensitive)))
+        // Musik
+        else if (filename.contains(QRegExp(".mp3$", Qt::CaseInsensitive)) ||
+                 filename.contains(QRegExp(".aac$", Qt::CaseInsensitive)) ||
+                 filename.contains(QRegExp(".ogg$", Qt::CaseInsensitive)) ||
+                 filename.contains(QRegExp(".flac$", Qt::CaseInsensitive)) ||
+                 filename.contains(QRegExp(".wav$", Qt::CaseInsensitive)) ||
+                 filename.contains(QRegExp(".wma$", Qt::CaseInsensitive)))
         {
-            setIcon(QIcon(":/icons/rar.png"));
+            setIcon(QIcon(":/icons/audio.png"));
         }
-        // Sonstige
+        // Textdokument
+                else if (filename.contains(QRegExp(".doc$", Qt::CaseInsensitive)) ||
+                         filename.contains(QRegExp(".docx$", Qt::CaseInsensitive)) ||
+                         filename.contains(QRegExp(".odt$", Qt::CaseInsensitive)))
+                {
+                    setIcon(QIcon(":/icons/document.png"));
+                }
+        // Kalkulationsdokument
+                else if (filename.contains(QRegExp(".xls$", Qt::CaseInsensitive)) ||
+                         filename.contains(QRegExp(".xlsx$", Qt::CaseInsensitive)) ||
+                         filename.contains(QRegExp(".ods$", Qt::CaseInsensitive)))
+                {
+                    setIcon(QIcon(":/icons/sheet.png"));
+                }
+        // Präsentationsdokument
+                else if (filename.contains(QRegExp(".ppt$", Qt::CaseInsensitive)) ||
+                         filename.contains(QRegExp(".pptx$", Qt::CaseInsensitive)) ||
+                         filename.contains(QRegExp(".odp$", Qt::CaseInsensitive)))
+                {
+                    setIcon(QIcon(":/icons/slideshow.png"));
+                }
+        // BMP
+        else if (filename.contains(QRegExp(".bmp$", Qt::CaseInsensitive)) ||
+                 filename.contains(QRegExp(".jpg$", Qt::CaseInsensitive)) ||
+                 filename.contains(QRegExp(".png$", Qt::CaseInsensitive)) ||
+                 filename.contains(QRegExp(".gif$", Qt::CaseInsensitive)))
+        {
+
+            setIcon(QIcon(":/icons/picture.png"));
+        }
+        // Archivefiles
+        else if (filename.contains(QRegExp(".rar$", Qt::CaseInsensitive))||
+                filename.contains(QRegExp(".zip$", Qt::CaseInsensitive))||
+                filename.contains(QRegExp(".jar$", Qt::CaseInsensitive)))
+        {
+            setIcon(QIcon(":/icons/archive.png"));
+        }
         else
         {
             setIcon(QIcon(":/icons/otherFile.png"));

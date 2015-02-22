@@ -5,8 +5,6 @@
         <file>magnifier.png</file>
         <file>refresh.png</file>
         <file>otherFile.png</file>
-        <file>rar.png</file>
-        <file>zip.png</file>
         <file>downloadDirectory.png</file>
         <file>logs.png</file>
         <file>semester.png</file>
@@ -16,5 +14,12 @@
         <file>browser.png</file>
         <file>settings.png</file>
         <file>Sync-my-L2P.png</file>
+        <file>video.png</file>
+        <file>slideshow.png</file>
+        <file>sheet.png</file>
+        <file>document.png</file>
+        <file>audio.png</file>
+        <file>picture.png</file>
+        <file>archive.png</file>
     </qresource>
 </RCC>
