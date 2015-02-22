@@ -94,9 +94,9 @@ void MyMainWindow::loadSettings()
     // Einstellungen alter Versionen entfernen
     removeOldSettings();
 
-    ui->optionsTab->loadSettings();
-    ui->browserTab->loadSettings();    
     ui->logTab->loadSettings();
+    ui->optionsTab->loadSettings();
+    ui->browserTab->loadSettings();
 
     // Beim ersten Start Anleitung anzeigen
     QSettings settings;
