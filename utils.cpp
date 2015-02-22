@@ -133,6 +133,9 @@ Structureelement *Utils::getDirectoryItem(Structureelement *courseItem, QStringL
     // Iteriere entlang der Elemente des Pfads und erstelle diese ggf.
     foreach(QString item, path)
     {
+        // Remove unnessescary whit
+        item = item.simplified();
+
         // Bei Verwendung der deutschen Sprache die Ordner umbennen
         if(QLocale::system().language() == QLocale::German)
         {
