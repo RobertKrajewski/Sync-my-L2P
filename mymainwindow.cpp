@@ -179,7 +179,7 @@ void MyMainWindow::trayClickedSlot(QSystemTrayIcon::ActivationReason reason)
 // Installiert die neue Übersetzung, wenn eine andere Sprache gewählt wurde
 // Falls neue Sprachen ergänzt werden sollen, müssen diese hier und in der options.cpp ergänzt werden.
 void MyMainWindow::on_langCB_currentIndexChanged(const QString &lang){
-    QLOG_INFO() << "wechsle Sprache auf " << lang;
+    QLOG_INFO() << tr("wechsle Sprache auf ") << lang;
 
     qApp->removeTranslator(&m_translator);
     if (lang == tr("Systemsprache"))
