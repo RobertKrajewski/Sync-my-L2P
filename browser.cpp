@@ -538,7 +538,7 @@ void Browser::on_syncPushButton_clicked()
 
     // Iterieren über alle Elemente
     int changedCounter = 0;
-    QString veranstaltungName;
+    QString courseName;
 
     QItemSelection newSelection;
     ui->dataTreeView->collapseAll();
@@ -548,6 +548,12 @@ void Browser::on_syncPushButton_clicked()
         if(currentElement->type() != fileItem)
         {
             continue;
+        }
+
+        Structureelement* course = Utils::getParentCourse(currentElement);
+        if(course)
+        {
+            courseName = course->text();
         }
 
         QString directoryPath = Utils::getElementLocalPath(currentElement, downloadPath, false, false);
@@ -581,7 +587,7 @@ void Browser::on_syncPushButton_clicked()
                     currentElement->data(urlRole).toUrl().toDisplayString(QUrl::FullyDecoded);
 
             if (!loader->startNextDownload(filename,
-                                           veranstaltungName,
+                                           courseName,
                                            directory.absoluteFilePath(filename),
                                            QUrl(QUrl::toPercentEncoding(url, ":/?=&")),
                                            changedCounter++,
