@@ -49,6 +49,7 @@ int FileDownloader::startNextDownload(QString fileName, QString courseName, QStr
     ui->veranstaltungLabel->setText(courseName);
     ui->dateinameLabel->setText(fileName);
     ui->progressBar->setFormat(QString("%v ") % correctUnit(itemSize) % " / %m " % correctUnit(itemSize));
+    ui->progressBar->setValue(0);
     ui->progressBar->setMaximum(correctSize(itemSize));
     ui->downloadSpeedLabel->setText("");
 
