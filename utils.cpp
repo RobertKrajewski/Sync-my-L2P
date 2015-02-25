@@ -16,6 +16,22 @@ Utils::Utils(QObject *parent) :
 }
 
 /// Bestimmung des lokalen Pfads für ein Element
+Structureelement *Utils::getParentCourse(Structureelement *item)
+{
+    Structureelement* currentItem = item;
+    while(currentItem)
+    {
+        if(currentItem->type() == courseItem)
+        {
+            return currentItem;
+        }
+
+        currentItem = dynamic_cast<Structureelement*>(currentItem->parent());
+    }
+
+    return NULL;
+}
+
 QString Utils::getElementLocalPath(Structureelement *item, QString downloadDirectoryPath, bool includeFilname, bool includePrefix)
 {
         QString path;
