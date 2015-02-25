@@ -118,6 +118,12 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
         QString url;
         QStringList urlParts;
 
+        // Skip directories
+        if(file["isDirectory"].toBool())
+        {
+            continue;
+        }
+
         if(responseCategory == 0)
         {
             QJsonObject fileInformation = file["fileInformation"].toObject();
