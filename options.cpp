@@ -26,6 +26,7 @@ Options::Options(QWidget *parent) :
     ui->langCB->addItem(tr("Systemsprache"));
     ui->langCB->addItem("Deutsch");
     ui->langCB->addItem("English");
+    ui->langCB->addItem("Lëtzebuergesch");
 }
 
 Options::~Options()
