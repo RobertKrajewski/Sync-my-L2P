@@ -193,6 +193,8 @@ void MyMainWindow::on_langCB_currentIndexChanged(const QString &lang){
         m_translator.load("sync-my-l2p_de", ":/lang");
     else if (lang == "English")
        m_translator.load("sync-my-l2p_en", ":/lang");
+    else if (lang == "Lëtzebuergesch")
+        m_translator.load("sync-my-l2p_lb", ":/lang");
     else
         m_translator.load("sync-my-l2p_en", ":/lang");
 

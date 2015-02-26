@@ -126,134 +126,133 @@
         <translation>Download</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="103"/>
+        <location filename="../browser.cpp" line="106"/>
         <source>Vermuteter Pfad der Progammdaten: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="112"/>
+        <location filename="../browser.cpp" line="115"/>
         <source>Kann keine Daten von Festplatte laden</source>
         <translation>Can&apos;t load data from harddrive</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="120"/>
+        <location filename="../browser.cpp" line="123"/>
         <source>Keine Dateiliste auf der Festplatte gefunden.</source>
         <translation>No data list found on harddrive.</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="128"/>
+        <location filename="../browser.cpp" line="131"/>
         <source>Kann Daten von Festplatte nicht parsen: </source>
         <translation>Can&apos;t parse from harddrive: </translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="202"/>
+        <location filename="../browser.cpp" line="210"/>
         <source>Veranstaltungsrequest</source>
         <translation>Course request</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="214"/>
+        <location filename="../browser.cpp" line="222"/>
         <source>Veranstaltungen empfangen</source>
         <translation>Courses received</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="222"/>
+        <location filename="../browser.cpp" line="230"/>
         <source>Beim Abruf der Veranstaltungen ist ein Fehler aufgetreten</source>
         <translation>There was an error while loading courses.</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="369"/>
+        <location filename="../browser.cpp" line="377"/>
         <source>Itemrequest empfangen: </source>
         <translation>Item request received: </translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="386"/>
         <source>Es wurden keine Übungen gefunden für: </source>
-        <translation>No assignment found for: </translation>
+        <translation type="vanished">No assignment found for: </translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="391"/>
+        <location filename="../browser.cpp" line="392"/>
         <source>SSL Fehler für: </source>
         <translation>SSL error for: </translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="395"/>
+        <location filename="../browser.cpp" line="396"/>
         <source>Beim Abruf des Inhalts einer Veranstaltung ist ein Fehler aufgetreten</source>
         <translation>There was an error while loading up a the contents of a course.</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="409"/>
+        <location filename="../browser.cpp" line="410"/>
         <source>Beim Abruf des Inhalts mindestens einer Veranstaltung ist ein Fehler aufgetreten</source>
         <translation>An error occurred while receiving files from at least one course</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="410"/>
+        <location filename="../browser.cpp" line="411"/>
         <source>Es können einige Dateien fehlen. Dieser Fehler wird nicht durch Sync-my-L2P verschuldet und ist bekannt. Klicke erneut auf Aktualisieren bis dieser Fehler nicht mehr auftaucht.</source>
         <translation>Some files could be missing. This is a known issue and it&apos;s not caused by Sync-my-L2P. Please click on &quot;Update&quot; until this message does not occurred anymore.</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="481"/>
+        <location filename="../browser.cpp" line="482"/>
         <source>Downloadverzeichnis fehlt!</source>
         <translation>Download directory is missing!</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="481"/>
+        <location filename="../browser.cpp" line="482"/>
         <source>Download unmöglich, da kein Zielverzeichnis angegeben wurde.</source>
         <translation>Download impossible because no target directory is specified.</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="482"/>
+        <location filename="../browser.cpp" line="483"/>
         <source>Kann nicht synchronisieren, da kein Downloadverzeichnis angegeben wurde</source>
         <translation>Can not syncronize, because no download directory was found.</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="494"/>
+        <location filename="../browser.cpp" line="495"/>
         <source>Kann Verzeichnis nicht erzeugen. Download abgebrochen.</source>
         <translation>Can not create directory. Download aborted.</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="541"/>
+        <location filename="../browser.cpp" line="548"/>
         <source>Verzeichnis nicht erstellbar!</source>
         <translation>Directory not createable.</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="541"/>
+        <location filename="../browser.cpp" line="548"/>
         <source>Kann folgendes Verzeichnis nicht erstellen: </source>
         <translation>Can not create the following directory: </translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="542"/>
+        <location filename="../browser.cpp" line="549"/>
         <source>Verzeichnis nicht erstellbar: </source>
         <translation>Directory not setable: </translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="604"/>
+        <location filename="../browser.cpp" line="611"/>
         <source>Synchronisation mit dem L2P der RWTH Aachen abgeschlossen.</source>
         <translation>Synchronization with the L2P of RWTH Aachen completed.</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="607"/>
+        <location filename="../browser.cpp" line="614"/>
         <source>Es wurden %1 von %2 eingebundenen Dateien synchronisiert.
 (Dieses Fenster schließt nach 10 Sek. automatisch.)</source>
         <translation>Synchronized %1 of %2 of bound in files.
 (This dialogue closes after 10 seconds automatically.)</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="901"/>
+        <location filename="../browser.cpp" line="908"/>
         <source>Itemrequest an API: </source>
         <translation>Item request to the API</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="970"/>
+        <location filename="../browser.cpp" line="977"/>
         <source>Veranstaltungsseite öffnen</source>
         <translation>Open course page</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="974"/>
+        <location filename="../browser.cpp" line="981"/>
         <source>Öffnen</source>
         <translation>Open</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="979"/>
+        <location filename="../browser.cpp" line="986"/>
         <source>Link kopieren</source>
         <translation>Copy link</translation>
     </message>
@@ -289,17 +288,17 @@
 <context>
     <name>FileDownloader</name>
     <message>
-        <location filename="../filedownloader.cpp" line="64"/>
+        <location filename="../filedownloader.cpp" line="65"/>
         <source>Fehler beim Öffnen mit Schreibberechtigung.</source>
         <translation>Error while opening with writing permission.</translation>
     </message>
     <message>
-        <location filename="../filedownloader.cpp" line="100"/>
+        <location filename="../filedownloader.cpp" line="101"/>
         <source>Fehler beim Schreiben der Datei</source>
         <translation>Error while writing file</translation>
     </message>
     <message>
-        <location filename="../filedownloader.cpp" line="122"/>
+        <location filename="../filedownloader.cpp" line="123"/>
         <source>Beim Download der Datei %1 ist ein Fehler aufgetreten.</source>
         <translation>An error occurred while downloading the file %1.</translation>
     </message>
@@ -429,8 +428,12 @@
     </message>
     <message>
         <location filename="../logger.cpp" line="102"/>
+        <source>Fehler beim Initialisieren des Logfiles: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Fehler beim initialisieren des Logfiles: </source>
-        <translation>Error while initializing log file: </translation>
+        <translation type="vanished">Error while initializing log file: </translation>
     </message>
     <message>
         <location filename="../logger.cpp" line="108"/>
@@ -779,7 +782,7 @@
 <context>
     <name>Utils</name>
     <message>
-        <location filename="../utils.cpp" line="102"/>
+        <location filename="../utils.cpp" line="118"/>
         <source>Unbekanntes Element auf der Ebene der Veranstaltungen: </source>
         <translation>Unknown element on the courses layer: </translation>
     </message>
