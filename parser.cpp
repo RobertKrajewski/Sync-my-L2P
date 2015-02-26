@@ -143,16 +143,12 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
         }
         else if(responseCategory == 1)
         {
-            // Wir brauchen nur die Dateien
-            if(file["isDirectory"].toBool())
-            {
-                continue;
-            }
+            QJsonObject fileInformation = file["fileInformation"].toObject();
 
-            filename = file["name"].toString();
-            filesize = -1;
-            timestamp = file["modifiedTimestamp"].toInt();
-            url = file["downloadUrl"].toString();
+            filename = fileInformation["fileName"].toString();
+            filesize = fileInformation["fileSize"].toString().toInt();
+            timestamp = fileInformation["modifiedTimestamp"].toInt();
+            url = fileInformation["downloadUrl"].toString();
             url = QByteArray::fromPercentEncoding(url.toLocal8Bit());
             urlParts = url.split('/');
 
