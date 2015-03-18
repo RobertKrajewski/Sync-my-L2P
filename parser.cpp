@@ -22,7 +22,8 @@ void Parser::parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
 
     if(!object["Status"].toBool())
     {
-        QLOG_ERROR() << tr("Status der Kursinformationen nicht ok.");
+        QLOG_ERROR() << tr("Status der Kursinformationen nicht ok: ") <<
+                        QString(document.toJson());
         return;
     }
 
@@ -104,7 +105,14 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
 
     if(!object["Status"].toBool())
     {
-        QLOG_ERROR() << tr("Status der Kursinformationen nicht ok.");
+        if( url.contains( "viewAllAssignments") )
+        {
+            return;
+        }
+
+        QLOG_ERROR() << tr("Status der Kursinformationen nicht ok: \n") <<
+                        url << "\n" <<
+                        QString(document.toJson());
         return;
     }
 
