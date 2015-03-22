@@ -2,5 +2,6 @@
     <qresource prefix="/lang">
         <file>sync-my-l2p_de.qm</file>
         <file>sync-my-l2p_en.qm</file>
+        <file>sync-my-l2p_lb.qm</file>
     </qresource>
 </RCC>

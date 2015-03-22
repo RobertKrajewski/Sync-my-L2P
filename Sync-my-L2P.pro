@@ -11,7 +11,8 @@ TARGET = Sync-my-L2P
 TEMPLATE = app
 
 TRANSLATIONS = lang/sync-my-l2p_de.ts \
-               lang/sync-my-l2p_en.ts
+               lang/sync-my-l2p_en.ts \
+               lang/sync-my-l2p_lb.ts
 
 SOURCES += main.cpp\
         mymainwindow.cpp \

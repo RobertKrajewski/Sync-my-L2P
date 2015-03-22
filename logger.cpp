@@ -99,7 +99,7 @@ void Logger::on_savePB_clicked()
     QFile file(filepath);
     if(!file.open(QIODevice::WriteOnly))
     {
-        QLOG_ERROR() << tr("Fehler beim initialisieren des Logfiles: ") << file.errorString();
+        QLOG_ERROR() << tr("Fehler beim Initialisieren des Logfiles: ") << file.errorString();
         return;
     }
 
