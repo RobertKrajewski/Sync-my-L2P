@@ -598,7 +598,7 @@
     </message>
     <message>
         <location filename="../options.ui" line="26"/>
-        <location filename="../options.cpp" line="259"/>
+        <location filename="../options.cpp" line="260"/>
         <source>Status: ausgeloggt</source>
         <translation></translation>
     </message>
@@ -723,17 +723,17 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../options.cpp" line="173"/>
+        <location filename="../options.cpp" line="174"/>
         <source>Downloadverzeichnis auswählen</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../options.cpp" line="276"/>
+        <location filename="../options.cpp" line="277"/>
         <source>Status: Login erfolgreich</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../options.cpp" line="290"/>
+        <location filename="../options.cpp" line="291"/>
         <source>Status: Login fehlgeschlagen</source>
         <translation></translation>
     </message>
@@ -742,30 +742,35 @@
     <name>Parser</name>
     <message>
         <location filename="../parser.cpp" line="19"/>
-        <location filename="../parser.cpp" line="101"/>
+        <location filename="../parser.cpp" line="102"/>
         <source>Kursinformationen leer bzw. nicht lesbar.</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../parser.cpp" line="25"/>
-        <location filename="../parser.cpp" line="107"/>
-        <source>Status der Kursinformationen nicht ok.</source>
-        <translation></translation>
+        <source>Status der Kursinformationen nicht ok: </source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../parser.cpp" line="51"/>
+        <location filename="../parser.cpp" line="52"/>
         <source>Veranstaltung </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../parser.cpp" line="51"/>
+        <location filename="../parser.cpp" line="52"/>
         <source>) hinzugefügt.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../parser.cpp" line="88"/>
+        <location filename="../parser.cpp" line="89"/>
         <source>Antwort auf unbekannten Request erhalten: </source>
         <translation></translation>
+    </message>
+    <message>
+        <location filename="../parser.cpp" line="113"/>
+        <source>Status der Kursinformationen nicht ok: 
+</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
