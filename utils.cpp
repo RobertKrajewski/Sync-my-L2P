@@ -164,6 +164,9 @@ Structureelement *Utils::getDirectoryItem(Structureelement *courseItem, QStringL
             else if (item.contains("LA_AssignmentDocuments")) {
                 item = "Übungsdokumente";
             }
+            else if (item.contains("LA_SolutionDocuments")) {
+                item = "Übungslösungen";
+            }
             else if (item.contains("EmailAttachments")) {
                 item = "E-Mail-Anhänge";
             }

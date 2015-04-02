@@ -198,6 +198,36 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
                 // Element hinzufügen
                 dir->appendRow(newFile);
             }
+
+            QJsonObject solutions = file["solution"].toObject();
+            QJsonArray solutionFiles= solutions["solutionDocuments"].toArray();
+            foreach(QJsonValue solutionElement, solutionFiles)
+            {
+                QJsonObject solutionDoc = solutionElement.toObject();
+
+                filename = solutionDoc["fileName"].toString();
+                filesize = solutionDoc["fileSize"].toString().toInt();
+                timestamp = solutionDoc["modifiedTimestamp"].toInt();
+                url = solutionDoc["downloadUrl"].toString();
+                url = QByteArray::fromPercentEncoding(url.toLocal8Bit());
+                urlParts = url.split('/');
+
+                urlParts.removeFirst();
+                urlParts.removeFirst();
+                urlParts.removeFirst();
+                urlParts.removeFirst();
+                urlParts.removeFirst();
+                urlParts.removeLast();
+                urlParts.removeLast();
+
+                Structureelement *dir = Utils::getDirectoryItem(currentCourse, urlParts);
+
+                Structureelement* newFile = new Structureelement(filename, QUrl(url), timestamp, filesize,
+                                                                 currentCourse->data(cidRole).toString(),
+                                                                 fileItem);
+                // Element hinzufügen
+                dir->appendRow(newFile);
+             }
         }
         else if(responseCategory == 3)
         {
