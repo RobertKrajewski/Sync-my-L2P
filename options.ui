@@ -71,7 +71,7 @@
            <string>Einloggen</string>
           </property>
           <property name="icon">
-           <iconset resource="icons/icons.qrc">
+           <iconset>
             <normaloff>:/icons/login.png</normaloff>:/icons/login.png</iconset>
           </property>
           <property name="default">
@@ -106,7 +106,7 @@
          <string>Durchsuchen</string>
         </property>
         <property name="icon">
-         <iconset resource="icons/icons.qrc">
+         <iconset>
           <normaloff>:/icons/downloadDirectory.png</normaloff>:/icons/downloadDirectory.png</iconset>
         </property>
        </widget>
@@ -163,14 +163,14 @@
       <item row="3" column="0">
        <widget class="QCheckBox" name="emailAttachmentsCheckBox">
         <property name="text">
-         <string>E-Mail-Anhänge</string>
+         <string>E-Mails</string>
         </property>
        </widget>
       </item>
       <item row="3" column="1">
        <widget class="QCheckBox" name="announcementAttachmentsCheckBox">
         <property name="text">
-         <string>Ankündigungs-Anhänge</string>
+         <string>Ankündigungen</string>
         </property>
        </widget>
       </item>
@@ -300,8 +300,6 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="icons/icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
