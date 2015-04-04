@@ -32,7 +32,8 @@ SOURCES += main.cpp\
     qslog/QsLogDestFile.cpp \
     qslog/QsLogDestFunctor.cpp \
     logger.cpp \
-    info.cpp
+    info.cpp \
+    message.cpp
 
 HEADERS  += mymainwindow.h \
     parser.h \
@@ -54,7 +55,8 @@ HEADERS  += mymainwindow.h \
     qslog/QsLogDisableForThisFile.h \
     qslog/QsLogLevel.h \
     logger.h \
-    info.h
+    info.h \
+    message.h
 
 FORMS    += mymainwindow.ui \
     mymainwindow.ui \
@@ -64,7 +66,8 @@ FORMS    += mymainwindow.ui \
     autoclosedialog.ui \
     logindialog.ui \
     logger.ui \
-    info.ui
+    info.ui \
+    message.ui
 
 OTHER_FILES += \
     Sync-my-L2P.icns \
