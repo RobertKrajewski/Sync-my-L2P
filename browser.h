@@ -105,6 +105,8 @@ private:
 
 private slots:
     void openFile();
+    void openMessage();
+    void openSourceMessage();
     void openCourse();
     void coursesRecieved(QNetworkReply*);
     void filesRecieved(QNetworkReply*);

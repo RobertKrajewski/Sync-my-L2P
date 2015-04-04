@@ -3,7 +3,6 @@
 
 #include <QDialog>
 
-
 namespace Ui {
 class Info;
 }

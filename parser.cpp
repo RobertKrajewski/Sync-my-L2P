@@ -224,8 +224,20 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
             urlParts.removeLast();
 
         }
-        else if(responseCategory == 4 || responseCategory == 5)
+        else if(responseCategory == 4)
         {
+            QString body = file["body"].toString();
+            QString title = file["title"].toString();
+            QString from = "Anküdigung im L²P";
+            int time = file["modifiedTimestamp"].toInt();
+
+            Structureelement *dir = Utils::getDirectoryItem(currentCourse, urlParts);
+
+            Structureelement* newMessage = new Structureelement(body, title, from, time,
+                                                             currentCourse->data(cidRole).toString(),
+                                                             messageItem);
+            dir->appendRow(newMessage);
+
             if (!file["attachments"].isNull()) {
                 QJsonArray attachment = file["attachments"].toArray();
                 foreach(QJsonValue attachmentElement, attachment)
@@ -251,6 +263,54 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
 
                     // Element hinzufügen
                     dir->appendRow(newFile);
+
+                }
+            }
+            else {
+                continue;
+            }
+        }
+        else if(responseCategory == 5)
+        {
+            QString body = file["body"].toString();
+            QString title = file["subject"].toString();
+            QString from = file["from"].toString();
+            int time = file["modifiedTimestamp"].toInt();
+
+            Structureelement *dir = Utils::getDirectoryItem(currentCourse, urlParts);
+
+            Structureelement* newMessage = new Structureelement(body, title, from, time,
+                                                             currentCourse->data(cidRole).toString(),
+                                                             messageItem);
+            dir->appendRow(newMessage);
+
+
+            if (!file["attachments"].isNull()) {
+                QJsonArray attachment = file["attachments"].toArray();
+                foreach(QJsonValue attachmentElement, attachment)
+                {
+                    QJsonObject fileInformation = attachmentElement.toObject();
+                    filename = fileInformation["fileName"].toString();
+                    filesize = fileInformation["fileSize"].toString().toInt();
+                    timestamp = fileInformation["modifiedTimestamp"].toInt();
+                    url = fileInformation["downloadUrl"].toString();
+                    urlParts = url.split('/');
+                    urlParts.removeFirst();
+                    urlParts.removeFirst();
+                    urlParts.removeFirst();
+                    urlParts.removeFirst();
+                    urlParts.removeLast();
+                    urlParts.removeLast();
+
+                    Structureelement *dir = Utils::getDirectoryItem(currentCourse, urlParts);
+
+                    Structureelement* newFile = new Structureelement(filename, QUrl(url), timestamp, filesize,
+                                                                     currentCourse->data(cidRole).toString(),
+                                                                     fileItem);
+
+                    // Element hinzufügen
+                    dir->appendRow(newFile);
+
 
                 }
             }
