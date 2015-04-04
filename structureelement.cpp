@@ -238,7 +238,7 @@ bool Structureelement::operator< (const QStandardItem& other) const
     {
         return false;
     }
-    else if ((typeEX == messageItem))
+    else if (typeEX == messageItem)
     {
         return (data(dateRole) < other.data(dateRole));
     }

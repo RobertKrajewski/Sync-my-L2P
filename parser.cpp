@@ -230,6 +230,8 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
             QString title = file["title"].toString();
             QString from = "Anküdigung im L²P";
             int time = file["modifiedTimestamp"].toInt();
+            QString dirname = "Announcement";
+            urlParts.append(dirname);
 
             Structureelement *dir = Utils::getDirectoryItem(currentCourse, urlParts);
 
@@ -276,6 +278,9 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
             QString title = file["subject"].toString();
             QString from = file["from"].toString();
             int time = file["modifiedTimestamp"].toInt();
+            QString dirname = "E-Mails";
+            urlParts.append(dirname);
+
 
             Structureelement *dir = Utils::getDirectoryItem(currentCourse, urlParts);
 
