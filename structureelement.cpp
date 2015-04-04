@@ -221,7 +221,7 @@ void Structureelement::chooseIcon()
     }
     else if(typeEX == messageItem)
     {
-        setIcon(QIcon(":/icons/otherFile.png"));
+        setIcon(QIcon(":/icons/mail.png"));
     }
 }
 
