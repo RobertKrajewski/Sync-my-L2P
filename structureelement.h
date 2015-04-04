@@ -26,7 +26,8 @@ enum MyItemType
     semesterItem    = 1000,
     courseItem      = 1001,
     directoryItem   = 1002,
-    fileItem        = 1003
+    fileItem        = 1003,
+    messageItem     = 1004
 };
 
 enum MyItemDataRole
@@ -36,7 +37,10 @@ enum MyItemDataRole
     dateRole            = 34,
     includeRole         = 35,
     synchronisedRole    = 36,
-    cidRole             = 37
+    cidRole             = 37,
+    bodyRole            = 38,
+    topicRole           = 39,
+    authorRole          = 40,
 };
 
 enum synchroniseStatus
@@ -51,6 +55,8 @@ class Structureelement : public QStandardItem
 {
 public:
     Structureelement(QString name, QUrl url = QUrl(), int time = 0, qint32 size = 0, QString cid = "", MyItemType typeEX = fileItem);
+
+    Structureelement(QString body, QString topic, QString author, int time = 0, QString cid = "", MyItemType typeEX = messageItem);
 
     int type() const { return typeEX; }
 
@@ -78,8 +84,19 @@ protected:
     /// Type des Elements
     MyItemType  typeEX;
 
+    /// Inhalt der Nachricht
+    QString body;
+
+    /// Thema der Nachricht
+    QString topic;
+
+    /// Autor der Nachricht
+    QString author;
+
     /// Status der Synchronisation
     enum synchroniseStatus  synchronised;
+
+    // Neuer Bereich für die Nachrichten
 
 private:
     void chooseIcon();
