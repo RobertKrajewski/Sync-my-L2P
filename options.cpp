@@ -27,6 +27,7 @@ Options::Options(QWidget *parent) :
     ui->langCB->addItem("Deutsch");
     ui->langCB->addItem("English");
     ui->langCB->addItem("Lëtzebuergesch");
+    ui->langCB->addItem("Shqip");
 }
 
 Options::~Options()
