@@ -43,7 +43,7 @@ void Parser::parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
         // Erstellen eines RegExps  für unzulässige Buchstaben im Veranstaltungsnamen
         QString escapePattern = "(:|<|>|/|\\\\|\\||\\*|\\^|\\?|\\\")";
         QRegExp escapeRegExp(escapePattern, Qt::CaseSensitive);
-        title.replace(escapeRegExp, "").trimmed();
+        title = title.replace(escapeRegExp, "").trimmed();
 
         Structureelement *newCourse = new Structureelement(title, QUrl(url), 0, 0, cid, courseItem);
 
