@@ -391,6 +391,10 @@ void Browser::filesRecieved(QNetworkReply *reply)
             sslSecureChannelBugOccured = true;
             QLOG_DEBUG() << tr("SSL Fehler für: ") << reply->url().toString();
         }
+        else if (replyMessage.contains("Assignment-Module is deactivated"))
+        {
+            QLOG_DEBUG() << tr("Assignment-Module ist deaktiviert für: ") << reply->url().toString();
+        }
         else
         {
             Utils::errorMessageBox(tr("Beim Abruf des Inhalts einer Veranstaltung ist ein Fehler aufgetreten"), reply->errorString() % ";\n " % replyMessage);
