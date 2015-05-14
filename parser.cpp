@@ -72,7 +72,7 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
     {
         responseCategory = 2;
     }
-    else if(url.contains("viewAllMediaLibrarys"))
+    else if(url.contains("viewAllMediaLibraries"))
     {
         responseCategory = 3;
     }
