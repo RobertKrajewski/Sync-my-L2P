@@ -336,7 +336,7 @@ void Browser::requestFileInformation()
         // Ausführen des Requests für "Literatur"
         if (options->isMediaLibrarysCheckBoxChecked())
         {
-            QNetworkRequest *request = apiRequest(course, "viewAllMediaLibrarys");
+            QNetworkRequest *request = apiRequest(course, "viewAllMediaLibraries");
 
             // Einfügen und Absenden des Requests
             replies.insert(manager->get(*request),
