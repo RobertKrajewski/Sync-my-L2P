@@ -1,5 +1,6 @@
 #include "browser.h"
 #include "ui_browser.h"
+#include "message.h"
 
 #include "options.h"
 
@@ -954,6 +955,17 @@ void Browser::on_dataTreeView_doubleClicked(const QModelIndex &index)
 
         QDesktopServices::openUrl(QUrl(fileUrl));
     }
+    else if (item->type() == messageItem)
+    {
+        // Erzeugt das Popup-Fester mit der anzuzeigenden Nachricht
+        message messages;
+
+        messages.updateSubject(item->data(topicRole).toString());
+        messages.updateMessage(item->data(bodyRole).toString().toUtf8());
+        messages.updateAuthor(item->data(authorRole).toString());
+        messages.updateDate(item->data(dateRole).toDateTime().toString("ddd dd.MM.yyyy hh:mm"));
+        messages.exec();
+    }
 }
 
 void Browser::on_dataTreeView_customContextMenuRequested(const QPoint &pos)
@@ -982,22 +994,65 @@ void Browser::on_dataTreeView_customContextMenuRequested(const QPoint &pos)
     }
 
     // Öffnen des Elements lokal oder im L2P
+    if (RightClickedItem->type() != messageItem)
+    {
     newCustomContextMenu.addAction(tr("Öffnen"), this, SLOT(openFile()));
-
+    }
     // Kopieren der URL
     if(RightClickedItem->type() == courseItem || RightClickedItem->type() == fileItem)
     {
         newCustomContextMenu.addAction(tr("Link kopieren"), this, SLOT(copyUrlToClipboardSlot()));
     }
 
+    // Öffnen der Nachricht
+    if(RightClickedItem->type()== messageItem)
+    {
+        newCustomContextMenu.addAction(tr("Nachricht anzeigen"), this, SLOT(openMessage()));
+
+    }
+
+    // Öffnen der Nachricht im Quelltext
+    if(RightClickedItem->type()== messageItem)
+    {
+        newCustomContextMenu.addAction(tr("Nachricht im Quelltext anzeigen"), this, SLOT(openSourceMessage()));
+
+    }
+
     // Anzeigen des Menus an der Mausposition
     newCustomContextMenu.exec(ui->dataTreeView->mapToGlobal(pos));
+
 }
 
 void Browser::openCourse()
 {
     // Öffnen der URL des mit der rechten Maustaste geklickten Items
     QDesktopServices::openUrl(lastRightClickItem->data(urlRole).toUrl());
+}
+
+void Browser::openMessage()
+{
+    // Erzeugt das Popup-Fester mit der anzuzeigenden Nachricht
+    message messages;
+
+    messages.updateSubject(lastRightClickItem->data(topicRole).toString());
+    messages.updateMessage(lastRightClickItem->data(bodyRole).toString().toUtf8());
+    messages.updateAuthor(lastRightClickItem->data(authorRole).toString());
+    messages.updateDate(lastRightClickItem->data(dateRole).toDateTime().toString("ddd dd.MM.yyyy hh:mm"));
+
+    messages.exec();
+}
+
+void Browser::openSourceMessage()
+{
+    // Erzeugt das Popup-Fester mit der anzuzeigenden Nachricht
+    message messages;
+
+    messages.updateSubject(lastRightClickItem->data(topicRole).toString());
+    messages.updateMessage(lastRightClickItem->data(bodyRole).toString().toHtmlEscaped());
+    messages.updateAuthor(lastRightClickItem->data(authorRole).toString());
+    messages.updateDate(lastRightClickItem->data(dateRole).toDateTime().toString("ddd dd.MM.yyyy hh:mm"));
+
+    messages.exec();
 }
 
 void Browser::openFile()

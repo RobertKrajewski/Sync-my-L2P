@@ -21,5 +21,6 @@
         <file>audio.png</file>
         <file>picture.png</file>
         <file>archive.png</file>
+        <file>mail.png</file>
     </qresource>
 </RCC>
