@@ -138,6 +138,8 @@ void MyMainWindow::removeOldSettings()
 
 void MyMainWindow::checkForUpdate()
 {
+    int currentVersion = 20100;
+
     QNetworkAccessManager manager;
     QNetworkRequest request( QUrl("http://sync-my-l2p.de/images/version.txt"));
     QEventLoop newLoop;
@@ -157,7 +159,7 @@ void MyMainWindow::checkForUpdate()
         return;
     }
     QString replyMessage(reply->readAll());
-    if( replyMessage.toInt() > 20100 )
+    if( replyMessage.toInt() > currentVersion )
     {
         // Aufhübschen der Versionsnummer
         replyMessage.insert(4, ".");
@@ -168,6 +170,10 @@ void MyMainWindow::checkForUpdate()
                                  tr("Neue Version verfügbar!") + " (v" + replyMessage +")",
                                  tr("Auf der offiziellen Webseite ist eine neue Version verfügbar!\n"
                                     "Diese Nachricht kannst du in den Optionen deaktiveren."));
+    }
+    else
+    {
+        QLOG_INFO() << tr("Diese Version ist aktuell") << " (" << currentVersion << ")";
     }
 }
 
