@@ -56,6 +56,8 @@ private:
 
     void centerOnDesktop();
 
+    void checkForUpdate();
+
     QSystemTrayIcon *trayIcon;
     Ui::MyMainWindow*      ui;
 

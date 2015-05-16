@@ -40,6 +40,7 @@ public:
     bool isAutoCloseAfterSyncCheckBoxChecked();
     bool isAutoBackgroundSyncCheckBoxChecked();
     bool isOverrideFilesCheckBoxChecked();
+    bool isCheckForUpdateCheckBoxChecked();
 
     QString getAccessToken() const;
 

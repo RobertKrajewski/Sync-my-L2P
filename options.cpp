@@ -241,6 +241,11 @@ bool Options::isOverrideFilesCheckBoxChecked()
     return ui->overrideFilesCheckBox->isChecked();
 }
 
+bool Options::isCheckForUpdateCheckBoxChecked()
+{
+    return ui->checkForUpdateCheckBox->isChecked();
+}
+
 QString Options::getAccessToken() const
 {
     return accessToken;
@@ -250,6 +255,8 @@ bool Options::isAutoLoginOnStartCheckBoxChecked()
 {
     return ui->autoLoginOnStartCheckBox->isChecked();
 }
+
+
 
 int Options::getLoginCounter()
 {
