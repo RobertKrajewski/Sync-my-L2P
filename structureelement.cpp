@@ -35,6 +35,21 @@ Structureelement::Structureelement(QString name, QUrl url, int time, qint32 size
     chooseIcon();
 }
 
+// Überladener Konstruktor für Nachrichtenelemente, welche nicht heruntergeladen werden können.
+Structureelement::Structureelement(QString body, QString topic, QString author, int time, QString cid, MyItemType typeEX)
+    :QStandardItem(topic),
+     included(true),
+     body(body),
+     topic(topic),
+     author(author),
+     time(QDateTime::fromMSecsSinceEpoch(qint64(1000) * time)),
+     typeEX(typeEX),
+     cid(cid)
+{
+    synchronised = NOT_SYNCHRONISED;
+    chooseIcon();
+}
+
 QVariant Structureelement::data(int role) const
 {
     switch(role)
@@ -47,6 +62,12 @@ QVariant Structureelement::data(int role) const
         return size;
     case dateRole:
         return time;
+    case bodyRole:
+        return body;
+    case topicRole:
+        return topic;
+    case authorRole:
+        return author;
     case synchronisedRole:
         return synchronised;
     case cidRole:
@@ -62,19 +83,25 @@ QVariant Structureelement::data(int role) const
             else
                  statustip.append(QString::number(size/1024.0,'f',2) % " KB");
 
-            statustip.append(" - " % time.toString("ddd dd.MM.yy hh:mm"));
+            statustip.append(" - " % time.toString("ddd dd.MM.yyyy hh:mm"));
 
             statustip.append(" - ");
             switch(synchronised)
             {
             case NOW_SYNCHRONISED:
             case SYNCHRONISED:
-                    statustip.append("synchronisert");
+                    statustip.append("synchronisiert");
                     break;
             case NOT_SYNCHRONISED:
             default:
                 statustip.append("nicht synchronisiert");
             }
+        }
+        else if (typeEX == messageItem)
+        {
+            statustip.append(text() % " - ");
+            statustip.append(author);
+            statustip.append(" - " % time.toString("ddd dd.MM.yyyy hh:mm"));
         }
         return statustip;
     }
@@ -192,6 +219,10 @@ void Structureelement::chooseIcon()
     {
         setIcon(QIcon(":/icons/semester.png"));
     }
+    else if(typeEX == messageItem)
+    {
+        setIcon(QIcon(":/icons/mail.png"));
+    }
 }
 
 /// Vergleich zwischen zwei Items für Sortierung.
@@ -206,6 +237,10 @@ bool Structureelement::operator< (const QStandardItem& other) const
     else if ((typeEX == fileItem) && (other.type() != fileItem))
     {
         return false;
+    }
+    else if (typeEX == messageItem)
+    {
+        return (data(dateRole) < other.data(dateRole));
     }
     else
     {

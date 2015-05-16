@@ -168,15 +168,31 @@ Structureelement *Utils::getDirectoryItem(Structureelement *courseItem, QStringL
                 item = "Übungslösungen";
             }
             else if (item.contains("EmailAttachments")) {
-                item = "E-Mail-Anhänge";
+                item = "E-Mails";
             }
             else if (item.contains("MediaLibrary")) {
                 item = "Medienbibliothek";
             }
             else if (item.contains("AnnouncementDocuments")) {
-                item = "Ankündigungs-Anhänge";
+                item = "Ankündigungen";
+            }
+            else if (item.contains("Announcement"))
+            {
+                item = "Ankündigungen";
             }
         }
+
+        // Bei anderen Sprachen werden Anhänge zu den Nachrichten gepackt.
+        if(QLocale::system().language() != QLocale::German)
+        {
+            if (item.contains("AnnouncementDocuments")) {
+                item = "Announcement";
+            }
+            else if (item.contains("EmailAttachments")) {
+                item = "E-Mails";
+            }
+        }
+
         bool correctChildFound = false;
         for(int row=0; row < currentItem->rowCount(); ++row)
         {
