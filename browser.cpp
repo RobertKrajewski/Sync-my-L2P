@@ -336,7 +336,7 @@ void Browser::requestFileInformation()
         // Ausführen des Requests für "Literatur"
         if (options->isMediaLibrarysCheckBoxChecked())
         {
-            QNetworkRequest *request = apiRequest(course, "viewAllMediaLibrarys");
+            QNetworkRequest *request = apiRequest(course, "viewAllMediaLibraries");
 
             // Einfügen und Absenden des Requests
             replies.insert(manager->get(*request),
@@ -390,6 +390,10 @@ void Browser::filesRecieved(QNetworkReply *reply)
         {
             sslSecureChannelBugOccured = true;
             QLOG_DEBUG() << tr("SSL Fehler für: ") << reply->url().toString();
+        }
+        else if (replyMessage.contains("Assignment-Module is deactivated"))
+        {
+            QLOG_DEBUG() << tr("Assignment-Module ist deaktiviert für: ") << reply->url().toString();
         }
         else
         {
