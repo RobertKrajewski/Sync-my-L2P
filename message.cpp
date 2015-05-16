@@ -34,7 +34,7 @@ void message::updateDate(QString date)
 void message::updateMessage(QString body)
 {
     if (body.isEmpty())
-        ui->message_body->setText(tr("Bitte synchronisiere dich mit dem L²P, um die Nachricht zu lesen!"));
+        ui->message_body->setText(tr("Bitte verbinde dich mit dem L²P, um die Nachricht zu lesen!"));
     else
         ui->message_body->setText(body);
 }
