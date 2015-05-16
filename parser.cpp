@@ -44,6 +44,8 @@ void Parser::parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
         QString escapePattern = "(:|<|>|/|\\\\|\\||\\*|\\^|\\?|\\\")";
         QRegExp escapeRegExp(escapePattern, Qt::CaseSensitive);
         title = title.replace(escapeRegExp, "").trimmed();
+        // Titellänge limitieren um Probleme bei Dateisystemen zu verhindern
+        title.truncate(100);
 
         Structureelement *newCourse = new Structureelement(title, QUrl(url), 0, 0, cid, courseItem);
 
