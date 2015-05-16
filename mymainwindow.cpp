@@ -67,6 +67,12 @@ MyMainWindow::MyMainWindow(QWidget *parent):
     // Erzeugt das Icon für das Tray im minimierten Zustand
     createTrayIcon();
 
+    // Prüfen auf eine neue Programmversion
+    if(ui->optionsTab->isCheckForUpdateCheckBoxChecked())
+    {
+        checkForUpdate();
+    }
+
     // Ausführen des Autologins
     if (ui->optionsTab->isAutoLoginOnStartCheckBoxChecked())
     {
@@ -128,6 +134,41 @@ void MyMainWindow::removeOldSettings()
     settings1.remove("loginData/u");
     settings1.remove("loginData/p");
     settings1.remove("semesterFilter");
+}
+
+void MyMainWindow::checkForUpdate()
+{
+    QNetworkAccessManager manager;
+    QNetworkRequest request( QUrl("http://sync-my-l2p.de/images/version.txt"));
+    QEventLoop newLoop;
+    QNetworkReply *reply = manager.get(request);
+
+    // Wait for reply
+    QObject::connect( reply, SIGNAL(finished()), &newLoop, SLOT(quit()));
+    QTimer killTimer;
+    killTimer.setSingleShot(true);
+    killTimer.start(5000);
+    QObject::connect( &killTimer, SIGNAL(timeout()), &newLoop, SLOT(quit()));
+    newLoop.exec();
+
+    if( reply->error() )
+    {
+        QLOG_ERROR() << tr("Konnte Version nicht überprüfen:\n") << reply->errorString();
+        return;
+    }
+    QString replyMessage(reply->readAll());
+    if( replyMessage.toInt() > 20100 )
+    {
+        // Aufhübschen der Versionsnummer
+        replyMessage.insert(4, ".");
+        replyMessage.insert(2, ".");
+
+        // Anzeige für den Benutzer
+        QMessageBox::information(this,
+                                 tr("Neue Version verfügbar!") + " (v" + replyMessage +")",
+                                 tr("Auf der offiziellen Webseite ist eine neue Version verfügbar!\n"
+                                    "Diese Nachricht kannst du in den Optionen deaktiveren."));
+    }
 }
 
 /// Tabs Pointer auf die Geschwistertabs übergeben
@@ -213,4 +254,3 @@ void MyMainWindow::retranslate()
     ui->browserTab->retranslate();
     ui->logTab->retranslate();
 }
-
