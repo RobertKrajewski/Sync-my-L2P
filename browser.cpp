@@ -1091,7 +1091,7 @@ void Browser::on_showNewDataPushButton_clicked()
 
     foreach(Structureelement * item, list)
     {
-        if ((item->type() == fileItem) && (item->data(synchronisedRole) == NOT_SYNCHRONISED))
+        if ((item->type() == fileItem) && (item->data(synchronisedRole) == NOT_SYNCHRONISED) && (item->data(includeRole) == true))
         {
             newSelection.select(item->index(), item->index());
             ui->dataTreeView->scrollTo(proxyModel.mapFromSource(item->index()));
