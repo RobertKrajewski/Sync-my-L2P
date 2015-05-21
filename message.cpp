@@ -12,12 +12,18 @@ message::message(QWidget *parent) :
 
 void message::updateAuthor(QString author)
 {
-    ui->author_label->setText(author);
+    if (author.isEmpty())
+        ui->author_label->setText(tr("Nicht verfügbar"));
+    else
+        ui->author_label->setText(author);
 }
 
 void message::updateSubject(QString subject)
 {
-    ui->subject_label->setText(subject);
+    if (subject.isEmpty())
+        ui->subject_label->setText(tr("Nachricht offline nicht verfügbar!"));
+    else
+        ui->subject_label->setText(subject);
 }
 
 void message::updateDate(QString date)
@@ -27,7 +33,10 @@ void message::updateDate(QString date)
 
 void message::updateMessage(QString body)
 {
-    ui->message_body->setText(body);
+    if (body.isEmpty())
+        ui->message_body->setText(tr("Bitte verbinde dich mit dem L²P, um die Nachricht zu lesen!"));
+    else
+        ui->message_body->setText(body);
 }
 
 message::~message()
