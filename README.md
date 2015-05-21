@@ -9,6 +9,9 @@ Kompilieren
 Für das Kompilieren benötigt man folgende Bibliotheken: QT (5.4 oder höher), OpenSSL.
 Am einfachsten ist es, die .pro Datei in Qt Creator zu laden und dort zu kompilieren. Über die Konsole kann stattdessen auch qmake (mit entsprechenden Argumenten) und dann der bevorzugte C++ Compiler ausgeführt werden.
 
+Zur Erstellung von Linuxpaketen gibt es ein separates Repository: https://github.com/justin-time/Sync-my-L2P-Linux
+An dieser Stelle vielen Dank an Stefan!
+
 Achtung: Damit das Programm eine Verbindung mit dem L2P herstellen kann, ist eine ClientID notwendig. Seitens der RWTH ist es verboten, diese zu veröffentlichen.
 
 Fehler gefunden?
