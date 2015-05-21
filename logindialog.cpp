@@ -30,7 +30,7 @@ void LoginDialog::run(Login *login)
     QObject::connect(this, SIGNAL(rejected()), this->login, SLOT(stopLoginSlot()));
 
     // Überprüfe Erreichbarkeit des L2P
-    QUrl url("https://www3.elearning.rwth-aachen.de/l2p/start/SitePages/Start.aspx");
+    QUrl url("https://www3.elearning.rwth-aachen.de");
     QNetworkRequest request;
     request.setUrl(url);
 
@@ -52,16 +52,14 @@ void LoginDialog::availabilitySlot(QNetworkReply * reply)
 
     if( reply->error() )
     {
-        QLOG_DEBUG() << tr("Fehler: L2P nicht erreichbar. Genauer Fehler: ") << reply->errorString();
-    }
-
-    if(response.contains("die die Kommunikation vereinfachen und verschiedene Assessment-Optionen bieten"))
-    {
-        checkForAuthentification();
+        response.truncate( 1000 );
+        QLOG_ERROR() << tr("L2P nicht erreichbar. Genauer Fehler: ") << reply->errorString();
+        QLOG_ERROR() << tr("Inhalt der Antwort: ") << response;
+        ui->statusLabel->setText(tr("Fehler: L2P nicht erreichbar."));
     }
     else
     {
-        ui->statusLabel->setText(tr("Fehler: L2P nicht erreichbar."));
+        checkForAuthentification();
     }
 }
 
