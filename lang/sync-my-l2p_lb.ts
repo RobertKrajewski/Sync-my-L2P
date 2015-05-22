@@ -122,37 +122,37 @@
         <translation>Download</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="115"/>
+        <location filename="../browser.cpp" line="116"/>
         <source>Kann keine Daten von Festplatte laden</source>
         <translation>Ka keng Dateien vun der Festplack lueden</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="123"/>
+        <location filename="../browser.cpp" line="124"/>
         <source>Keine Dateiliste auf der Festplatte gefunden.</source>
         <translation>Keng Dateielëscht op der Festplack fonnt.</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="131"/>
+        <location filename="../browser.cpp" line="132"/>
         <source>Kann Daten von Festplatte nicht parsen: </source>
         <translation>Kann d&apos;Daten vun der Festplack net parsen:</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="210"/>
+        <location filename="../browser.cpp" line="211"/>
         <source>Veranstaltungsrequest</source>
         <translation>Veranstaltungsrequest</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="222"/>
+        <location filename="../browser.cpp" line="223"/>
         <source>Veranstaltungen empfangen</source>
         <translation>Veranstaltungen empfaangen</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="230"/>
+        <location filename="../browser.cpp" line="231"/>
         <source>Beim Abruf der Veranstaltungen ist ein Fehler aufgetreten</source>
         <translation>Beim Ofruff vun der Veranstaltung ass ee Feeler opgetrueden</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="377"/>
+        <location filename="../browser.cpp" line="378"/>
         <source>Itemrequest empfangen: </source>
         <translation>Itemrequest empfaangen: </translation>
     </message>
@@ -161,96 +161,111 @@
         <translation type="vanished">Et goufe keng Übunge fonnt fir: </translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="106"/>
+        <location filename="../browser.cpp" line="107"/>
         <source>Vermuteter Pfad der Progammdaten: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="392"/>
+        <location filename="../browser.cpp" line="393"/>
         <source>SSL Fehler für: </source>
         <translation>SSL Feeler fir: </translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="396"/>
+        <location filename="../browser.cpp" line="397"/>
+        <source>Assignment-Module ist deaktiviert für: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../browser.cpp" line="401"/>
         <source>Beim Abruf des Inhalts einer Veranstaltung ist ein Fehler aufgetreten</source>
         <translation>Beim Ofruff vum Inhalt vun enger Veranstaltung ass ee Feeler opgetrueden</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="410"/>
+        <location filename="../browser.cpp" line="415"/>
         <source>Beim Abruf des Inhalts mindestens einer Veranstaltung ist ein Fehler aufgetreten</source>
         <translation>Beim Ofruff vum Inhalt vun mindestens enger Veranstaltung ass ee Feeler opgetrueden</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="411"/>
+        <location filename="../browser.cpp" line="416"/>
         <source>Es können einige Dateien fehlen. Dieser Fehler wird nicht durch Sync-my-L2P verschuldet und ist bekannt. Klicke erneut auf Aktualisieren bis dieser Fehler nicht mehr auftaucht.</source>
         <translation>Et kënne e puer Dateie feelen. Dëse Feeler ass net duerch Sync-my-L2P verschëld an ass bekannt. Klick nach eng Kéier op Aktualiséieren bis dëse Feeler net méi optrëtt.</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="482"/>
+        <location filename="../browser.cpp" line="487"/>
         <source>Downloadverzeichnis fehlt!</source>
         <translation>Downloadverzeichnis feelt!</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="482"/>
+        <location filename="../browser.cpp" line="487"/>
         <source>Download unmöglich, da kein Zielverzeichnis angegeben wurde.</source>
         <translation>Download net méiglech, well keen Zielverzeichnis ugin ass.</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="483"/>
+        <location filename="../browser.cpp" line="488"/>
         <source>Kann nicht synchronisieren, da kein Downloadverzeichnis angegeben wurde</source>
         <translation>Kann net synchroniséieren, well keen Downloadverzeichnis ugin ass</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="495"/>
+        <location filename="../browser.cpp" line="500"/>
         <source>Kann Verzeichnis nicht erzeugen. Download abgebrochen.</source>
         <translation>Ka Verzeichnis net erzeugen. Download ofgebrach,</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="548"/>
+        <location filename="../browser.cpp" line="553"/>
         <source>Verzeichnis nicht erstellbar!</source>
         <translation>Verzeichnis net erstellbar!</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="548"/>
+        <location filename="../browser.cpp" line="553"/>
         <source>Kann folgendes Verzeichnis nicht erstellen: </source>
         <translation>Ka folgend Verzeichnis net erstellen: </translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="549"/>
+        <location filename="../browser.cpp" line="554"/>
         <source>Verzeichnis nicht erstellbar: </source>
         <translation>Verzeichnis net erstellbar: </translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="611"/>
+        <location filename="../browser.cpp" line="616"/>
         <source>Synchronisation mit dem L2P der RWTH Aachen abgeschlossen.</source>
         <translation>Synchronisation mat dem L2P vun der RWTH Aachen ofgeschloss.</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="614"/>
+        <location filename="../browser.cpp" line="619"/>
         <source>Es wurden %1 von %2 eingebundenen Dateien synchronisiert.
 (Dieses Fenster schließt nach 10 Sek. automatisch.)</source>
         <translation>Et goufen %1 vun %2 agebonnen Dateien synchroniséiert.
 (Dës Fënster geet no 10 Sek. automatesch zou.)</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="908"/>
+        <location filename="../browser.cpp" line="913"/>
         <source>Itemrequest an API: </source>
         <translation>Itemrequest un API: </translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="977"/>
+        <location filename="../browser.cpp" line="993"/>
         <source>Veranstaltungsseite öffnen</source>
         <translation>Veranstaltungsseit opmaachen</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="981"/>
+        <location filename="../browser.cpp" line="999"/>
         <source>Öffnen</source>
         <translation>Opmaachen</translation>
     </message>
     <message>
-        <location filename="../browser.cpp" line="986"/>
+        <location filename="../browser.cpp" line="1004"/>
         <source>Link kopieren</source>
         <translation>Link kopéieren</translation>
+    </message>
+    <message>
+        <location filename="../browser.cpp" line="1010"/>
+        <source>Nachricht anzeigen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../browser.cpp" line="1017"/>
+        <source>Nachricht im Quelltext anzeigen</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -508,32 +523,41 @@
         <translation>Erreechbarkeet festgestallt</translation>
     </message>
     <message>
-        <location filename="../logindialog.cpp" line="55"/>
         <source>Fehler: L2P nicht erreichbar. Genauer Fehler: </source>
-        <translation>Feeler: L2P net erreechbar. Genaue Feeler:</translation>
+        <translation type="vanished">Feeler: L2P net erreechbar. Genaue Feeler:</translation>
     </message>
     <message>
-        <location filename="../logindialog.cpp" line="64"/>
+        <location filename="../logindialog.cpp" line="56"/>
+        <source>L2P nicht erreichbar. Genauer Fehler: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../logindialog.cpp" line="57"/>
+        <source>Inhalt der Antwort: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../logindialog.cpp" line="58"/>
         <source>Fehler: L2P nicht erreichbar.</source>
         <translation>Feeler: L2P net erreechbar.</translation>
     </message>
     <message>
-        <location filename="../logindialog.cpp" line="70"/>
+        <location filename="../logindialog.cpp" line="68"/>
         <source>Login fehlgeschlagen.</source>
         <translation>Login feelgeschloen. </translation>
     </message>
     <message>
-        <location filename="../logindialog.cpp" line="76"/>
+        <location filename="../logindialog.cpp" line="74"/>
         <source>Login erfolgreich abgeschlossen!</source>
         <translation>Login erfollegräich ofgeschloss!</translation>
     </message>
     <message>
-        <location filename="../logindialog.cpp" line="89"/>
+        <location filename="../logindialog.cpp" line="87"/>
         <source>Authentifizierung notwendig. Browser öffnet automatisch.</source>
         <translation>Authentifizierung noutwendeg. Browser geet automatesch op.</translation>
     </message>
     <message>
-        <location filename="../logindialog.cpp" line="95"/>
+        <location filename="../logindialog.cpp" line="93"/>
         <source>Einloggen...</source>
         <translation>Aloggen.</translation>
     </message>
@@ -571,17 +595,39 @@
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Wëllkomm bei Sync-My-L²P!&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;An dësem Tab fënnt sech eng kuerz Uleedung fir Éischtbenotzer vun dësem Programm.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Schnellstart&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Wann s du direkt wëlls lassleeën, féier einfach folgend dräi Schrëtter duerch:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline;&quot;&gt;1. Aloggen&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Klick am Tab &amp;quot;Astellungen&amp;quot; op de Knäppchen op den Knäppchen &amp;quot;Aloggen&amp;quot;.Kuerz drop geet däi Browser op an du gëss opgefuerdert, dech mat denger TIM-Kennung ze authentifizeieren. Dono muss du Sync-my-L²P authoriseieren, fir datt de Programm op deng Dateien am L²P zougräife kann. Esoubal s du och dëst erleedegt hues, kanns du de Browser zou maachen an an de Programm zeréckgoen.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline;&quot;&gt;2. Daten aktualiséieren an auswielen.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Nom erfollegräichen Login ginn automatesch all deng Coursen aus dem L²P ofgeruff. Dëst kann ee Moment daueren. Esoubal d&apos;Aktualiséierung fäerdeg ass, kanns du d&apos;ofgeruffen Daten ukucken an eenzel Dateien/Dossieren/Coursen/Semester vum Download ausschléissen. Och kanns du Filter fir Gréisst an Ännerungsdatum definéieren.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline;&quot;&gt;3. Download&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Fir elo deng Dateien ze downloaden, musst du nach een Downloaddossier definéieren. Dofir klicks de am Tab &amp;quot;Astellungen&amp;quot; op de Knäppchen &amp;quot;Duerchsichen&amp;quot;an wiels en Dossier aus. Elo muss du nëmmen nach am Tab &amp;quot;Dateibrowser&amp;quot; op de Knäppchen &amp;quot;downloaden&amp;quot; drécken ab Sync-my-L²P lued all ausgewielten Dateien fir dech erof.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Tipps an Tricks&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;D&apos;&lt;/span&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline;&quot;&gt;Faarw vun der Datei&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;gëtt der Informatiounen iwwert den aktuelle Status vun de Dateien. Rout bedeit &amp;quot;net downloaden&amp;quot;, Schwaarz sinn nei, net gedownloaten Dateien a Gréng gëtt fir scho gedownloaten Dateie benotzt.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Du kanns duerch en &lt;/span&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline;&quot;&gt;Doppelklick&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; op Dateien dëss einfach opmaachen.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Am Tab &lt;/span&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline;&quot;&gt;Astellungen&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; fannen sech e puer Optiounen, mat deenes du Sync-my-L²P nach méi komfortabel kanns maachen.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../mymainwindow.cpp" line="155"/>
+        <location filename="../mymainwindow.cpp" line="158"/>
+        <source>Konnte Version nicht überprüfen:
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mymainwindow.cpp" line="170"/>
+        <source>Neue Version verfügbar!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mymainwindow.cpp" line="171"/>
+        <source>Auf der offiziellen Webseite ist eine neue Version verfügbar!
+Diese Nachricht kannst du in den Optionen deaktiveren.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mymainwindow.cpp" line="176"/>
+        <source>Diese Version ist aktuell</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mymainwindow.cpp" line="202"/>
         <source>Läuft im Hintergrund weiter.</source>
         <translation>Leeft am Hannergrond weider.</translation>
     </message>
     <message>
-        <location filename="../mymainwindow.cpp" line="182"/>
+        <location filename="../mymainwindow.cpp" line="229"/>
         <source>wechsle Sprache auf </source>
         <translation>Wiessel Sprooch op</translation>
     </message>
     <message>
-        <location filename="../mymainwindow.cpp" line="185"/>
+        <location filename="../mymainwindow.cpp" line="232"/>
         <source>Systemsprache</source>
         <translation>Systemsprooch</translation>
     </message>
@@ -595,7 +641,7 @@
     </message>
     <message>
         <location filename="../options.ui" line="26"/>
-        <location filename="../options.cpp" line="260"/>
+        <location filename="../options.cpp" line="268"/>
         <source>Status: ausgeloggt</source>
         <translation>Status: ausgeloggt</translation>
     </message>
@@ -656,13 +702,21 @@
     </message>
     <message>
         <location filename="../options.ui" line="166"/>
-        <source>E-Mail-Anhänge</source>
-        <translation>E-Mail-Unhäng</translation>
+        <source>E-Mails</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../options.ui" line="173"/>
+        <source>Ankündigungen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>E-Mail-Anhänge</source>
+        <translation type="vanished">E-Mail-Unhäng</translation>
+    </message>
+    <message>
         <source>Ankündigungs-Anhänge</source>
-        <translation>Ukënnegungs-Unhäng</translation>
+        <translation type="vanished">Ukënnegungs-Unhäng</translation>
     </message>
     <message>
         <location filename="../options.ui" line="183"/>
@@ -710,7 +764,12 @@
         <translation>Sprooch:</translation>
     </message>
     <message>
-        <location filename="../options.ui" line="284"/>
+        <location filename="../options.ui" line="281"/>
+        <source>Beim Start nach neuer Version suchen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../options.ui" line="294"/>
         <source>Über Sync-my-L2P</source>
         <translation>Iwwer Sync-my-L2P</translation>
     </message>
@@ -720,17 +779,17 @@
         <translation>Systemsprooch</translation>
     </message>
     <message>
-        <location filename="../options.cpp" line="174"/>
+        <location filename="../options.cpp" line="175"/>
         <source>Downloadverzeichnis auswählen</source>
         <translation>Downloadverzeichnis auswielen</translation>
     </message>
     <message>
-        <location filename="../options.cpp" line="277"/>
+        <location filename="../options.cpp" line="285"/>
         <source>Status: Login erfolgreich</source>
         <translation>Status: Login erfollegräich</translation>
     </message>
     <message>
-        <location filename="../options.cpp" line="291"/>
+        <location filename="../options.cpp" line="299"/>
         <source>Status: Login fehlgeschlagen</source>
         <translation>Status: Login feelgeschloen</translation>
     </message>
@@ -739,7 +798,7 @@
     <name>Parser</name>
     <message>
         <location filename="../parser.cpp" line="19"/>
-        <location filename="../parser.cpp" line="102"/>
+        <location filename="../parser.cpp" line="104"/>
         <source>Kursinformationen leer bzw. nicht lesbar.</source>
         <translation>Kursinformatiounen eidel bzw. net liesbar.</translation>
     </message>
@@ -753,22 +812,22 @@
         <translation>Status vun de Kursinformationen net ok:</translation>
     </message>
     <message>
-        <location filename="../parser.cpp" line="52"/>
+        <location filename="../parser.cpp" line="54"/>
         <source>Veranstaltung </source>
         <translation>Veranstaltung</translation>
     </message>
     <message>
-        <location filename="../parser.cpp" line="52"/>
+        <location filename="../parser.cpp" line="54"/>
         <source>) hinzugefügt.</source>
         <translation>) bei gefügt.</translation>
     </message>
     <message>
-        <location filename="../parser.cpp" line="89"/>
+        <location filename="../parser.cpp" line="91"/>
         <source>Antwort auf unbekannten Request erhalten: </source>
         <translation>Äntwert op onbekannte Request erhal: </translation>
     </message>
     <message>
-        <location filename="../parser.cpp" line="113"/>
+        <location filename="../parser.cpp" line="115"/>
         <source>Status der Kursinformationen nicht ok: 
 </source>
         <translation>Status vun de Kursinformationen net ok.</translation>
@@ -780,6 +839,59 @@
         <location filename="../utils.cpp" line="118"/>
         <source>Unbekanntes Element auf der Ebene der Veranstaltungen: </source>
         <translation>Onbekanntent Element op dem Niveau von der Veranstaltung: </translation>
+    </message>
+</context>
+<context>
+    <name>message</name>
+    <message>
+        <location filename="../message.ui" line="32"/>
+        <source>Nachricht</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../message.ui" line="77"/>
+        <source>Von:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../message.ui" line="84"/>
+        <source>Mustermann</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../message.ui" line="98"/>
+        <source>Datum:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../message.ui" line="105"/>
+        <source>01.01.2000</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../message.ui" line="119"/>
+        <source>Thema:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../message.ui" line="126"/>
+        <source>Musterthema</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../message.cpp" line="16"/>
+        <source>Nicht verfügbar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../message.cpp" line="24"/>
+        <source>Nachricht offline nicht verfügbar!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../message.cpp" line="37"/>
+        <source>Bitte verbinde dich mit dem L²P, um die Nachricht zu lesen!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
