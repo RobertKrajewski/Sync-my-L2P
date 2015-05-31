@@ -72,6 +72,8 @@ void Options::loadSettings()
 
     settings.beginGroup("misc");
     ui->minimizeInTrayCheckBox->setChecked(         settings.value("minimizeInTray", false).toBool());
+    ui->overrideFilesCheckBox->setChecked(          settings.value("overrideFiles", false).toBool());
+    ui->checkForUpdateCheckBox->setChecked(         settings.value("checkForUpdates", true).toBool());
     settings.endGroup();
 
     settings.beginGroup("language");
@@ -114,6 +116,8 @@ void Options::saveSettings()
 
     settings.beginGroup("misc");
     settings.setValue("minimizeInTray",     ui->minimizeInTrayCheckBox->isChecked());
+    settings.setValue("overrideFiles",      ui->overrideFilesCheckBox->isChecked());
+    settings.setValue("checkForUpdates",    ui->checkForUpdateCheckBox->isChecked());
     settings.endGroup();
 
     settings.beginGroup("language");
