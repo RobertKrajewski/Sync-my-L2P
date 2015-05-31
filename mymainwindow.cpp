@@ -26,10 +26,7 @@
 
 
 MyMainWindow::MyMainWindow(QWidget *parent):
-    QMainWindow(parent,
-                Qt::CustomizeWindowHint | Qt::
-                WindowTitleHint | Qt::WindowCloseButtonHint | Qt::
-                WindowMinimizeButtonHint), ui(new Ui::MyMainWindow), trayIcon(NULL)
+    QMainWindow(parent), ui(new Ui::MyMainWindow), trayIcon(NULL)
 {
     // Sprache installieren
     QString locale = QLocale::system().name();
