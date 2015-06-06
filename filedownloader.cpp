@@ -48,9 +48,9 @@ int FileDownloader::startNextDownload(QString fileName, QString courseName, QStr
     ui->progressLabel->setText(QString("Datei %1/%2").arg(itemNummer).arg(itemNumber));
     ui->veranstaltungLabel->setText(courseName);
     ui->dateinameLabel->setText(fileName);
-    ui->progressBar->setFormat(QString("%v ") % correctUnit(itemSize) % " / %m " % correctUnit(itemSize));
+    ui->progressBar->setFormat( "0 Byte / " % QString::number(correctSize(itemSize),'f',2) % " " % correctUnit(itemSize));
     ui->progressBar->setValue(0);
-    ui->progressBar->setMaximum(correctSize(itemSize));
+    ui->progressBar->setMaximum(itemSize);
     ui->downloadSpeedLabel->setText("");
 
     times.actime = 0;
@@ -84,12 +84,17 @@ void FileDownloader::downloadProgressSlot(qint64 bytesReceived, qint64 bytesTota
     (void) bytesTotal;
 
     // Aktualisieren der Progressbar anhand der Größe der empfangenen Bytes
-    ui->progressBar->setValue(correctSize(bytesReceived));
+
+    ui->progressBar->setFormat( QString::number(correctSize(bytesReceived),'f',2) %
+                                " " % correctUnit( bytesReceived ) % " / " %
+                                QString::number(correctSize(bytesTotal),'f',2) %
+                                " " % correctUnit(bytesTotal));
+    ui->progressBar->setValue(bytesReceived);
     ui->progressBar->update();
 
     // Downloadgeschwindigkeit in kB/s
-    int downloadSpeed = bytesReceived * 1000 / downloadTime.elapsed() / 1024;
-    ui->downloadSpeedLabel->setText(QString::number(downloadSpeed) % " kB/s");
+    double downloadSpeed = bytesReceived * 1000.0 / downloadTime.elapsed() / 1024;
+    ui->downloadSpeedLabel->setText(QString::number(downloadSpeed, 'f', 1) % " kB/s");
 }
 
 /// Abspeichern von empfangenen Dateiteilen
@@ -155,11 +160,11 @@ void FileDownloader::keyPressEvent(QKeyEvent *event)
 /// Erzeugung der passenden Größeneinheit von der Dateigröße
 QString FileDownloader::correctUnit(qint64 bytes)
 {
-    if(bytes > 1024 * 1024 * 5)
+    if(bytes > 1024 * 1024)
     {
         return "MB";
     }
-    else if (bytes > 1024 * 5)
+    else if (bytes > 1024)
     {
         return "kB";
     }
@@ -170,15 +175,15 @@ QString FileDownloader::correctUnit(qint64 bytes)
 }
 
 /// Dateigröße in lesbare Größe umwandeln
-qint64 FileDownloader::correctSize(qint64 bytes)
+double FileDownloader::correctSize(qint64 bytes)
 {
-    if(bytes > 1024 * 1024 * 5)
+    if(bytes > 1024 * 1024)
     {
-        return bytes / (1024 * 1024);
+        return bytes / (1024.0 * 1024);
     }
-    else if (bytes > 1024 * 5)
+    else if (bytes > 1024)
     {
-        return bytes / 1024;
+        return bytes / 1024.0;
     }
     else
     {
