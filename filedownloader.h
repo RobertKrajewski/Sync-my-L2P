@@ -68,7 +68,7 @@ private:
     utimbuf times;
 
     QString correctUnit(qint64 bytes);
-    qint64 correctSize(qint64 bytes);
+    double correctSize(qint64 bytes);
 
     QTime downloadTime;
 
