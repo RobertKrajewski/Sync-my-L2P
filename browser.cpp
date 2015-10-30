@@ -210,10 +210,18 @@ void Browser::on_refreshPushButton_clicked()
 
     QLOG_DEBUG() << tr("Veranstaltungsrequest");
 
-    QNetworkRequest request(QUrl("https://www3.elearning.rwth-aachen.de/_vti_bin/L2PServices/api.svc/v1/viewAllCourseInfo?accessToken=" % options->getAccessToken()));
-
-    // Starten der Anfrage für die Veranstaltungen
-    manager->get(request);
+    if(options->isCurrentSemesterCheckBoxChecked())
+    {
+        // Starten der Anfrage für die Veranstaltungen des aktuellen Semesters
+        QNetworkRequest request(QUrl("https://www3.elearning.rwth-aachen.de/_vti_bin/L2PServices/api.svc/v1/viewAllCourseInfoByCurrentSemester?accessToken=" % options->getAccessToken()));
+        manager->get(request);
+    }
+    else
+    {
+        // Starten der Anfrage für die Veranstaltungen aller Semester
+        QNetworkRequest request(QUrl("https://www3.elearning.rwth-aachen.de/_vti_bin/L2PServices/api.svc/v1/viewAllCourseInfo?accessToken=" % options->getAccessToken()));
+        manager->get(request);
+    }
 }
 
 // Auslesen der empfangenen Semesterveranstaltungsnamen
