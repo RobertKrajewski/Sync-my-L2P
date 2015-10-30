@@ -41,6 +41,7 @@ public:
     bool isAutoBackgroundSyncCheckBoxChecked();
     bool isOverrideFilesCheckBoxChecked();
     bool isCheckForUpdateCheckBoxChecked();
+    bool isCurrentSemesterCheckBoxChecked();
 
     QString getAccessToken() const;
 
