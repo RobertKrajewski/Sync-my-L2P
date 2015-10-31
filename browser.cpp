@@ -154,7 +154,7 @@ void Browser::saveSettings()
 
     settings.beginGroup("dateFilter");
     settings.setValue("dateFilter",     ui->dateFilterCheckBox->isChecked());
-    settings.setValue("mindate",        ui->minDateEdit->date());
+    settings.setValue("minDate",        ui->minDateEdit->date());
     settings.setValue("maxDate",        ui->maxDateEdit->date());
     settings.endGroup();
 
