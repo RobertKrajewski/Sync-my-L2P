@@ -168,6 +168,9 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
             urlParts.removeFirst();
             urlParts.removeFirst();
             urlParts.removeLast();
+
+            // Fix Browser-URL
+            url.remove(0,13);
         }
         else if(responseCategory == 2)
         {
@@ -190,6 +193,9 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
                 urlParts.removeFirst();
                 urlParts.removeFirst();
                 urlParts.removeLast();
+
+                // Fix Browser-URL
+                url.remove(0,10);
 
                 Structureelement *dir = Utils::getDirectoryItem(currentCourse, urlParts);
 
@@ -221,6 +227,9 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
                 urlParts.removeFirst();
                 urlParts.removeLast();
                 urlParts.removeLast();
+
+                // Fix Browser-URL
+                url.remove(0,10);
 
                 Structureelement *dir = Utils::getDirectoryItem(currentCourse, urlParts);
 

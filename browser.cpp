@@ -958,7 +958,7 @@ void Browser::on_dataTreeView_doubleClicked(const QModelIndex &index)
         }
         else
         {
-            fileUrl = Utils::getElementRemotePath(item, "https://www3.elearning.rwth-aachen.de/");
+            fileUrl = Utils::getElementRemotePath(item, "https://www3.elearning.rwth-aachen.de");
         }
 
         QDesktopServices::openUrl(QUrl(fileUrl));
