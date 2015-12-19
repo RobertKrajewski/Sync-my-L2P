@@ -55,12 +55,12 @@ void Options::loadSettings()
     ui->downloadFolderlineEdit->setText(            settings.value("downloadFolder", "").toString());
 
     settings.beginGroup("documentFilter");
-    ui->learningMaterialsCheckBox->setChecked(              settings.value("documents", true).toBool());
+    ui->learningMaterialsCheckBox->setChecked(      settings.value("documents", true).toBool());
     ui->sharedDocumentsCheckBox->setChecked(        settings.value("sharedMaterials", true).toBool());
-    ui->assignmentsCheckBox->setChecked(              settings.value("exercises", true).toBool());
-    ui->mediaLibrarysCheckBox->setChecked(             settings.value("literature", true).toBool());
-    ui->emailAttachmentsCheckBox->setChecked(             settings.value("email", true).toBool());
-    ui->announcementAttachmentsCheckBox->setChecked(             settings.value("announcement", true).toBool());
+    ui->assignmentsCheckBox->setChecked(            settings.value("exercises", true).toBool());
+    ui->mediaLibrarysCheckBox->setChecked(          settings.value("literature", true).toBool());
+    ui->emailAttachmentsCheckBox->setChecked(       settings.value("email", true).toBool());
+    ui->announcementAttachmentsCheckBox->setChecked(settings.value("announcement", true).toBool());
 
     settings.endGroup();
 
@@ -74,6 +74,7 @@ void Options::loadSettings()
     ui->minimizeInTrayCheckBox->setChecked(         settings.value("minimizeInTray", false).toBool());
     ui->overrideFilesCheckBox->setChecked(          settings.value("overrideFiles", false).toBool());
     ui->checkForUpdateCheckBox->setChecked(         settings.value("checkForUpdates", true).toBool());
+    ui->currentSemesterCheckBox->setChecked(          settings.value("currentSemester", false).toBool());
     settings.endGroup();
 
     settings.beginGroup("language");
@@ -118,6 +119,7 @@ void Options::saveSettings()
     settings.setValue("minimizeInTray",     ui->minimizeInTrayCheckBox->isChecked());
     settings.setValue("overrideFiles",      ui->overrideFilesCheckBox->isChecked());
     settings.setValue("checkForUpdates",    ui->checkForUpdateCheckBox->isChecked());
+    settings.setValue("currentSemester",    ui->currentSemesterCheckBox->isChecked());
     settings.endGroup();
 
     settings.beginGroup("language");
@@ -260,6 +262,10 @@ bool Options::isAutoLoginOnStartCheckBoxChecked()
     return ui->autoLoginOnStartCheckBox->isChecked();
 }
 
+bool Options::isCurrentSemesterCheckBoxChecked()
+{
+    return ui->currentSemesterCheckBox->isChecked();
+}
 
 
 int Options::getLoginCounter()
