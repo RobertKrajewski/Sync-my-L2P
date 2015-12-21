@@ -47,8 +47,7 @@ void QsLogging::FunctorDestination::write(const QString &message, QsLogging::Lev
     if (mLogFunction)
         mLogFunction(message, level);
 
-    if (level > QsLogging::TraceLevel)
-        emit logMessageReady(message, static_cast<int>(level));
+    emit logMessageReady(message, static_cast<int>(level));
 }
 
 bool QsLogging::FunctorDestination::isValid()
