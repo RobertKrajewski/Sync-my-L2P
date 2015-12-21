@@ -63,7 +63,11 @@ public:
             level(logLevel),
             qtDebug(&buffer) {}
         ~Helper();
+#if QT_VERSION >= 0x050400
+        QDebug& stream(){ return qtDebug.noquote(); }
+#else
         QDebug& stream(){ return qtDebug; }
+#endif
 
     private:
         void writeToLog();
