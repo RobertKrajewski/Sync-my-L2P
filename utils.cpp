@@ -226,7 +226,7 @@ void Utils::centerWidgetOnDesktop(QWidget *widget)
 }
 
 /// Überprüfung aller Dateien, ob diese auf der Festplatte bereits existieren
-void Utils::checkAllFilesIfSynchronised(QLinkedList<Structureelement*> items, QString downloadDirectory)
+void Utils::checkAllFilesIfSynchronised(QList<Structureelement*> items, QString downloadDirectory)
 {
     foreach(Structureelement* item, items)
     {

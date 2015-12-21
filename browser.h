@@ -38,9 +38,7 @@
 #include "utils.h"
 
 class Options;
-class Veranstaltung;
-
-
+class L2pItemModel;
 
 namespace Ui {
 class Browser;
@@ -71,46 +69,33 @@ private:
     void removeSelection(Structureelement*);
     void addSelection(Structureelement*);
 
-    void getStructureelementsList(Structureelement*, QLinkedList<Structureelement*>&, bool);
-    void getStructureelementsList(QStandardItem *topElement, QLinkedList <Structureelement *> &list);
+    void getStructureelementsList(Structureelement*, QList<Structureelement*>&, bool);
+    void getStructureelementsList(QStandardItem *topElement, QList <Structureelement *> &list);
 
-    int getFileCount(QLinkedList<Structureelement*>& items);
-
-    void loadStructureelementFromXml(QDomElement item, QStandardItem *parentItem);
-    void saveStructureelementToXml(QDomDocument &domDoc, QStandardItem *item, QDomElement *parentItem);
+    int getFileCount(QList<Structureelement*>& items);
 
     void updateButtons();
     void setupSignalsSlots();
 
-    QNetworkRequest *webdavRequest(Structureelement *aktuelleVeranstaltung, QString urlExtension);
-
-    QNetworkRequest *apiRequest(Structureelement *course, QString apiExtension);
-
     Ui::Browser *ui;
     QNetworkAccessManager   *manager;
-    MySortFilterProxyModel  proxyModel;
-    QStandardItemModel      *itemModel;
-    QStandardItemModel      *oldItemModel;
+    MySortFilterProxyModel *proxy;
     Structureelement        *iter;
     QFile                   output;
-    QMap<QNetworkReply*, Structureelement*> replies;
 
     Structureelement* lastRightClickItem;
 
     Options *options;
 
-    int refreshCounter;
+    int refreshCounter = 0;
 
-    bool sslSecureChannelBugOccured;
+    L2pItemModel *l2pItemModel;
 
 private slots:
     void openFile();
     void openMessage();
     void openSourceMessage();
     void openCourse();
-    void coursesRecieved(QNetworkReply*);
-    void filesRecieved(QNetworkReply*);
-    void requestFileInformation();
     void on_searchPushButton_clicked();
     void on_removeSelectionPushButton_clicked();
     void on_addSelectionPushButton_clicked();
@@ -121,6 +106,7 @@ private slots:
     void on_showNewDataPushButton_clicked();
     void copyUrlToClipboardSlot();
     void successfulLoginSlot();
+    void itemModelReloadedSlot();
 };
 
 #endif // BROWSER_H

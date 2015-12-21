@@ -8,11 +8,9 @@
 #include <QTextCodec>
 
 #include <QStandardPaths>
-
+#include <QEventLoop>
+#include "l2pitemmodel.h"
 #include "qslog/QsLog.h"
-
-// Hauptadresse des Sharepointdienstes
-QString MainURL = "https://www3.elearning.rwth-aachen.de";
 
 Browser::Browser(QWidget *parent) :
     QWidget(parent),
@@ -21,17 +19,9 @@ Browser::Browser(QWidget *parent) :
     ui->setupUi(this);
 
     // Hinzufügen der Daten zur Baumansicht
-    itemModel = new QStandardItemModel();
-    proxyModel.setDynamicSortFilter(true);
-    proxyModel.setSourceModel(itemModel);
-    ui->dataTreeView->setModel(&proxyModel);
-
-    // Erzeugen des NetzwerkAccessManagers
-    manager = new QNetworkAccessManager(qApp);
-
-    QObject::connect(ui->searchLineEdit, SIGNAL(returnPressed()), ui->searchPushButton, SLOT(click()));
-
-    refreshCounter = 0;
+    l2pItemModel = new L2pItemModel();
+    proxy = l2pItemModel->getProxy();
+    ui->dataTreeView->setModel(proxy);
 
     setupSignalsSlots();
 }
@@ -44,42 +34,7 @@ Browser::~Browser()
 void Browser::init(Options *options)
 {
     this->options = options;
-}
-
-void Browser::loadStructureelementFromXml(QDomElement item, QStandardItem *parentItem)
-{
-    if(item.isNull())
-    {
-        return;
-    }
-
-    QStandardItem *newChild;
-    if(item.tagName() == "item")
-    {
-        QString name = item.attribute("name", "");
-        QUrl url = QUrl(item.attribute("url", ""));
-        int time = item.attribute("time", "0").toInt();
-        int size = item.attribute("size", "0").toInt();
-        QString cid = item.attribute("cid", "");
-        MyItemType type = static_cast<MyItemType>(item.attribute("type", "").toInt());
-        bool included = item.attribute("included", "0").toInt();
-
-        newChild = new Structureelement(name, url, time, size, cid, type);
-        newChild->setData(included, includeRole);
-
-        parentItem->appendRow(newChild);
-    }
-    else if(item.tagName() == "root")
-    {
-        newChild = parentItem;
-    }
-
-    // Alle Kindknoten hinzufügen
-    QDomNodeList children = item.childNodes();
-    for(int i=0; i < children.length(); i++)
-    {
-        loadStructureelementFromXml(children.item(i).toElement(), newChild);
-    }
+    l2pItemModel->setOptions(options);
 }
 
 void Browser::loadSettings()
@@ -97,49 +52,7 @@ void Browser::loadSettings()
     ui->maxDateEdit->setDate(settings.value("maxDate", QDate(2042, 1, 1)).toDate());
     settings.endGroup();
 
-    QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
-
-#if QT_VERSION >= 0x050400
-    QString dataPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-#else
-    QString dataPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-#endif
-    QLOG_DEBUG() << tr("Vermuteter Pfad der Progammdaten: ") << dataPath;
-
-    QDir dir(dataPath);
-    if (!dir.exists()) {
-        dir.mkpath(".");
-    }
-    QFile file(dataPath + "/data.xml");
-    if(!file.open(QIODevice::ReadWrite))
-    {
-        QLOG_ERROR() << tr("Kann keine Daten von Festplatte laden") << ": " << file.errorString();
-        return;
-    }
-
-    QTextStream ts(&file);
-
-    if(ts.atEnd())
-    {
-        QLOG_INFO() << tr("Keine Dateiliste auf der Festplatte gefunden.");
-        return;
-    }
-
-    QDomDocument domDoc;
-    QString errorMessage;
-    if(!domDoc.setContent(ts.readAll(), &errorMessage))
-    {
-        QLOG_ERROR() << tr("Kann Daten von Festplatte nicht parsen: ") << errorMessage;
-        return;
-    }
-    file.close();
-
-    QDomElement root = domDoc.documentElement();
-    loadStructureelementFromXml(root, itemModel->invisibleRootItem());
-
-    QLinkedList<Structureelement*> items;
-    getStructureelementsList(itemModel->invisibleRootItem(), items);
-    Utils::checkAllFilesIfSynchronised(items, options->downloadFolderLineEditText());
+    l2pItemModel->loadDataFromFile();
 }
 
 void Browser::saveSettings()
@@ -158,22 +71,7 @@ void Browser::saveSettings()
     settings.setValue("maxDate",        ui->maxDateEdit->date());
     settings.endGroup();
 
-    QDomDocument domDoc;
-    saveStructureelementToXml(domDoc, itemModel->invisibleRootItem(), NULL);
-
-#if QT_VERSION >= 0x050400
-    QString dataPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-#else
-    QString dataPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-#endif
-    QFile file(dataPath + "/data.xml");
-    if(!file.open(QIODevice::WriteOnly))
-    {
-        return;
-    }
-    QTextStream ts(&file);
-    ts << domDoc.toByteArray();
-    file.close();
+    l2pItemModel->saveDataToFile();
 }
 
 void Browser::downloadDirectoryLineEditChangedSlot(QString downloadDirectory)
@@ -188,341 +86,58 @@ void Browser::downloadDirectoryLineEditChangedSlot(QString downloadDirectory)
     }
 }
 
-// Starten des Aktualisierungsvorgang durch das Abrufen der Veranstaltungen
+/// Starten des Aktualisierungsvorgang durch das Abrufen der Veranstaltungen
 void Browser::on_refreshPushButton_clicked()
 {
     refreshCounter++;
-
-    oldItemModel = itemModel;
-
-    itemModel = new QStandardItemModel();
-    proxyModel.setSourceModel(itemModel);
+    l2pItemModel->loadDataFromServer();
 
     // Zurücksetzen der freigeschalteten Schaltflächen
     updateButtons();
 
     // Einfrieren der Anzeige
     emit enableSignal(false);
-
-    // Verbinden des Managers
-    QObject::connect(manager, SIGNAL(finished(QNetworkReply *)),
-                     this, SLOT(coursesRecieved(QNetworkReply *)));
-
-    QLOG_DEBUG() << tr("Veranstaltungsrequest");
-
-    if(options->isCurrentSemesterCheckBoxChecked())
-    {
-        // Starten der Anfrage für die Veranstaltungen des aktuellen Semesters
-        QNetworkRequest request(QUrl("https://www3.elearning.rwth-aachen.de/_vti_bin/L2PServices/api.svc/v1/viewAllCourseInfoByCurrentSemester?accessToken=" % options->getAccessToken()));
-        manager->get(request);
-    }
-    else
-    {
-        // Starten der Anfrage für die Veranstaltungen aller Semester
-        QNetworkRequest request(QUrl("https://www3.elearning.rwth-aachen.de/_vti_bin/L2PServices/api.svc/v1/viewAllCourseInfo?accessToken=" % options->getAccessToken()));
-        manager->get(request);
-    }
-}
-
-// Auslesen der empfangenen Semesterveranstaltungsnamen
-void Browser::coursesRecieved(QNetworkReply *reply)
-{
-
-    QLOG_DEBUG() << tr("Veranstaltungen empfangen");
-    // Prüfen auf Fehler beim Abruf
-    if (!reply->error())
-    {
-        Parser::parseCourses(reply, itemModel);
-    }
-    else
-    {
-        Utils::errorMessageBox(tr("Beim Abruf der Veranstaltungen ist ein Fehler aufgetreten"), reply->errorString() % ";\n " % reply->readAll());
-    }
-
-    // Veranstaltungen alphabetisch sortieren
-    itemModel->sort(0);
-
-    QObject::disconnect(manager,
-                        SIGNAL(finished(QNetworkReply *)),
-                        this,
-                        SLOT(coursesRecieved(QNetworkReply *)));
-
-    // Aufruf der Funktion zur Aktualisierung der Dateien
-    if(itemModel->rowCount() != 0)
-    {
-        requestFileInformation();
-    }
-    else
-    {
-        emit enableSignal(true);
-        updateButtons();
-    }
-}
-
-/// Anfordern der Dateien für jede Veranstaltung
-void Browser::requestFileInformation()
-{
-    // Prüfen, ob überhaupt Dokumentorte ausgewählt wurden
-    if (!options->isLearningMaterialsCheckBoxChecked()
-        && !options->isSharedLearningmaterialsCheckBoxChecked()
-        && !options->isAssignmentsCheckBoxChecked()
-        && !options->isMediaLibrarysCheckBoxChecked()
-        && !options->isEmailAttachmentsCheckBoxChecked()
-        && !options->isAnnouncementAttachmentsCheckBoxChecked())
-    {
-        // Freischalten von Schaltflächen
-        emit enableSignal(true);
-        updateButtons();
-        return;
-    }
-
-    QObject::connect(manager,
-                     SIGNAL(finished(QNetworkReply *)),
-                     this,
-                     SLOT(filesRecieved(QNetworkReply *)));
-
-    QList<Structureelement*> courses = Utils::getAllCourseItems(itemModel);
-
-    // Sonderfall: Es existieren keine Veranstaltungen
-    if (courses.size() == 0)
-    {
-        QObject::disconnect(manager, SIGNAL(finished(QNetworkReply *)),
-                            this, SLOT(filesRecieved(QNetworkReply *)));
-        // Freischalten von Schaltflächen
-        updateButtons();
-        emit enableSignal(true);
-        return;
-    }
-
-    sslSecureChannelBugOccured = false;
-
-
-    //Anfordern aller Daten per APIRequest
-    foreach(Structureelement* course, courses)
-    {
-        // Löschen aller Dateien
-        if (course->rowCount() > 0)
-        {
-            course->removeRows(0, course->rowCount());
-        }
-
-        // Ausführen des Requests für "Dokumente"
-        if (options->isLearningMaterialsCheckBoxChecked())
-        {
-            QNetworkRequest *request = apiRequest(course, "viewAllLearningMaterials");
-
-            // Einfügen und Absenden des Requests
-            replies.insert(manager->get(*request),
-                           course);
-
-            delete request;
-        }
-
-        // Ausführen des Requests für "Strukturierte Materialien"
-        if (options->isSharedLearningmaterialsCheckBoxChecked())
-        {
-            QNetworkRequest *request = apiRequest(course, "viewAllSharedDocuments");
-
-            // Einfügen und Absenden des Requests
-            replies.insert(manager->get(*request),
-                           course);
-
-            delete request;
-        }
-
-        // Ausführen des Requests für "Übungsbetrieb"
-        if (options->isAssignmentsCheckBoxChecked())
-        {
-            QNetworkRequest *request = apiRequest(course, "viewAllAssignments");
-
-            // Einfügen und Absenden des Requests
-            replies.insert(manager->get(*request),
-                           course);
-
-            delete request;
-        }
-
-        // Ausführen des Requests für "Literatur"
-        if (options->isMediaLibrarysCheckBoxChecked())
-        {
-            QNetworkRequest *request = apiRequest(course, "viewAllMediaLibraries");
-
-            // Einfügen und Absenden des Requests
-            replies.insert(manager->get(*request),
-                           course);
-
-            delete request;
-        }
-
-        // Ausführen des Requests für "Ankündigung Anhänge"
-        if (options->isAnnouncementAttachmentsCheckBoxChecked())
-        {
-            QNetworkRequest *request = apiRequest(course, "viewAllAnnouncements");
-
-            // Einfügen und Absenden des Requests
-            replies.insert(manager->get(*request),
-                           course);
-
-            delete request;
-        }
-
-        // Ausführen des Requests für "E-Mail Anhänge"
-        if (options->isEmailAttachmentsCheckBoxChecked())
-        {
-            QNetworkRequest *request = apiRequest(course, "viewAllEmails");
-
-            // Einfügen und Absenden des Requests
-            replies.insert(manager->get(*request),
-                           course);
-
-            delete request;
-        }
-
-    }
-}
-
-void Browser::filesRecieved(QNetworkReply *reply)
-{
-    QLOG_DEBUG() << tr("Itemrequest empfangen: ") << reply->url().toString();
-
-    // Prüfen auf Fehler
-    if (!reply->error())
-    {
-        Parser::parseFiles(reply, &replies,
-                           options->downloadFolderLineEditText());
-    }
-    else
-    {
-        QString replyMessage(reply->readAll());
-
-         if(replyMessage.contains("secure channel"))
-        {
-            sslSecureChannelBugOccured = true;
-            QLOG_DEBUG() << tr("SSL Fehler für: ") << reply->url().toString();
-        }
-        else if (replyMessage.contains("Assignment-Module is deactivated"))
-        {
-            QLOG_DEBUG() << tr("Assignment-Module ist deaktiviert für: ") << reply->url().toString();
-        }
-        else
-        {
-            Utils::errorMessageBox(tr("Beim Abruf des Inhalts einer Veranstaltung ist ein Fehler aufgetreten"), reply->errorString() % ";\n " % replyMessage);
-        }
-    }
-
-    // Löschen der Antwort aus der Liste der abzuarbeitenden Antworten
-    replies.remove(reply);
-    // Freigabe des Speichers
-    reply->deleteLater();
-
-    // Prüfen, ob alle Antworten bearbeitet wurden
-    if (replies.empty())
-    {
-        if(sslSecureChannelBugOccured)
-        {
-            Utils::errorMessageBox(tr("Beim Abruf des Inhalts mindestens einer Veranstaltung ist ein Fehler aufgetreten"),
-                                   tr("Es können einige Dateien fehlen. Dieser Fehler wird nicht durch Sync-my-L2P verschuldet und ist bekannt."
-                                      " Klicke erneut auf Aktualisieren bis dieser Fehler nicht mehr auftaucht."));
-        }
-
-        QObject::disconnect(manager, SIGNAL(finished(QNetworkReply *)),
-                            this,    SLOT(filesRecieved(QNetworkReply *)));
-
-        itemModel->sort(0);
-
-        QLinkedList<Structureelement*> items;
-
-        QStandardItem* root = itemModel->invisibleRootItem();
-        for( int i=0; i < root->rowCount(); i++)
-        {
-            getStructureelementsList(static_cast<Structureelement*>(root->child(i)), items);
-        }
-
-        QLinkedList<Structureelement*> oldItems;
-        root = oldItemModel->invisibleRootItem();
-        for( int i=0; i < root->rowCount(); i++)
-        {
-            getStructureelementsList(static_cast<Structureelement*>(root->child(i)), oldItems);
-        }
-
-        foreach(Structureelement *item, items)
-        {
-            for(QLinkedList<Structureelement*>::iterator it = oldItems.begin(); it != oldItems.end(); it++)
-            {
-                Structureelement *oldItem = *it;
-                if(item->data(urlRole) == oldItem->data(urlRole) && item->text() == oldItem->text())
-                {
-                    item->setData(oldItem->data(includeRole), includeRole);
-                    oldItems.erase(it);
-                    break;
-                }
-            }
-        }
-
-        oldItemModel->deleteLater();
-        oldItemModel = 0;
-
-        Utils::checkAllFilesIfSynchronised(items, options->downloadFolderLineEditText());
-
-        // Freischalten von Schaltflächen
-        updateButtons();
-
-        // Anzeigen aller neuen, unsynchronisierten Dateien
-        if (refreshCounter == 1)
-        {
-            on_showNewDataPushButton_clicked();
-        }
-
-        emit enableSignal(true);
-
-        // Automatische Synchronisation beim Programmstart
-        if (options->isAutoSyncOnStartCheckBoxChecked() && refreshCounter==1 && options->getLoginCounter()==1
-                && !sslSecureChannelBugOccured)
-        {
-            on_syncPushButton_clicked();
-        }
-    }
 }
 
 void Browser::on_syncPushButton_clicked()
 {
     emit enableSignal(false);
-    QString downloadPath = options->downloadFolderLineEditText();
 
     // Falls noch kein Downloadverzeichnis angegeben wurde, abbrechen
+    QString downloadPath = options->downloadFolderLineEditText();
     if (downloadPath.isEmpty())
     {
-        Utils::errorMessageBox(tr("Downloadverzeichnis fehlt!"), tr("Download unmöglich, da kein Zielverzeichnis angegeben wurde."));
-        QLOG_ERROR() << tr("Kann nicht synchronisieren, da kein Downloadverzeichnis angegeben wurde");
+        Utils::errorMessageBox(tr("Downloadverzeichnis fehlt!"),
+                               tr("Download unmöglich, da kein Zielverzeichnis angegeben wurde."));
         emit switchTab(1);
         emit enableSignal(true);
         return;
     }
 
-    QDir verzeichnis(downloadPath);
-
     // Überprüfung, ob das angegebene Verzeichnis existiert oder
     // erstellt werden kann
-    if (!verzeichnis.exists() && !verzeichnis.mkpath(verzeichnis.path()))
+    QDir dir(downloadPath);
+    if (!dir.exists() && !dir.mkpath(dir.path()))
     {
         QLOG_ERROR() << tr("Kann Verzeichnis nicht erzeugen. Download abgebrochen.");
         emit enableSignal(true);
         return;
     }
 
-
+    auto *data = l2pItemModel->getData();
 
     // Hinzufügen aller eingebundenen Elemente
-    QLinkedList<Structureelement *> elementList;
-
-    for (int i = 0; i < itemModel->rowCount(); i++)
+    QList<Structureelement *> elementList;
+    for (int i = 0; i < data->rowCount(); i++)
     {
-        getStructureelementsList((Structureelement *) itemModel->item(i, 0), elementList, true);
+        getStructureelementsList((Structureelement *) data->item(i, 0), elementList, true);
     }
 
     // Abbruch bei fehlenden Elementen
     if (elementList.isEmpty())
     {
+        Utils::errorMessageBox(tr("Kann nicht synchronisieren"),
+                               tr("Keine Dateien zur Synchronisation verfügbar."));
         emit enableSignal(true);
         return;
     }
@@ -594,7 +209,7 @@ void Browser::on_syncPushButton_clicked()
             }
 
             currentElement->setData(NOW_SYNCHRONISED, synchronisedRole);
-            ui->dataTreeView->scrollTo(proxyModel.mapFromSource(currentElement->index()));
+            ui->dataTreeView->scrollTo(proxy->mapFromSource(currentElement->index()));
             newSelection.select(currentElement->index(), currentElement->index());
         }
     }
@@ -604,6 +219,7 @@ void Browser::on_syncPushButton_clicked()
     // wenn das Fenster zu schnell wieder geschlossen wird
     QThread::msleep(20);
 #endif
+
     loader->hide();
     loader->close();
 
@@ -632,7 +248,7 @@ void Browser::on_syncPushButton_clicked()
 
     // Alle synchronisierten Elemente auswählen
     ui->dataTreeView->selectionModel()->
-    select(proxyModel.mapSelectionFromSource(newSelection),
+    select(proxy->mapSelectionFromSource(newSelection),
            QItemSelectionModel::ClearAndSelect);
 
 
@@ -649,9 +265,11 @@ void Browser::on_searchPushButton_clicked()
         return;
     }
 
+    auto *data = l2pItemModel->getData();
+
     // Alle Elemente mit dem Suchwort finden
-    QList<QStandardItem *> found = itemModel->findItems("*" % ui->searchLineEdit->text() % "*",
-                                                           Qt::MatchWildcard | Qt::MatchRecursive);
+    QList<QStandardItem *> found = data->findItems("*" % ui->searchLineEdit->text() % "*",
+                                                   Qt::MatchWildcard | Qt::MatchRecursive);
 
     // Gefundene Elemente auswählen und anzeigen
     QItemSelection newSelection;
@@ -660,19 +278,21 @@ void Browser::on_searchPushButton_clicked()
     foreach(QStandardItem * item, found)
     {
         newSelection.select(item->index(), item->index());
-        ui->dataTreeView->scrollTo(proxyModel.mapFromSource(item->index()));
+        ui->dataTreeView->scrollTo(proxy->mapFromSource(item->index()));
     }
 
     ui->dataTreeView->selectionModel()->
-    select(proxyModel.mapSelectionFromSource(newSelection),
+    select(proxy->mapSelectionFromSource(newSelection),
            QItemSelectionModel::ClearAndSelect);
 }
 
 // Ausschließen der ausgewählten Elemente, ggf. deren Vaterelemente und alle ihre Kindelemente
 void Browser::on_removeSelectionPushButton_clicked()
 {
+    auto *data = l2pItemModel->getData();
+
     // Holen der ausgewählten Dateien
-    QModelIndexList selectedElementsIndexList = proxyModel.mapSelectionToSource(ui->dataTreeView->selectionModel()->selection()).indexes();
+    QModelIndexList selectedElementsIndexList = proxy->mapSelectionToSource(ui->dataTreeView->selectionModel()->selection()).indexes();
     // Iteration über alle Elemente
     Structureelement *parentElement = 0;
     QModelIndexList::Iterator iteratorEnd = selectedElementsIndexList.end();
@@ -694,7 +314,7 @@ void Browser::on_removeSelectionPushButton_clicked()
 
         // Hinweis: Nur wenn selectedElement ein Toplevel-Item ist, kann parentElement invisibleRootItem sein
         // ist selectedElement ein tieferes Item, ist der oberste Parent 0x00
-        while ((parentElement != 0) && (parentElement != itemModel->invisibleRootItem()))
+        while ((parentElement != 0) && (parentElement != l2pItemModel->getData()->invisibleRootItem()))
         {
             bool siblingsExcluded = true;
 
@@ -716,8 +336,8 @@ void Browser::on_removeSelectionPushButton_clicked()
     }
 
     // Aktualisieren der kompletten Ansicht
-    ui->dataTreeView->dataChanged(itemModel->index(0, 0),
-                                  itemModel->index(itemModel->rowCount(), 0));
+    ui->dataTreeView->dataChanged(data->index(0, 0),
+                                  data->index(data->rowCount(), 0));
 }
 
 // Rekursives ausschließen aller untergeordneten Elemente des übergebenen Elements
@@ -738,8 +358,7 @@ void Browser::removeSelection(Structureelement *element)
 void Browser::on_addSelectionPushButton_clicked()
 {
     // Bestimmen der ausgewählten Items
-    QModelIndexList selectedElementsIndexList = proxyModel
-            .mapSelectionToSource(ui->dataTreeView->selectionModel()->selection())
+    QModelIndexList selectedElementsIndexList = proxy->mapSelectionToSource(ui->dataTreeView->selectionModel()->selection())
             .indexes();
 
     // Variablen zur Speicherung von Pointern aus Performancegründen vor
@@ -770,8 +389,10 @@ void Browser::on_addSelectionPushButton_clicked()
         addSelection(element);
     }
 
+    auto *data = l2pItemModel->getData();
+
     // Aktualisierung der kompletten Ansicht
-    ui->dataTreeView->dataChanged(itemModel->index(0, 0), itemModel->index(itemModel->rowCount(), 0));
+    ui->dataTreeView->dataChanged(data->index(0, 0), data->index(data->rowCount(), 0));
 }
 
 // Rekursives Durchlaufen alle Kindelemente eines Elements und Einbindung dieser
@@ -786,7 +407,7 @@ void Browser::addSelection(Structureelement *aktuelleStruktur)
         addSelection((Structureelement *) aktuelleStruktur->child(i, 0));
 }
 
-void Browser::getStructureelementsList(Structureelement *currentElement, QLinkedList <Structureelement *> &liste, bool onlyIncluded)
+void Browser::getStructureelementsList(Structureelement *currentElement, QList <Structureelement *> &liste, bool onlyIncluded)
 {
     if (!onlyIncluded
         || (onlyIncluded && currentElement->data(includeRole).toBool()))
@@ -807,7 +428,7 @@ void Browser::getStructureelementsList(Structureelement *currentElement, QLinked
     }
 }
 
-void Browser::getStructureelementsList(QStandardItem *topElement, QLinkedList <Structureelement *> &list)
+void Browser::getStructureelementsList(QStandardItem *topElement, QList <Structureelement *> &list)
 {
     Structureelement *item = dynamic_cast<Structureelement*>(topElement);
     if(item)
@@ -819,7 +440,7 @@ void Browser::getStructureelementsList(QStandardItem *topElement, QLinkedList <S
 }
 
 /// Bestimmung der Zahl der Dateien in einer Liste
-int Browser::getFileCount(QLinkedList < Structureelement * > &items)
+int Browser::getFileCount(QList < Structureelement * > &items)
 {
     int fileCounter = 0;
 
@@ -834,41 +455,10 @@ int Browser::getFileCount(QLinkedList < Structureelement * > &items)
     return fileCounter;
 }
 
-void Browser::saveStructureelementToXml(QDomDocument &domDoc, QStandardItem *item, QDomElement *parentItem)
-{
-    QDomElement xmlItem;
-
-    // Das Root-item auslassen
-    if(item->text().isEmpty())
-    {
-        xmlItem = domDoc.createElement("root");
-        domDoc.appendChild(xmlItem);
-    }
-    else
-    {
-        xmlItem = domDoc.createElement("item");
-        xmlItem.setAttribute("name", item->text());
-        xmlItem.setAttribute("url", item->data(urlRole).toUrl().toString());
-        xmlItem.setAttribute("time", item->data(dateRole).toDateTime().toMSecsSinceEpoch()/1000);
-        xmlItem.setAttribute("size", item->data(sizeRole).toInt());
-        xmlItem.setAttribute("cid", item->data(cidRole).toString());
-        xmlItem.setAttribute("type", item->type());
-        xmlItem.setAttribute("included", item->data(includeRole).toBool());
-        parentItem->appendChild(xmlItem);
-    }
-
-    for(int i=0; i < item->rowCount(); i++)
-    {
-        saveStructureelementToXml(domDoc, item->child(i), &xmlItem);
-    }
-}
-
-
-
 // Aktivierung oder Deaktivierung der Buttons in Abhängigkeit des Status
 void Browser::updateButtons()
 {
-    if(itemModel->rowCount() == 0 || options->getAccessToken().isEmpty())
+    if(l2pItemModel->getData()->rowCount() == 0 || options->getAccessToken().isEmpty())
     {
         ui->showNewDataPushButton->setEnabled(false);
         ui->expandPushButton->setEnabled(false);
@@ -894,36 +484,18 @@ void Browser::updateButtons()
 
 void Browser::setupSignalsSlots()
 {
+    connect(ui->searchLineEdit, SIGNAL(returnPressed()), ui->searchPushButton, SLOT(click()));
     connect(ui->expandPushButton, &QPushButton::clicked, ui->dataTreeView, &QTreeView::expandAll);
     connect(ui->contractPushButton, &QPushButton::clicked, ui->dataTreeView, &QTreeView::collapseAll);
 
-    connect(ui->sizeLimitSpinBox, SIGNAL(valueChanged(int)), &proxyModel, SLOT(setMaximumSize(int)));
-    connect(ui->sizeLimitCheckBox, &QCheckBox::toggled, &proxyModel, &MySortFilterProxyModel::setMaximumSizeFilter);
+    connect(ui->sizeLimitSpinBox, SIGNAL(valueChanged(int)), proxy, SLOT(setMaximumSize(int)));
+    connect(ui->sizeLimitCheckBox, &QCheckBox::toggled, proxy, &MySortFilterProxyModel::setMaximumSizeFilter);
 
-    connect(ui->dateFilterCheckBox, &QCheckBox::toggled, &proxyModel, &MySortFilterProxyModel::setInRangeDateFilter);
-    connect(ui->minDateEdit, &QDateEdit::dateChanged, &proxyModel, &MySortFilterProxyModel::setFilterMinimumDate);
-    connect(ui->maxDateEdit, &QDateEdit::dateChanged, &proxyModel, &MySortFilterProxyModel::setFilterMaximumDate);
-}
+    connect(ui->dateFilterCheckBox, &QCheckBox::toggled, proxy, &MySortFilterProxyModel::setInRangeDateFilter);
+    connect(ui->minDateEdit, &QDateEdit::dateChanged, proxy, &MySortFilterProxyModel::setFilterMinimumDate);
+    connect(ui->maxDateEdit, &QDateEdit::dateChanged, proxy, &MySortFilterProxyModel::setFilterMaximumDate);
 
-QNetworkRequest *Browser::apiRequest(Structureelement *course, QString apiExtension)
-{
-    QString baseUrl = "https://www3.elearning.rwth-aachen.de/_vti_bin/L2PServices/api.svc/v1/";
-    QString access = "?accessToken=" % options->getAccessToken();
-    QString cid = "&cid=" % course->data(cidRole).toString();
-
-    QString url = baseUrl % apiExtension % access % cid;
-    QNetworkRequest *request = new QNetworkRequest(QUrl(QUrl::toPercentEncoding(url, ":/?=&")));
-
-    QSslConfiguration conf = request->sslConfiguration();
-    conf.setPeerVerifyMode(QSslSocket::VerifyNone);
-    request->setSslConfiguration(conf);
-
-    QLOG_DEBUG() << tr("Itemrequest an API: ") << url;
-
-    // Damit der L2P Server nicht überfordert wird...
-    QThread::msleep(10);
-
-    return request;
+    connect(l2pItemModel, &L2pItemModel::loadingFinished, this, &Browser::itemModelReloadedSlot);
 }
 
 void Browser::on_openDownloadfolderPushButton_clicked()
@@ -939,8 +511,8 @@ void Browser::on_openDownloadfolderPushButton_clicked()
 void Browser::on_dataTreeView_doubleClicked(const QModelIndex &index)
 {
     Structureelement *item =
-        (Structureelement *) itemModel->
-        itemFromIndex(proxyModel.mapToSource(index));
+        (Structureelement *) l2pItemModel->getData()->
+        itemFromIndex(proxy->mapToSource(index));
 
     if (item->type() == fileItem)
     {
@@ -980,8 +552,8 @@ void Browser::on_dataTreeView_customContextMenuRequested(const QPoint &pos)
 {
     // Bestimmung des Elements, auf das geklickt wurde
     Structureelement *RightClickedItem =
-        (Structureelement *) itemModel->
-        itemFromIndex(proxyModel.mapToSource(ui->dataTreeView->indexAt(pos)));
+        (Structureelement *) l2pItemModel->getData()->
+        itemFromIndex(proxy->mapToSource(ui->dataTreeView->indexAt(pos)));
 
     // Überprüfung, ob überhaupt auf ein Element geklickt wurde (oder
     // ins Leere)
@@ -1089,10 +661,12 @@ void Browser::openFile()
 
 void Browser::on_showNewDataPushButton_clicked()
 {
-    QLinkedList<Structureelement*> list;
+    QList<Structureelement*> list;
 
-    for (int i = 0; i < itemModel->rowCount(); i++)
-        getStructureelementsList((Structureelement*)(itemModel->invisibleRootItem()->child(i)), list);
+    auto *data = l2pItemModel->getData();
+
+    for (int i = 0; i < data->rowCount(); i++)
+        getStructureelementsList((Structureelement*)(data->invisibleRootItem()->child(i)), list);
 
     QItemSelection newSelection;
     ui->dataTreeView->collapseAll();
@@ -1102,12 +676,12 @@ void Browser::on_showNewDataPushButton_clicked()
         if ((item->type() == fileItem) && (item->data(synchronisedRole) == NOT_SYNCHRONISED) && (item->data(includeRole) == true))
         {
             newSelection.select(item->index(), item->index());
-            ui->dataTreeView->scrollTo(proxyModel.mapFromSource(item->index()));
+            ui->dataTreeView->scrollTo(proxy->mapFromSource(item->index()));
         }
     }
 
     ui->dataTreeView->selectionModel()->
-            select(proxyModel.mapSelectionFromSource(newSelection),
+            select(proxy->mapSelectionFromSource(newSelection),
                    QItemSelectionModel::ClearAndSelect);
 }
 
@@ -1131,9 +705,32 @@ void Browser::successfulLoginSlot()
     ui->refreshPushButton->setEnabled(true);
 }
 
+void Browser::itemModelReloadedSlot()
+{
+    updateButtons();
+
+    //Utils::checkAllFilesIfSynchronised(l2pItemModel->getData(), options->downloadFolderLineEditText());
+
+    // Anzeigen aller neuen, unsynchronisierten Dateien
+    if (refreshCounter == 1)
+    {
+        on_showNewDataPushButton_clicked();
+    }
+
+    emit enableSignal(true);
+
+    // Automatische Synchronisation beim Programmstart
+    if (options->isAutoSyncOnStartCheckBoxChecked() && refreshCounter==1 && options->getLoginCounter()==1)
+    {
+        on_syncPushButton_clicked();
+    }
+
+
+}
+
 void Browser::clearItemModel()
 {
-    itemModel->clear();
+//    itemModel->clear();
     updateButtons();
 }
 

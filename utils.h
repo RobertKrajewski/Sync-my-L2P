@@ -22,7 +22,7 @@ public:
 
     static void centerWidgetOnDesktop(QWidget* widget);
 
-    static void checkAllFilesIfSynchronised(QLinkedList<Structureelement *> items, QString downloadDirectory);
+    static void checkAllFilesIfSynchronised(QList<Structureelement *> items, QString downloadDirectory);
 private:
     explicit Utils(QObject *parent = 0);
 
