@@ -22,7 +22,6 @@ SOURCES += main.cpp\
     mysortfilterproxymodel.cpp \
     filedownloader.cpp \
     utils.cpp \
-    browser.cpp \
     options.cpp \
     autoclosedialog.cpp \
     login.cpp \
@@ -34,7 +33,9 @@ SOURCES += main.cpp\
     qslog/QsLogDestFunctor.cpp \
     logger.cpp \
     info.cpp \
-    message.cpp
+    message.cpp \
+    browser.cpp \
+    l2pitemmodel.cpp
 
 HEADERS  += mymainwindow.h \
     parser.h \
@@ -42,7 +43,6 @@ HEADERS  += mymainwindow.h \
     mysortfilterproxymodel.h \
     filedownloader.h \
     utils.h \
-    browser.h \
     options.h \
     autoclosedialog.h \
     login.h \
@@ -57,18 +57,21 @@ HEADERS  += mymainwindow.h \
     qslog/QsLogLevel.h \
     logger.h \
     info.h \
-    message.h
+    message.h \
+    browser.h \
+    l2pitemmodel.h \
+    urls.h
 
 FORMS    += mymainwindow.ui \
     mymainwindow.ui \
     dateidownloader.ui \
-    browser.ui \
     options.ui \
     autoclosedialog.ui \
     logindialog.ui \
     logger.ui \
     info.ui \
-    message.ui
+    message.ui \
+    browser.ui
 
 OTHER_FILES += \
     Sync-my-L2P.icns \
