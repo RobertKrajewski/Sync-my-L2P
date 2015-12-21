@@ -7,6 +7,40 @@
 #include "utils.h"
 #include "qslog/QsLog.h"
 
+QList<QString> Parser::parseFeatures(QNetworkReply *reply)
+{
+    // Empfangene Nachricht auslesen und als JSON interpretieren
+    QByteArray response(reply->readAll());
+    QJsonDocument document = QJsonDocument::fromJson(response);
+    QJsonObject object = document.object();
+
+    QList<QString> activeFeatures;
+
+    if(object.isEmpty())
+    {
+        QLOG_INFO() << tr("Featureinformationen leer bzw. nicht lesbar.");
+        return activeFeatures;
+    }
+
+    if(!object["Status"].toBool())
+    {
+        QLOG_ERROR() << tr("Status der Featureinformationen nicht ok: ") <<
+                        QString(document.toJson());
+        return activeFeatures;
+    }
+
+    // Array mit allen einzelnen Vorlesungen/Veranstaltungen
+    QJsonArray courses = object["active"].toArray();
+
+    // Für jede Veranstaltung ein neues Strukturelement anlegen
+    foreach(QJsonValue element, courses)
+    {
+        activeFeatures << element.toString();
+    }
+
+    return activeFeatures;
+}
+
 void Parser::parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
 {
     // Empfangene Nachricht auslesen und als JSON interpretieren
@@ -16,7 +50,7 @@ void Parser::parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
 
     if(object.isEmpty())
     {
-        QLOG_INFO() << tr("Kursinformationen leer bzw. nicht lesbar.");
+        QLOG_WARN() << tr("Kursinformationen leer bzw. nicht lesbar.");
         return;
     }
 
@@ -51,11 +85,11 @@ void Parser::parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
 
         Utils::getSemesterItem(itemModel, semester)->appendRow(newCourse);
 
-        QLOG_INFO() << tr("Veranstaltung ") << title << " (" << cid << tr(") hinzugefügt.");
+        QLOG_DEBUG() << tr("Veranstaltung") << title << "(" << cid << tr(") hinzugefügt.");
     }
 }
 
-void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelement*> *replies, QString downloadDirectoryPath)
+void Parser::parseFiles(QNetworkReply *reply, Structureelement* course, QString downloadDirectoryPath)
 {
     QString url = reply->url().toString();
 
@@ -92,7 +126,7 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
         return;
     }
 
-    Structureelement *currentCourse = replies->value(reply);
+    Structureelement *currentCourse = course;
 
     QByteArray response = reply->readAll();
 
@@ -269,7 +303,7 @@ void Parser::parseFiles(QNetworkReply *reply, QMap<QNetworkReply*, Structureelem
         {
             QString body = file["body"].toString();
             QString title = file["title"].toString();
-            QString from = "Anküdigung im L²P";
+            QString from = tr("Ankündigung im L2P");
             int time = file["modifiedTimestamp"].toInt();
             QString dirname = "Announcement";
             urlParts.append(dirname);
