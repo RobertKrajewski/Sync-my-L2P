@@ -74,7 +74,7 @@ void Options::loadSettings()
     ui->minimizeInTrayCheckBox->setChecked(         settings.value("minimizeInTray", false).toBool());
     ui->overrideFilesCheckBox->setChecked(          settings.value("overrideFiles", false).toBool());
     ui->checkForUpdateCheckBox->setChecked(         settings.value("checkForUpdates", true).toBool());
-    ui->currentSemesterCheckBox->setChecked(          settings.value("currentSemester", false).toBool());
+    ui->currentSemesterCheckBox->setChecked(          settings.value("currentSemester", true).toBool());
     settings.endGroup();
 
     settings.beginGroup("language");
