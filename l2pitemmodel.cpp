@@ -63,6 +63,11 @@ void L2pItemModel::requestFeatures()
 void L2pItemModel::loadDataFromServer()
 {
     // Aktuelle Daten behalten für ein Merge mit den neuen Daten
+    if(oldData)
+    {
+        oldData->deleteLater();
+    }
+
     oldData = data;
 
     // Neues Datenmodell erstellen
@@ -331,28 +336,28 @@ void L2pItemModel::addFilesFromReply(QNetworkReply *reply, Structureelement *cou
         }
 
         QList<Structureelement*> oldItems;
-        root = oldData->invisibleRootItem();
-        for( int i=0; i < root->rowCount(); i++)
+        if(oldData)
         {
-            getItemList(static_cast<Structureelement*>(root->child(i)), oldItems);
-        }
-
-        foreach(Structureelement *item, items)
-        {
-            for(QList<Structureelement*>::iterator it = oldItems.begin(); it != oldItems.end(); it++)
+            root = oldData->invisibleRootItem();
+            for( int i=0; i < root->rowCount(); i++)
             {
-                Structureelement *oldItem = *it;
-                if(item->data(urlRole) == oldItem->data(urlRole) && item->text() == oldItem->text())
+                getItemList(static_cast<Structureelement*>(root->child(i)), oldItems);
+            }
+
+            foreach(Structureelement *item, items)
+            {
+                for(QList<Structureelement*>::iterator it = oldItems.begin(); it != oldItems.end(); it++)
                 {
-                    item->setData(oldItem->data(includeRole), includeRole);
-                    oldItems.erase(it);
-                    break;
+                    Structureelement *oldItem = *it;
+                    if(item->data(urlRole) == oldItem->data(urlRole) && item->text() == oldItem->text())
+                    {
+                        item->setData(oldItem->data(includeRole), includeRole);
+                        oldItems.erase(it);
+                        break;
+                    }
                 }
             }
         }
-
-        oldData->deleteLater();
-        oldData = 0;
 
         Utils::checkAllFilesIfSynchronised(items, options->downloadFolderLineEditText());
     }
