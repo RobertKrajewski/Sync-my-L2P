@@ -141,9 +141,17 @@ void L2pItemModel::saveDataToFile()
 #else
     QString dataPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
 #endif
-    QFile file(dataPath + DATAFILENAME);
+
+    if(!QDir(dataPath).exists())
+    {
+        QDir().mkdir(dataPath);
+    }
+
+    QFile file(dataPath + "/" + DATAFILENAME);
     if(!file.open(QIODevice::WriteOnly))
     {
+        Utils::errorMessageBox(tr("Kursinformationen nicht speicherbar."),
+                               file.errorString());
         return;
     }
     QTextStream ts(&file);
