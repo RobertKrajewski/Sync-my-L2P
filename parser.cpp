@@ -18,7 +18,7 @@ QList<QString> Parser::parseFeatures(QNetworkReply *reply)
 
     if(object.isEmpty())
     {
-        QLOG_INFO() << tr("Featureinformationen leer bzw. nicht lesbar.");
+        QLOG_INFO() << tr("Featureinformationen leer bzw. nicht lesbar.") <<":"<<reply->url();
         return activeFeatures;
     }
 
