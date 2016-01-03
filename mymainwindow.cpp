@@ -77,13 +77,12 @@ MyMainWindow::MyMainWindow(QWidget *parent):
     }
 }
 
-MyMainWindow::~MyMainWindow()
+void MyMainWindow::closeEvent(QCloseEvent * event)
 {
     saveSettings();
-    delete ui;
-    delete trayIcon;
-
     QsLogging::Logger::destroyInstance();
+
+    event->accept();
 }
 
 /// Laden der gespeicherten Einstellungen aller Tabs
