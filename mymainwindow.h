@@ -36,7 +36,7 @@ class MyMainWindow : public QMainWindow
 
 public:
     explicit MyMainWindow(QWidget *parent = 0);
-    ~MyMainWindow();
+    void closeEvent(QCloseEvent * event);
 
 private slots:
     void trayClickedSlot(QSystemTrayIcon::ActivationReason);
