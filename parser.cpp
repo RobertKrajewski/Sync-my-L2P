@@ -208,6 +208,7 @@ void Parser::parseFiles(QNetworkReply *reply, Structureelement* course, QString 
         }
         else if(responseCategory == 2)
         {
+            // Läd das Übungsdokument herunter
             QJsonArray assignmentDocs = file["assignmentDocuments"].toArray();
 
             foreach(QJsonValue assignmentElement, assignmentDocs)
@@ -240,7 +241,40 @@ void Parser::parseFiles(QNetworkReply *reply, Structureelement* course, QString 
                 // Element hinzufügen
                 dir->appendRow(newFile);
             }
+            // Läd die Korrektur der eingereichten Lösung herunter
+            QJsonObject correction = file["correction"].toObject();
+            QJsonArray correctionFiles= correction["correctionDocuments"].toArray();
+            foreach(QJsonValue correctionElement, correctionFiles)
+            {
+                QJsonObject correctionDoc = correctionElement.toObject();
 
+                filename = correctionDoc["fileName"].toString();
+                filesize = correctionDoc["fileSize"].toString().toInt();
+                timestamp = correctionDoc["modifiedTimestamp"].toInt();
+                url = correctionDoc["downloadUrl"].toString();
+                url = QByteArray::fromPercentEncoding(url.toLocal8Bit());
+                urlParts = url.split('/');
+
+                urlParts.removeFirst();
+                urlParts.removeFirst();
+                urlParts.removeFirst();
+                urlParts.removeFirst();
+                urlParts.removeFirst();
+                urlParts.removeLast();
+                urlParts.removeLast();
+
+                // Fix Browser-URL
+                url.remove(0,10);
+
+                Structureelement *dir = Utils::getDirectoryItem(currentCourse, urlParts);
+
+                Structureelement* newFile = new Structureelement(filename, QUrl(url), timestamp, filesize,
+                                                                 currentCourse->data(cidRole).toString(),
+                                                                 fileItem);
+                // Element hinzufügen
+                dir->appendRow(newFile);
+             }
+            // Läd die eingereichten Lösungen herunter
             QJsonObject solutions = file["solution"].toObject();
             QJsonArray solutionFiles= solutions["solutionDocuments"].toArray();
             foreach(QJsonValue solutionElement, solutionFiles)
@@ -273,6 +307,40 @@ void Parser::parseFiles(QNetworkReply *reply, Structureelement* course, QString 
                 // Element hinzufügen
                 dir->appendRow(newFile);
              }
+            // Läd die Musterlösung herunter
+            QJsonArray sampleSolutions = file["SampleSolutionDocuments"].toArray();
+
+            foreach(QJsonValue sampleSolutionElement, sampleSolutions)
+            {
+                QJsonObject sampleSolutionDoc = sampleSolutionElement.toObject();
+
+                filename = sampleSolutionDoc["fileName"].toString();
+                filesize = sampleSolutionDoc["fileSize"].toString().toInt();
+                timestamp = sampleSolutionDoc["modifiedTimestamp"].toInt();
+                url = sampleSolutionDoc["downloadUrl"].toString();
+                url = QByteArray::fromPercentEncoding(url.toLocal8Bit());
+                urlParts = url.split('/');
+
+                urlParts.removeFirst();
+                urlParts.removeFirst();
+                urlParts.removeFirst();
+                urlParts.removeFirst();
+                urlParts.removeFirst();
+                urlParts.removeLast();
+
+                // Fix Browser-URL
+                url.remove(0,10);
+
+                Structureelement *dir = Utils::getDirectoryItem(currentCourse, urlParts);
+
+                Structureelement* newFile = new Structureelement(filename, QUrl(url), timestamp, filesize,
+                                                                 currentCourse->data(cidRole).toString(),
+                                                                 fileItem);
+
+                // Element hinzufügen
+                dir->appendRow(newFile);
+            }
+
         }
         else if(responseCategory == 3)
         {
