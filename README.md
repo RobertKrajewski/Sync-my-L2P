@@ -14,6 +14,12 @@ An dieser Stelle vielen Dank an Stefan!
 
 Achtung: Damit das Programm eine Verbindung mit dem L2P herstellen kann, ist eine ClientID notwendig. Seitens der RWTH ist es verboten, diese zu veröffentlichen.
 
+Installation auf OSX (Cask)
+----------------
+Users with home-brew installed can now install Sync-my-L2p with the following commands:
+`brew tap caskroom/cask` followed by `brew cask install sync-my-l2p`. Updating the program will work with the command `brew update` to update the program formula, followed by `brew upgrade` to upgrade the program itself.
+
+
 Fehler gefunden?
 ----------------
 
