@@ -142,9 +142,10 @@ void L2pItemModel::saveDataToFile()
     QString dataPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
 #endif
 
-    if(!QDir(dataPath).exists())
+    if(!QDir(dataPath).exists() && !QDir().mkpath(dataPath))
     {
-        QDir().mkdir(dataPath);
+        QLOG_ERROR() << tr("Konnte Pfad für Speicherung der Kursinformationen nicht erstellen") <<
+                        " (" << dataPath << ")";
     }
 
     QFile file(dataPath + "/" + DATAFILENAME);
