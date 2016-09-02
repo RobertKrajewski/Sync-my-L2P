@@ -61,6 +61,7 @@ void Options::loadSettings()
     ui->mediaLibrarysCheckBox->setChecked(          settings.value("literature", true).toBool());
     ui->emailAttachmentsCheckBox->setChecked(       settings.value("email", true).toBool());
     ui->announcementAttachmentsCheckBox->setChecked(settings.value("announcement", true).toBool());
+    ui->tutorDomainCheckBox->setChecked(            settings.value("tutorDomain", true).toBool());
 
     settings.endGroup();
 
@@ -107,6 +108,7 @@ void Options::saveSettings()
     settings.setValue("literature",         ui->mediaLibrarysCheckBox->isChecked());
     settings.setValue("email",              ui->emailAttachmentsCheckBox->isChecked());
     settings.setValue("announcement",       ui->announcementAttachmentsCheckBox->isChecked());
+    settings.setValue("tutorDomain",        ui->tutorDomainCheckBox->isChecked());
     settings.endGroup();
 
     settings.beginGroup("automation");
@@ -227,6 +229,11 @@ bool Options::isLearningMaterialsCheckBoxChecked()
     return ui->learningMaterialsCheckBox->isChecked();
 }
 
+bool Options::isTutorDomainCheckBoxChecked()
+{
+    return ui->tutorDomainCheckBox->isChecked();
+}
+
 bool Options::isAutoSyncOnStartCheckBoxChecked()
 {
     return ui->autoSyncOnStartCheckBox->isChecked();
@@ -266,7 +273,6 @@ bool Options::isCurrentSemesterCheckBoxChecked()
 {
     return ui->currentSemesterCheckBox->isChecked();
 }
-
 
 int Options::getLoginCounter()
 {

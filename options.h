@@ -42,6 +42,7 @@ public:
     bool isOverrideFilesCheckBoxChecked();
     bool isCheckForUpdateCheckBoxChecked();
     bool isCurrentSemesterCheckBoxChecked();
+    bool isTutorDomainCheckBoxChecked();
 
     QString getAccessToken() const;
 
