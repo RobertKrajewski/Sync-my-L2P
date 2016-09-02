@@ -30,10 +30,9 @@ void LoginDialog::run(Login *login)
     QObject::connect(this, SIGNAL(rejected()), this->login, SLOT(stopLoginSlot()));
 
     // Überprüfe Erreichbarkeit des L2P
-    QUrl url("https://www3.elearning.rwth-aachen.de");
+    QUrl url("https://www3.elearning.rwth-aachen.de/_vti_bin/L2PServices/api.svc/v1/Documentation");
     QNetworkRequest request;
     request.setUrl(url);
-
 
     QObject::connect(&manager, SIGNAL(finished(QNetworkReply*)),
                      this, SLOT(availabilitySlot(QNetworkReply*)));
@@ -44,7 +43,6 @@ void LoginDialog::run(Login *login)
 
 void LoginDialog::availabilitySlot(QNetworkReply * reply)
 {
-    QLOG_INFO() << tr("Erreichbarkeit festgestellt");
     QObject::disconnect(&manager, SIGNAL(finished(QNetworkReply*)),
                         this, SLOT(availabilitySlot(QNetworkReply*)));
 
@@ -59,6 +57,7 @@ void LoginDialog::availabilitySlot(QNetworkReply * reply)
     }
     else
     {
+        QLOG_INFO() << tr("L2P erreichbar");
         checkForAuthentification();
     }
 }
