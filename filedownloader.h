@@ -72,6 +72,8 @@ private:
 
     QTime downloadTime;
 
+    bool showedError;
+
 private slots:
     void downloadProgressSlot(qint64,qint64);
     void readyReadSlot();
