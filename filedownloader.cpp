@@ -34,6 +34,8 @@ FileDownloader::FileDownloader(int itemNumber,
     this->show();
 
     Utils::centerWidgetOnDesktop(this);
+
+    showedError = false;
 }
 
 FileDownloader::~FileDownloader()
@@ -125,10 +127,19 @@ void FileDownloader::finishedSlot()
 
     if(reply->error())
     {
-        Utils::errorMessageBox(tr("Beim Download der Datei %1 ist ein Fehler aufgetreten.").arg(output.fileName()),
-                               reply->errorString() % "; " % reply->readAll());
+        if(!showedError)
+        {
+            Utils::errorMessageBox(tr("Beim Download der Datei %1 ist ein Fehler aufgetreten. Weitere Fehler werden nur im Log angezeigt").arg(output.fileName()),
+                                   reply->errorString() % "; " % reply->readAll());
+            showedError = true;
+        }
+        else
+        {
+            QLOG_ERROR() << tr("Beim Download der Datei %1 ist ein Fehler aufgetreten. Weitere Fehler werden nur im Log angezeigt").arg(output.fileName()) <<
+                            ": " << reply->errorString() % "; " % reply->readAll();
+        }
+
         output.remove();
-        loop.exit(0);
     }
     else
     {
