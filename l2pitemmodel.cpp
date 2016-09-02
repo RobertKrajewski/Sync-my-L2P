@@ -306,6 +306,12 @@ void L2pItemModel::addFeatureFromReply(QNetworkReply *reply, Structureelement *c
         replies.insert(manager.get(createApiRequest(course, "viewAllEmails")),
         {course, ReplyInfo::files});
     }
+
+    if(options->isTutorDomainCheckBoxChecked() && activeFeatures.contains("TutorDomain"))
+    {
+        replies.insert(manager.get(createApiRequest(course, "viewAllTutorDomainDocuments")),
+        {course, ReplyInfo::files});
+    }
 }
 
 void L2pItemModel::addFilesFromReply(QNetworkReply *reply, Structureelement *course)
