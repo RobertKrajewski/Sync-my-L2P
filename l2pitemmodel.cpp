@@ -103,6 +103,7 @@ void L2pItemModel::loadDataFromFile()
 
     // Dateiinhalt überprüfen
     QTextStream ts(&dataFile);
+    ts.setCodec(QTextCodec::codecForName("utf-8"));
     if(ts.atEnd())
     {
         QLOG_INFO() << tr("Geladene Datei enthält keine Daten.");
@@ -156,7 +157,8 @@ void L2pItemModel::saveDataToFile()
         return;
     }
     QTextStream ts(&file);
-    ts << domDoc.toByteArray();
+    ts.setCodec(QTextCodec::codecForName("utf-8"));
+    ts << domDoc.toString();
     file.close();
 }
 
@@ -212,7 +214,7 @@ void L2pItemModel::parseDataToXml(QDomDocument &output, QStandardItem *item,
     QDomElement xmlItem;
 
     // Das Root-item auslassen
-    if(item->text().isEmpty())
+    if(parentItem == nullptr)
     {
         xmlItem = output.createElement("root");
         output.appendChild(xmlItem);
