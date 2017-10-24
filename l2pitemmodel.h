@@ -59,28 +59,44 @@ protected:
     void getItemList(QStandardItem *topElement, QList <Structureelement *> &list);
     void requestCourses();
     void requestFeatures();
+    void startNextRequests();
 
     QStandardItemModel *data = new QStandardItemModel();
     QStandardItemModel *oldData = nullptr;
 
     MySortFilterProxyModel proxy;
 
+    enum Type
+    {
+        courses,
+        features,
+        files
+    };
+
     struct ReplyInfo
     {
-        Structureelement* item;
-
-        enum Type
-        {
-            courses,
-            features,
-            files
-        };
+        Structureelement *item;
 
         Type type;
+
+        QTime timeStart;
+    };
+
+    struct OpenRequest
+    {
+        Structureelement *item;
+
+        Type type;
+
+        QTime timeStart;
+
+        QNetworkRequest request;
     };
 
     QNetworkAccessManager manager;
     QMap<QNetworkReply*, ReplyInfo> replies;
+    QList<OpenRequest> requestQueue;
+
 
     Options *options = nullptr;
 

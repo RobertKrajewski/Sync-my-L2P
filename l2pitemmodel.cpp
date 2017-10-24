@@ -2,7 +2,8 @@
 #include <QTextCodec>
 
 #include <QStandardPaths>
-
+#include <QCoreApplication>
+#include <QThread>
 #include "qslog/QsLog.h"
 #include "urls.h"
 #include "options.h"
@@ -26,6 +27,27 @@ L2pItemModel::~L2pItemModel()
 }
 
 /**
+ * @brief Laden der Daten vom L2P Server
+ */
+void L2pItemModel::loadDataFromServer()
+{
+    if(oldData)
+    {
+        oldData->deleteLater();
+    }
+
+    // Aktuelle Daten behalten für ein Merge mit den neuen Daten
+    oldData = data;
+
+    // Neues Datenmodell erstellen
+    data = new QStandardItemModel();
+    proxy.setSourceModel(data);
+
+    // Request für Kurse starten
+    requestCourses();
+}
+
+/**
  * @brief Senden eines Requests zum Erhalt aller ausgewählten Veranstaltungen
  */
 void L2pItemModel::requestCourses()
@@ -33,11 +55,18 @@ void L2pItemModel::requestCourses()
     QLOG_DEBUG() << tr("Sende Request für Veranstaltungen");
 
     QString url = options->isCurrentSemesterCheckBoxChecked() ?
-                viewAllCourseInfoByCurrentSemesterUrl :
-                viewAllCourseInfoUrl;
+                  viewAllCourseInfoByCurrentSemesterUrl :
+                  viewAllCourseInfoUrl;
 
     QNetworkRequest request(QUrl(url % "?accessToken=" % options->getAccessToken()));
-    replies.insert(manager.get(request), {nullptr, ReplyInfo::courses});
+
+    OpenRequest openRequest = {nullptr,
+                               courses,
+                               QTime::currentTime(),
+                               request};
+    requestQueue.append(openRequest);
+
+    startNextRequests();
 }
 
 /**
@@ -53,29 +82,12 @@ void L2pItemModel::requestFeatures()
                                      "?accessToken=" % options->getAccessToken() %
                                      "&cid=" % course->data(cidRole).toString()));
 
-        replies.insert(manager.get(request), {course, ReplyInfo::features});
+        OpenRequest openRequest = {course,
+                                   features,
+                                   QTime::currentTime(),
+                                   request};
+        requestQueue.append(openRequest);
     }
-}
-
-/**
- * @brief Laden der Daten vom L2P Server
- */
-void L2pItemModel::loadDataFromServer()
-{
-    // Aktuelle Daten behalten für ein Merge mit den neuen Daten
-    if(oldData)
-    {
-        oldData->deleteLater();
-    }
-
-    oldData = data;
-
-    // Neues Datenmodell erstellen
-    data = new QStandardItemModel();
-    proxy.setSourceModel(data);
-
-    // Request für Kurse starten
-    requestCourses();
 }
 
 /**
@@ -145,8 +157,8 @@ void L2pItemModel::saveDataToFile()
 
     if(!QDir(dataPath).exists() && !QDir().mkpath(dataPath))
     {
-        QLOG_ERROR() << tr("Konnte Pfad für Speicherung der Kursinformationen nicht erstellen") <<
-                        " (" << dataPath << ")";
+        Utils::errorMessageBox(tr("Pfad nicht erstellbar"),
+                               tr("Konnte Pfad für Speicherung der Kursinformationen nicht erstellen") + " (" + dataPath + ")");
     }
 
     QFile file(dataPath + "/" + DATAFILENAME);
@@ -246,8 +258,7 @@ void L2pItemModel::addCoursesFromReply(QNetworkReply *reply)
 {
     if(reply->error())
     {
-        Utils::errorMessageBox(tr("Beim Abruf der Veranstaltungen ist ein Fehler aufgetreten"),
-                               reply->errorString() % ";\n " % reply->readAll());
+        QLOG_ERROR() << tr("Beim Abruf der Veranstaltungen ist ein Fehler aufgetreten") % reply->errorString() % ";\n " % reply->url().toString();
     }
     else
     {
@@ -273,47 +284,74 @@ void L2pItemModel::addFeatureFromReply(QNetworkReply *reply, Structureelement *c
 {
     const auto activeFeatures = Parser::parseFeatures(reply);
 
+    QNetworkAccessManager &manager = *(new QNetworkAccessManager());
+    QObject::connect(&manager, SIGNAL(finished(QNetworkReply*)),
+                     this, SLOT(serverDataRecievedSlot(QNetworkReply*)));
+
     if(options->isLearningMaterialsCheckBoxChecked() && activeFeatures.contains("Learning Materials"))
     {
-        replies.insert(manager.get(createApiRequest(course, "viewAllLearningMaterials")),
-                       {course, ReplyInfo::files});
+        OpenRequest request = {course,
+                               files,
+                               QTime::currentTime(),
+                               createApiRequest(course, "viewAllLearningMaterials")};
+        requestQueue.append(request);
     }
 
     if(options->isSharedLearningmaterialsCheckBoxChecked() && activeFeatures.contains("Shared Documents"))
     {
-        replies.insert(manager.get(createApiRequest(course, "viewAllSharedDocuments")),
-                       {course, ReplyInfo::files});
+        OpenRequest request = {course,
+                               files,
+                               QTime::currentTime(),
+                               createApiRequest(course, "viewAllSharedDocuments")};
+        requestQueue.append(request);
     }
 
     if(options->isAssignmentsCheckBoxChecked() && activeFeatures.contains("Assignments"))
     {
-        replies.insert(manager.get(createApiRequest(course, "viewAllAssignments")),
-        {course, ReplyInfo::files});
+        OpenRequest request = {course,
+                               files,
+                               QTime::currentTime(),
+                               createApiRequest(course, "viewAllAssignments")};
+        requestQueue.append(request);
     }
 
     if(options->isMediaLibrarysCheckBoxChecked() && activeFeatures.contains("Media Library"))
     {
-        replies.insert(manager.get(createApiRequest(course, "viewAllMediaLibraries")),
-        {course, ReplyInfo::files});
+        OpenRequest request = {course,
+                               files,
+                               QTime::currentTime(),
+                               createApiRequest(course, "viewAllMediaLibraries")};
+        requestQueue.append(request);
     }
 
     if(options->isAnnouncementAttachmentsCheckBoxChecked() && activeFeatures.contains("Announcements"))
     {
-        replies.insert(manager.get(createApiRequest(course, "viewAllAnnouncements")),
-        {course, ReplyInfo::files});
+        OpenRequest request = {course,
+                               files,
+                               QTime::currentTime(),
+                               createApiRequest(course, "viewAllAnnouncements")};
+        requestQueue.append(request);
     }
 
     if(options->isEmailAttachmentsCheckBoxChecked() && activeFeatures.contains("Emails"))
     {
-        replies.insert(manager.get(createApiRequest(course, "viewAllEmails")),
-        {course, ReplyInfo::files});
+        OpenRequest request = {course,
+                               files,
+                               QTime::currentTime(),
+                               createApiRequest(course, "viewAllEmails")};
+        requestQueue.append(request);
     }
 
     if(options->isTutorDomainCheckBoxChecked() && activeFeatures.contains("TutorDomain"))
     {
-        replies.insert(manager.get(createApiRequest(course, "viewAllTutorDomainDocuments")),
-        {course, ReplyInfo::files});
+        OpenRequest request = {course,
+                               files,
+                               QTime::currentTime(),
+                               createApiRequest(course, "viewAllTutorDomainDocuments")};
+        requestQueue.append(request);
     }
+
+    QLOG_DEBUG() << "Current open requests: " << replies.size();
 }
 
 void L2pItemModel::addFilesFromReply(QNetworkReply *reply, Structureelement *course)
@@ -325,6 +363,8 @@ void L2pItemModel::addFilesFromReply(QNetworkReply *reply, Structureelement *cou
     {
         Parser::parseFiles(reply, course,
                            options->downloadFolderLineEditText());
+
+        QLOG_DEBUG() << tr("Dateiinformationen geparst: ") << reply->url().toString();
     }
     else
     {
@@ -336,7 +376,8 @@ void L2pItemModel::addFilesFromReply(QNetworkReply *reply, Structureelement *cou
         }
         else
         {
-            Utils::errorMessageBox(tr("Beim Abruf des Inhalts einer Veranstaltung ist ein Fehler aufgetreten"), reply->errorString() % ";\n " % replyMessage);
+            auto errorMessage = reply->errorString();
+            QLOG_ERROR() << tr("Beim Abruf der Veranstaltungen ist ein Fehler aufgetreten") % reply->errorString() % ";\n " % reply->url().toString() % replyMessage;
         }
     }
 
@@ -383,8 +424,6 @@ void L2pItemModel::addFilesFromReply(QNetworkReply *reply, Structureelement *cou
             }
         }
 
-
-
         Utils::checkAllFilesIfSynchronised(items, options->downloadFolderLineEditText());
     }
 }
@@ -425,19 +464,22 @@ void L2pItemModel::serverDataRecievedSlot(QNetworkReply *reply)
     ReplyInfo replyInfo = replies.value(reply);
     replies.remove(reply);
 
+    QTime elapsed = QTime::fromMSecsSinceStartOfDay(QTime::currentTime().msecsSinceStartOfDay() - replyInfo.timeStart.msecsSinceStartOfDay());
+    QLOG_DEBUG() << "Elapsed time: " << elapsed.toString() << " for request url: " << reply->url().toString();
+
     switch (replyInfo.type)
     {
-    case ReplyInfo::courses:
+    case courses:
     {
         addCoursesFromReply(reply);
         break;
     }
-    case ReplyInfo::features:
+    case features:
     {
         addFeatureFromReply(reply, replyInfo.item);
         break;
     }
-    case ReplyInfo::files:
+    case files:
     {
         addFilesFromReply(reply, replyInfo.item);
         break;
@@ -447,6 +489,8 @@ void L2pItemModel::serverDataRecievedSlot(QNetworkReply *reply)
         QLOG_ERROR() << tr("Serverantwort wurde unbekannter Typ zugeordnet") % ":" % reply->url().toString();
     }
     }
+
+    startNextRequests();
 
     reply->deleteLater();
 
@@ -458,6 +502,18 @@ void L2pItemModel::serverDataRecievedSlot(QNetworkReply *reply)
 
         QLOG_DEBUG() << tr("Aktualisierung beendet");
         emit loadingFinished(true);
+    }
+}
+
+void L2pItemModel::startNextRequests()
+{
+    while(replies.size() < 10 && requestQueue.size() > 0)
+    {
+        auto nextRequest = requestQueue.first();
+        ReplyInfo replyInfo = {nextRequest.item, nextRequest.type, QTime::currentTime()};
+        replies.insert(manager.get(nextRequest.request),
+                       replyInfo);
+        requestQueue.pop_front();
     }
 }
 
