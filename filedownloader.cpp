@@ -127,24 +127,31 @@ void FileDownloader::finishedSlot()
 
     if(reply->error())
     {
-        if(!showedError)
+        QString errorString = reply->errorString();
+
+        if(!showedError && !errorString.contains("server replied: Not Found") && !errorString.contains("Operation canceled"))
         {
             Utils::errorMessageBox(tr("Beim Download der Datei %1 ist ein Fehler aufgetreten. Weitere Fehler werden nur im Log angezeigt").arg(output.fileName()),
-                                   reply->errorString() % "; " % reply->readAll());
+                                   errorString % "; " % reply->readAll());
             showedError = true;
         }
         else
         {
-            QLOG_ERROR() << tr("Beim Download der Datei %1 ist ein Fehler aufgetreten. Weitere Fehler werden nur im Log angezeigt").arg(output.fileName()) <<
-                            ": " << reply->errorString() % "; " % reply->readAll();
+            QLOG_ERROR() << tr("Beim Download der Datei %1 ist ein Fehler aufgetreten.").arg(output.fileName()) <<
+                            ": " << errorString % "; " % reply->readAll();
         }
 
         output.remove();
+
+        // Abort synchronisation completly if user desires
+        if(errorString.contains("Operation canceled"))
+        {
+            loop.exit(0);
+            return;
+        }
     }
-    else
-    {
-        loop.exit(1);
-    }
+
+    loop.exit(1);
 }
 
 void FileDownloader::on_abortPushButton_clicked()
