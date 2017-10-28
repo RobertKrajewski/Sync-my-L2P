@@ -519,7 +519,7 @@ void L2pItemModel::serverDataRecievedSlot(QNetworkReply *reply)
 
 void L2pItemModel::startNextRequests()
 {
-    while(replies.size() < 10 && requestQueue.size() > 0)
+    while(replies.size() < 19 && requestQueue.size() > 0)
     {
         auto nextRequest = requestQueue.first();
         ReplyInfo replyInfo = {nextRequest.item, nextRequest.type, QTime::currentTime()};
