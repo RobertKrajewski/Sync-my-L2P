@@ -43,6 +43,8 @@ void L2pItemModel::loadDataFromServer()
     data = new QStandardItemModel();
     proxy.setSourceModel(data);
 
+    numRequests = 0;
+
     // Request für Kurse starten
     requestCourses();
 }
@@ -65,6 +67,7 @@ void L2pItemModel::requestCourses()
                                QTime::currentTime(),
                                request};
     requestQueue.append(openRequest);
+    numRequests++;
 
     startNextRequests();
 }
@@ -87,6 +90,7 @@ void L2pItemModel::requestFeatures()
                                    QTime::currentTime(),
                                    request};
         requestQueue.append(openRequest);
+        numRequests++;
     }
 }
 
@@ -295,6 +299,7 @@ void L2pItemModel::addFeatureFromReply(QNetworkReply *reply, Structureelement *c
                                QTime::currentTime(),
                                createApiRequest(course, "viewAllLearningMaterials")};
         requestQueue.append(request);
+        numRequests++;
     }
 
     if(options->isSharedLearningmaterialsCheckBoxChecked() && activeFeatures.contains("Shared Documents"))
@@ -304,6 +309,7 @@ void L2pItemModel::addFeatureFromReply(QNetworkReply *reply, Structureelement *c
                                QTime::currentTime(),
                                createApiRequest(course, "viewAllSharedDocuments")};
         requestQueue.append(request);
+        numRequests++;
     }
 
     if(options->isAssignmentsCheckBoxChecked() && activeFeatures.contains("Assignments"))
@@ -313,6 +319,7 @@ void L2pItemModel::addFeatureFromReply(QNetworkReply *reply, Structureelement *c
                                QTime::currentTime(),
                                createApiRequest(course, "viewAllAssignments")};
         requestQueue.append(request);
+        numRequests++;
     }
 
     if(options->isMediaLibrarysCheckBoxChecked() && activeFeatures.contains("Media Library"))
@@ -322,6 +329,7 @@ void L2pItemModel::addFeatureFromReply(QNetworkReply *reply, Structureelement *c
                                QTime::currentTime(),
                                createApiRequest(course, "viewAllMediaLibraries")};
         requestQueue.append(request);
+        numRequests++;
     }
 
     if(options->isAnnouncementAttachmentsCheckBoxChecked() && activeFeatures.contains("Announcements"))
@@ -331,6 +339,7 @@ void L2pItemModel::addFeatureFromReply(QNetworkReply *reply, Structureelement *c
                                QTime::currentTime(),
                                createApiRequest(course, "viewAllAnnouncements")};
         requestQueue.append(request);
+        numRequests++;
     }
 
     if(options->isEmailAttachmentsCheckBoxChecked() && activeFeatures.contains("Emails"))
@@ -340,6 +349,7 @@ void L2pItemModel::addFeatureFromReply(QNetworkReply *reply, Structureelement *c
                                QTime::currentTime(),
                                createApiRequest(course, "viewAllEmails")};
         requestQueue.append(request);
+        numRequests++;
     }
 
     if(options->isTutorDomainCheckBoxChecked() && activeFeatures.contains("TutorDomain"))
@@ -349,6 +359,7 @@ void L2pItemModel::addFeatureFromReply(QNetworkReply *reply, Structureelement *c
                                QTime::currentTime(),
                                createApiRequest(course, "viewAllTutorDomainDocuments")};
         requestQueue.append(request);
+        numRequests++;
     }
 
     QLOG_DEBUG() << "Current open requests: " << replies.size();
@@ -466,6 +477,7 @@ void L2pItemModel::serverDataRecievedSlot(QNetworkReply *reply)
 
     QTime elapsed = QTime::fromMSecsSinceStartOfDay(QTime::currentTime().msecsSinceStartOfDay() - replyInfo.timeStart.msecsSinceStartOfDay());
     QLOG_DEBUG() << "Elapsed time: " << elapsed.toString() << " for request url: " << reply->url().toString();
+    emit showStatusMessage(QString("Aktualisierungsfortschritt: %1 von %2 Anfragen durchgeführt").arg(numRequests-requestQueue.size()).arg(numRequests));
 
     switch (replyInfo.type)
     {

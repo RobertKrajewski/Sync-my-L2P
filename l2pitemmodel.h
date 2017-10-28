@@ -48,6 +48,7 @@ public slots:
 
 signals:
     void loadingFinished(bool successful);
+    void showStatusMessage(QString);
 
 protected:
     void parseDataFromXml(QDomElement input, QStandardItem *parentItem);
@@ -96,10 +97,8 @@ protected:
     QNetworkAccessManager manager;
     QMap<QNetworkReply*, ReplyInfo> replies;
     QList<OpenRequest> requestQueue;
-
-
     Options *options = nullptr;
-
+    int numRequests = 0;
 
 protected slots:
     void serverDataRecievedSlot(QNetworkReply *reply);

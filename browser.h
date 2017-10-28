@@ -64,6 +64,7 @@ public slots:
 signals:
     void enableSignal(bool);
     void switchTab(int);
+    void showStatusMessage(QString);
     
 private:
     void removeSelection(Structureelement*);

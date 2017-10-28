@@ -499,6 +499,7 @@ void Browser::setupSignalsSlots()
     connect(ui->maxDateEdit, &QDateEdit::dateChanged, proxy, &MySortFilterProxyModel::setFilterMaximumDate);
 
     connect(l2pItemModel, &L2pItemModel::loadingFinished, this, &Browser::itemModelReloadedSlot);
+    connect(l2pItemModel, &L2pItemModel::showStatusMessage, this, &Browser::showStatusMessage);
 }
 
 void Browser::on_openDownloadfolderPushButton_clicked()
@@ -727,8 +728,6 @@ void Browser::itemModelReloadedSlot()
     {
         on_syncPushButton_clicked();
     }
-
-
 }
 
 void Browser::clearItemModel()

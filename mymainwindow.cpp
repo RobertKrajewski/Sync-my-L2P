@@ -51,6 +51,7 @@ MyMainWindow::MyMainWindow(QWidget *parent):
 
     QObject::connect(ui->optionsTab, SIGNAL(successfulLogin()), ui->browserTab, SLOT(successfulLoginSlot()));
 
+    QObject::connect(ui->browserTab, SIGNAL(showStatusMessage(QString)), this, SLOT(showStatusMessage(QString)));
 
     // Gespeicherte Einstellungen für das gesamte Programm laden
     loadSettings();
@@ -246,6 +247,11 @@ void MyMainWindow::on_langCB_currentIndexChanged(const QString &lang){
 
     qApp->installTranslator(&m_translator);
     retranslate();
+}
+
+void MyMainWindow::showStatusMessage(QString msg)
+{
+    ui->statusBar->showMessage(msg);
 }
 
 // Läd die neuen Übersetzungen für die GUI Elemente.
