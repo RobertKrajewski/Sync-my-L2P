@@ -3,6 +3,11 @@
 
 Sync-my-L2P ist ein Programm, das von Studenten der RWTH Aachen für den komfortablen Download aller zur Verfügung gestellten Dateien in ihrem Lernportal "L²P" geschaffen wurde. Sie ermöglicht dir, sehr einfach die Daten aus deinen virtuellen Lernräumen mit deiner Festplatte zu spiegeln, so dass diese auch ohne Internet zur Verfügung stehen.
 
+Download
+----------------
+Sync-my-L2P steht vorgefertigt auf der [offiziellen Webseite](http://www.sync-my-l2p.de) oder [hier](https://github.com/Sync-my-L2P/Sync-my-L2P/releases/tag/latest) für mehrere Plattformen bereit. 
+
+
 Kompilieren
 ----------------
 
