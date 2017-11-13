@@ -5,7 +5,7 @@ Sync-my-L2P ist ein Programm, das von Studenten der RWTH Aachen für den komfort
 
 Download
 ----------------
-Sync-my-L2P steht vorgefertigt auf der [offiziellen Webseite](http://www.sync-my-l2p.de) oder [hier](https://github.com/Sync-my-L2P/Sync-my-L2P/releases/tag/v2.2.0) für mehrere Plattformen bereit. 
+Sync-my-L2P steht vorgefertigt auf der [offiziellen Webseite](http://www.syncmyl2p.de) oder [hier](https://github.com/Sync-my-L2P/Sync-my-L2P/releases/tag/v2.2.0) für mehrere Plattformen bereit. 
 
 
 Kompilieren
