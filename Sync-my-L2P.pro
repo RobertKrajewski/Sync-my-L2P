@@ -1,15 +1,10 @@
-QT       += core gui network xml
+QT     += core gui network xml
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 CONFIG += c++11
 
 TARGET = Sync-my-L2P
 TEMPLATE = app
 DESTDIR = bin
-
-TRANSLATIONS = lang/sync-my-l2p_de.ts \
-               lang/sync-my-l2p_en.ts \
-               lang/sync-my-l2p_lb.ts \
-               lang/sync-my-l2p_sq.ts
 
 SOURCES += \
     src/main.cpp \
@@ -62,17 +57,22 @@ FORMS += \
     gui/mymainwindow.ui \
     gui/options.ui
 
-OTHER_FILES += \
-    Sync-my-L2P.icns \
-    README.md \
-    magnifier.ico \
-    LICENSE \
-    .gitignore
+TRANSLATIONS = lang/sync-my-l2p_de.ts \
+               lang/sync-my-l2p_en.ts \
+               lang/sync-my-l2p_lb.ts \
+               lang/sync-my-l2p_sq.ts
 
 RESOURCES += \
     icons\icons.qrc \
     lang\translation.qrc
 
 RC_FILE = icon.rc
+
+OTHER_FILES += \
+    Sync-my-L2P.icns \
+    README.md \
+    magnifier.ico \
+    LICENSE \
+    .gitignore
 
 include(qslog/QsLog.pri)
