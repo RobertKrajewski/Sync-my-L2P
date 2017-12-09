@@ -135,10 +135,10 @@ void MyMainWindow::removeOldSettings()
 
 void MyMainWindow::checkForUpdate()
 {
-    int currentVersion = 20200;
+    int currentVersion = 20300;
 
     QNetworkAccessManager manager;
-    QNetworkRequest request( QUrl("http://sync-my-l2p.de/images/version.txt"));
+    QNetworkRequest request( QUrl("http://syncmyl2p.de/images/version.txt"));
     QEventLoop newLoop;
     QNetworkReply *reply = manager.get(request);
 
