@@ -64,7 +64,7 @@ void Logger::logSlot(QString message, int level)
     else
     {
         ui->logList->addItem(message + "\n");
-        ui->logList->item(ui->logList->count()-1)->setForeground(Qt::black);
+        // Use system default color
     }
 
 }

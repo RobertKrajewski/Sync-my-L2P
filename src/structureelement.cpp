@@ -113,7 +113,8 @@ QVariant Structureelement::data(int role) const
             else if (synchronised == SYNCHRONISED)
                 return QBrush(Qt::darkGreen);
             else
-                return QBrush(Qt::black);
+                // Use system default color
+                return QStandardItem::data(role);
         }
         else
         {
