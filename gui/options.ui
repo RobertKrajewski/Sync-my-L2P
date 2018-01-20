@@ -63,6 +63,10 @@
           <property name="text">
            <string>Löschen</string>
           </property>
+          <property name="icon">
+           <iconset resource="../icons/icons.qrc">
+            <normaloff>:/icons/logout.png</normaloff>:/icons/logout.png</iconset>
+          </property>
          </widget>
         </item>
         <item>
@@ -71,7 +75,7 @@
            <string>Einloggen</string>
           </property>
           <property name="icon">
-           <iconset resource="icons/icons.qrc">
+           <iconset resource="../icons/icons.qrc">
             <normaloff>:/icons/login.png</normaloff>:/icons/login.png</iconset>
           </property>
           <property name="default">
@@ -106,7 +110,7 @@
          <string>Durchsuchen</string>
         </property>
         <property name="icon">
-         <iconset resource="icons/icons.qrc">
+         <iconset resource="../icons/icons.qrc">
           <normaloff>:/icons/downloadDirectory.png</normaloff>:/icons/downloadDirectory.png</iconset>
         </property>
        </widget>
@@ -307,6 +311,10 @@
      <property name="text">
       <string>Über Sync-my-L2P</string>
      </property>
+     <property name="icon">
+      <iconset resource="../icons/icons.qrc">
+       <normaloff>:/icons/about.png</normaloff>:/icons/about.png</iconset>
+     </property>
     </widget>
    </item>
    <item>
@@ -325,7 +333,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="icons/icons.qrc"/>
+  <include location="../icons/icons.qrc"/>
  </resources>
  <connections/>
 </ui>

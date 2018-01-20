@@ -22,5 +22,11 @@
         <file>picture.png</file>
         <file>archive.png</file>
         <file>mail.png</file>
+        <file>tutorial.png</file>
+        <file>logout.png</file>
+        <file>about.png</file>
+        <file>contact.png</file>
+        <file>contributors.png</file>
+        <file>license.png</file>
     </qresource>
 </RCC>
