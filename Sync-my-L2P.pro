@@ -16,7 +16,6 @@ SOURCES += \
     src/logger.cpp \
     src/login.cpp \
     src/logindialog.cpp \
-    src/main.cpp \
     src/message.cpp \
     src/mymainwindow.cpp \
     src/mysortfilterproxymodel.cpp \
