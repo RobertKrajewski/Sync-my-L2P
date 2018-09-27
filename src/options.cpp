@@ -264,6 +264,13 @@ QString Options::getAccessToken() const
     return accessToken;
 }
 
+QString Options::getMoodleAccessToken() const
+{
+    // Hardcoded token for my development server
+    // should be removed if the moodle api goes live
+    return QString("");
+}
+
 bool Options::isAutoLoginOnStartCheckBoxChecked()
 {
     return ui->autoLoginOnStartCheckBox->isChecked();

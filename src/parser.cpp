@@ -89,6 +89,55 @@ void Parser::parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
     }
 }
 
+void Parser::parseMoodleCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
+{
+    // Empfangene Nachricht auslesen und als JSON interpretieren
+    QByteArray response(reply->readAll());
+    QJsonDocument document = QJsonDocument::fromJson(response);
+    QJsonObject object = document.object();
+
+    if(object.isEmpty())
+    {
+        QLOG_WARN() << tr("Moodle-Kursinformationen leer bzw. nicht lesbar.");
+        return;
+    }
+
+    if(object["StatusCode"].toInt() != 0)
+    {
+        QLOG_ERROR() << tr("Status der Moodle-Kursinformationen nicht ok: ") <<
+                        QString(document.toJson());
+        return;
+    }
+
+    // Array mit allen einzelnen Vorlesungen/Veranstaltungen
+    QJsonArray courses = object["Data"].toArray();
+
+    // Für jede Veranstaltung ein neues Strukturelement anlegen
+    foreach(QJsonValue element, courses)
+    {
+        QJsonObject course = element.toObject();
+
+        QString title = course["courseTitle"].toString();
+        QString cid = QString::number(course["id"].toInt());
+        QJsonObject category = course["category"].toObject();
+        QString semester = category["idnumber"].toString();
+        QString url = course["url"].toString();
+
+        // Erstellen eines RegExps  für unzulässige Buchstaben im Veranstaltungsnamen
+        QString escapePattern = "(:|<|>|/|\\\\|\\||\\*|\\^|\\?|\\\")";
+        QRegExp escapeRegExp(escapePattern, Qt::CaseSensitive);
+        title = title.replace(escapeRegExp, "").trimmed();
+        // Titellänge limitieren um Probleme bei Dateisystemen zu verhindern
+        title.truncate(100);
+
+        Structureelement *newCourse = new Structureelement(title, QUrl(url), 0, 0, cid, courseItem);
+
+        Utils::getSemesterItem(itemModel, semester)->appendRow(newCourse);
+
+        QLOG_DEBUG() << tr("Moodle-Veranstaltung") << title << "(" << cid << tr(") hinzugefügt.");
+    }
+}
+
 void Parser::parseFiles(QNetworkReply *reply, Structureelement* course, QString downloadDirectoryPath)
 {
     QString url = reply->url().toString();

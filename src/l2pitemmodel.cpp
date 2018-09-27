@@ -47,6 +47,7 @@ void L2pItemModel::loadDataFromServer()
 
     // Request für Kurse starten
     requestCourses();
+    requestMoodleCourses();
 }
 
 /**
@@ -60,10 +61,42 @@ void L2pItemModel::requestCourses()
                   viewAllCourseInfoByCurrentSemesterUrl :
                   viewAllCourseInfoUrl;
 
-    QNetworkRequest request(QUrl(url % "?accessToken=" % options->getAccessToken()));
+    QUrl request_url(url % "?accessToken=" % options->getAccessToken());
+    QNetworkRequest request(request_url);
 
     OpenRequest openRequest = {nullptr,
                                courses,
+                               QTime::currentTime(),
+                               request};
+    requestQueue.append(openRequest);
+    numRequests++;
+
+    startNextRequests();
+}
+
+/**
+ * @brief Senden eines Requests zum Erhalt aller ausgewählten Veranstaltungen von Moodle
+ */
+void L2pItemModel::requestMoodleCourses()
+{
+    QLOG_DEBUG() << tr("Sende Request für Veranstaltungen von Moodle");
+
+    QString url = moodleGetMyEnrolledCourses;
+
+    // TODO: semester generieren oder problem anders lösen
+    QString aktuelles_semester = "ss18";
+    QString token = options->getMoodleAccessToken();
+
+    QString tmp_url(url % "?token=" % token);
+    // filter by current semester
+    if (options->isCurrentSemesterCheckBoxChecked())
+        tmp_url += "&semester=" % aktuelles_semester;
+    QUrl request_url(tmp_url);
+    QNetworkRequest request(request_url);
+
+
+    OpenRequest openRequest = {nullptr,
+                               moodleCourses,
                                QTime::currentTime(),
                                request};
     requestQueue.append(openRequest);
@@ -284,6 +317,42 @@ void L2pItemModel::addCoursesFromReply(QNetworkReply *reply)
     }
 }
 
+/**
+ * @brief Hinzufügen aller Moodle-Kurse aus der Antwort des Servers
+ * @param reply Netzwerkantwort mit Moodle-Kursen
+ */
+void L2pItemModel::addMoodleCoursesFromReply(QNetworkReply *reply)
+{
+    if(reply->error())
+    {
+        QLOG_ERROR() << tr("Beim Abruf der Moodle-Veranstaltungen ist ein Fehler aufgetreten") % reply->errorString() % ";\n " % reply->url().toString();
+    }
+    else
+    {
+        QLOG_INFO() << tr("Moodle-Veranstaltungen empfangen");
+        // data ist eine liste mit semestern, diese semester enthalten course
+        // reply enthält eine liste mit courses
+        // wird dann in json gecastet
+        // dann für alle course in der liste ein course (structureelement) daraus erstellt
+        // dann werden diese course zu data ins jeweilige semester hinzugefügt
+        Parser::parseMoodleCourses(reply, data);
+    }
+
+    if(data->rowCount() != 0)
+    {
+        // Veranstaltungen alphabetisch sortieren
+        data->sort(0);
+
+        // Aktive Features abrufen
+        //TODO
+        //requestFeatures();
+    }
+    else
+    {
+        emit loadingFinished(true);
+    }
+}
+
 void L2pItemModel::addFeatureFromReply(QNetworkReply *reply, Structureelement *course)
 {
     const auto activeFeatures = Parser::parseFeatures(reply);
@@ -451,7 +520,7 @@ QNetworkRequest L2pItemModel::createApiRequest(Structureelement *course,
     QString access = "?accessToken=" % options->getAccessToken();
     QString cid = "&cid=" % course->data(cidRole).toString();
 
-    QString url = apiUrl % apiCommand % access % cid;
+    QString url = l2pApiUrl % apiCommand % access % cid;
     QNetworkRequest request(QUrl(QUrl::toPercentEncoding(url, ":/?=&")));
 
     QLOG_DEBUG() << tr("Erstellter Request:") << url;
@@ -484,6 +553,11 @@ void L2pItemModel::serverDataRecievedSlot(QNetworkReply *reply)
     case courses:
     {
         addCoursesFromReply(reply);
+        break;
+    }
+    case moodleCourses:
+    {
+        addMoodleCoursesFromReply(reply);
         break;
     }
     case features:
