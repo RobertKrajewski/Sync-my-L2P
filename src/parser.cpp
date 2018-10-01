@@ -408,6 +408,12 @@ void Parser::parseFiles(QNetworkReply *reply, Structureelement* course, QString 
                     continue;
                 }
 
+            // Some Media Library items - for example only a youtube link, but no file - doesn't contain fileInformation to download
+            if(url == "")
+                {
+                    continue;
+                }
+
             urlParts = url.split('/');
             urlParts.removeFirst();
             urlParts.removeFirst();
