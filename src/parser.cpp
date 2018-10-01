@@ -577,6 +577,7 @@ void Parser::parseMoodleFiles(QNetworkReply *reply, Structureelement* course, QS
         urlParts.removeFirst();
         urlParts.removeFirst();
         urlParts.removeFirst();
+        urlParts.removeFirst();
         urlParts.removeLast();
 
         Structureelement *dir = Utils::getDirectoryItem(currentCourse, urlParts);

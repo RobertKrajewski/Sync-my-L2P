@@ -217,7 +217,7 @@ void Browser::on_syncPushButton_clicked()
             if (!loader->startNextDownload(filename,
                                            courseName,
                                            directory.absoluteFilePath(filename),
-                                           QUrl(QUrl::toPercentEncoding(url, ":/?=&")),
+                                           QUrl(url),
                                            changedCounter++,
                                            currentElement->data(sizeRole).toInt(),
                                            currentElement->data(dateRole).toDateTime().toMSecsSinceEpoch()/1000))
