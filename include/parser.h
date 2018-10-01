@@ -20,6 +20,7 @@ public:
     static void parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel);
     static void parseMoodleCourses(QNetworkReply *reply, QStandardItemModel *itemModel);
     static void parseFiles(QNetworkReply *reply, Structureelement *course, QString downloadDirectoryPath);
+    static void parseMoodleFiles(QNetworkReply *reply, Structureelement *course, QString downloadDirectoryPath);
 };
 
 #endif // PARSER_H

@@ -21,13 +21,19 @@
 #include <QStandardItem>
 #include <QDateTime>
 
+enum MyItemSystem
+{
+    l2p    = 100,
+    moodle = 101
+};
+
 enum MyItemType
 {
     semesterItem    = 1000,
     courseItem      = 1001,
     directoryItem   = 1002,
     fileItem        = 1003,
-    messageItem     = 1004
+    messageItem     = 1004,
 };
 
 enum MyItemDataRole
@@ -41,6 +47,7 @@ enum MyItemDataRole
     bodyRole            = 38,
     topicRole           = 39,
     authorRole          = 40,
+    systemEXRole        = 41,
 };
 
 enum synchroniseStatus
@@ -54,9 +61,9 @@ enum synchroniseStatus
 class Structureelement : public QStandardItem
 {
 public:
-    Structureelement(QString name, QUrl url = QUrl(), int time = 0, qint32 size = 0, QString cid = "", MyItemType typeEX = fileItem);
+    Structureelement(QString name, QUrl url = QUrl(), int time = 0, qint32 size = 0, QString cid = "", MyItemType typeEX = fileItem, MyItemSystem systemEX = l2p);
 
-    Structureelement(QString body, QString topic, QString author, int time = 0, QString cid = "", MyItemType typeEX = messageItem);
+    Structureelement(QString body, QString topic, QString author, int time = 0, QString cid = "", MyItemType typeEX = messageItem, MyItemSystem systemEX = l2p);
 
     int type() const { return typeEX; }
 
@@ -81,9 +88,6 @@ protected:
     /// Änderungsdatum
     QDateTime   time;
 
-    /// Type des Elements
-    MyItemType  typeEX;
-
     /// Inhalt der Nachricht
     QString body;
 
@@ -92,6 +96,12 @@ protected:
 
     /// Autor der Nachricht
     QString author;
+
+    /// Type des Elements
+    MyItemType  typeEX;
+
+    /// System des Elements
+    MyItemSystem  systemEX;
 
     /// Status der Synchronisation
     enum synchroniseStatus  synchronised;

@@ -22,29 +22,31 @@
 
 #include "structureelement.h"
 
-Structureelement::Structureelement(QString name, QUrl url, int time, qint32 size, QString cid, MyItemType typeEX)
+Structureelement::Structureelement(QString name, QUrl url, int time, qint32 size, QString cid, MyItemType typeEX, MyItemSystem systemEX)
     :QStandardItem(name),
+     size(size),
      included(true),
      url(url),
+     cid(cid),
      time(QDateTime::fromMSecsSinceEpoch(qint64(1000) * time)),
-     size(size),
      typeEX(typeEX),
-     cid(cid)
+     systemEX(systemEX)
 {
     synchronised = NOT_SYNCHRONISED;
     chooseIcon();
 }
 
 // Überladener Konstruktor für Nachrichtenelemente, welche nicht heruntergeladen werden können.
-Structureelement::Structureelement(QString body, QString topic, QString author, int time, QString cid, MyItemType typeEX)
+Structureelement::Structureelement(QString body, QString topic, QString author, int time, QString cid, MyItemType typeEX, MyItemSystem systemEX)
     :QStandardItem(topic),
      included(true),
+     cid(cid),
+     time(QDateTime::fromMSecsSinceEpoch(qint64(1000) * time)),
      body(body),
      topic(topic),
      author(author),
-     time(QDateTime::fromMSecsSinceEpoch(qint64(1000) * time)),
      typeEX(typeEX),
-     cid(cid)
+     systemEX(systemEX)
 {
     synchronised = NOT_SYNCHRONISED;
     chooseIcon();
@@ -72,6 +74,8 @@ QVariant Structureelement::data(int role) const
         return synchronised;
     case cidRole:
         return cid;
+    case systemEXRole:
+        return systemEX;
     case Qt::StatusTipRole:
     {
         QString statustip;

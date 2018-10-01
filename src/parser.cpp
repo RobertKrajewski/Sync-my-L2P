@@ -130,7 +130,7 @@ void Parser::parseMoodleCourses(QNetworkReply *reply, QStandardItemModel *itemMo
         // Titellänge limitieren um Probleme bei Dateisystemen zu verhindern
         title.truncate(100);
 
-        Structureelement *newCourse = new Structureelement(title, QUrl(url), 0, 0, cid, courseItem);
+        Structureelement *newCourse = new Structureelement(title, QUrl(url), 0, 0, cid, courseItem, moodle);
 
         Utils::getSemesterItem(itemModel, semester)->appendRow(newCourse);
 
@@ -528,5 +528,64 @@ void Parser::parseFiles(QNetworkReply *reply, Structureelement* course, QString 
             // Element hinzufügen
             dir->appendRow(newFile);
         }
+    }
+}
+
+void Parser::parseMoodleFiles(QNetworkReply *reply, Structureelement* course, QString downloadDirectoryPath)
+{
+    Structureelement *currentCourse = course;
+
+    QByteArray response = reply->readAll();
+
+    QJsonDocument document = QJsonDocument::fromJson(response);
+    QJsonObject object = document.object();
+
+    if(object.isEmpty())
+    {
+        QLOG_DEBUG() << tr("Moodle-Kursinformationen leer bzw. nicht lesbar.");
+        return;
+    }
+
+    if(object["StatusCode"].toInt() != 0)
+    {
+        QLOG_ERROR() << tr("Status der Moodle-Kursinformationen nicht ok: \n") <<
+                        "\n" <<
+                        QString(document.toJson());
+        return;
+    }
+
+    QJsonArray files = object["Data"].toArray();
+    foreach(QJsonValue element, files)
+    {
+        QJsonObject file = element.toObject();
+        QString filename;
+        int filesize;
+        int timestamp;
+        QString url;
+        QStringList urlParts;
+
+        QJsonObject fileInformation = file["fileinformation"].toObject();
+
+        filename = file["name"].toString();
+        filesize = fileInformation["filesize"].toInt();
+        timestamp = file["lastModified"].toInt();
+        url = file["downloadUrl"].toString();
+        url = QByteArray::fromPercentEncoding(url.toLocal8Bit());
+        urlParts = url.split('/');
+
+        urlParts.removeFirst();
+        urlParts.removeFirst();
+        urlParts.removeFirst();
+        urlParts.removeFirst();
+        urlParts.removeLast();
+
+        Structureelement *dir = Utils::getDirectoryItem(currentCourse, urlParts);
+
+        Structureelement* newFile = new Structureelement(filename, QUrl(url), timestamp, filesize,
+                                                     currentCourse->data(cidRole).toString(),
+                                                     fileItem, moodle);
+
+        // Element hinzufügen
+        dir->appendRow(newFile);
     }
 }

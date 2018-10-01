@@ -128,6 +128,31 @@ void L2pItemModel::requestFeatures()
 }
 
 /**
+ * @brief Request für die aktiven Module aller Kurse
+ */
+void L2pItemModel::requestMoodleFiles()
+{
+
+    for(auto *course : Utils::getAllCourseItems(data))
+    {
+        QString request_url = moodleGetFiles %
+                "?token=" % options->getMoodleAccessToken() %
+                "&courseid=" % course->data(cidRole).toString();
+        QUrl url = request_url;
+        QNetworkRequest request(url);
+
+        OpenRequest openRequest = {course,
+                                   moodleFiles,
+                                   QTime::currentTime(),
+                                   request};
+        requestQueue.append(openRequest);
+        numRequests++;
+
+        QLOG_DEBUG() << tr("Erstellter Moodle-Request:") << request_url;
+    }
+}
+
+/**
  * @brief Auffinden und Einlesen des auf der Festplatte gespeicherten Dateibaums
  */
 void L2pItemModel::loadDataFromFile()
@@ -343,9 +368,8 @@ void L2pItemModel::addMoodleCoursesFromReply(QNetworkReply *reply)
         // Veranstaltungen alphabetisch sortieren
         data->sort(0);
 
-        // Aktive Features abrufen
-        //TODO
-        //requestFeatures();
+        // Moodle Files abrufen
+        requestMoodleFiles();
     }
     else
     {
@@ -508,6 +532,80 @@ void L2pItemModel::addFilesFromReply(QNetworkReply *reply, Structureelement *cou
     }
 }
 
+void L2pItemModel::addMoodleFilesFromReply(QNetworkReply *reply, Structureelement *course)
+{
+    QLOG_DEBUG() << tr("Moodle-Dateiinformationen empfangen: ") << reply->url().toString();
+
+    // Prüfen auf Fehler
+    if (!reply->error())
+    {
+        Parser::parseMoodleFiles(reply, course,
+                           options->downloadFolderLineEditText());
+
+        QLOG_DEBUG() << tr("Moodle-Dateiinformationen geparst: ") << reply->url().toString();
+    }
+    else
+    {
+        QString replyMessage(reply->readAll());
+
+        if(replyMessage.contains("secure channel"))
+        {
+            QLOG_DEBUG() << tr("SSL Fehler für: ") << reply->url().toString();
+        }
+        else
+        {
+            auto errorMessage = reply->errorString();
+            QLOG_ERROR() << tr("Beim Abruf der Veranstaltungen ist ein Fehler aufgetreten") % reply->errorString() % ";\n " % reply->url().toString() % replyMessage;
+        }
+    }
+
+    // Prüfen, ob alle Antworten bearbeitet wurden
+    if (replies.empty())
+    {
+
+        QList<Structureelement*> items;
+
+        QStandardItem* root = data->invisibleRootItem();
+        for( int i=0; i < root->rowCount(); i++)
+        {
+            getItemList(static_cast<Structureelement*>(root->child(i)), items);
+        }
+
+        if(oldData)
+        {
+            QList<Structureelement*> oldItems;
+
+            // Get old data
+            root = oldData->invisibleRootItem();
+            getItemList(root, oldItems);
+
+            foreach(Structureelement *item, items)
+            {
+                // Find an old item which fits to a new one and copy properties
+                for(auto it = oldItems.begin(); it != oldItems.end(); it++)
+                {
+                    auto *oldItem = *it;
+                    if(item->data(urlRole) == oldItem->data(urlRole) && item->text() == oldItem->text())
+                    {
+                        item->setData(oldItem->data(includeRole), includeRole);
+                        oldItems.erase(it);
+                        break;
+                    }
+                }
+
+                // Don't include item if parent is not included
+                auto* parentItem = dynamic_cast<Structureelement*>(item->parent());
+                if(parentItem && !parentItem->data(includeRole).toBool() && item->data(includeRole).toBool())
+                {
+                    item->setData(false, includeRole);
+                }
+            }
+        }
+
+        Utils::checkAllFilesIfSynchronised(items, options->downloadFolderLineEditText());
+    }
+}
+
 /**
  * @brief Erstellung eines Lernraumspezifischen Requests
  * @param course Strukturelement des Kurses
@@ -570,6 +668,9 @@ void L2pItemModel::serverDataRecievedSlot(QNetworkReply *reply)
         addFilesFromReply(reply, replyInfo.item);
         break;
     }
+    case moodleFiles:
+        addMoodleFilesFromReply(reply, replyInfo.item);
+        break;
     default:
     {
         QLOG_ERROR() << tr("Serverantwort wurde unbekannter Typ zugeordnet") % ":" % reply->url().toString();

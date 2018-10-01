@@ -12,6 +12,7 @@ const QString moodleMainUrl = "http://d-sp02.devlef.campus.rwth-aachen.de/";
 const QString moodleApiUrl = moodleMainUrl + "ProxyService_ms/api/v2/moodle/";
 const QString moodleGetMyEnrolledCourses = moodleApiUrl + "getmyenrolledcourses";
 const QString moodleGetFiles = moodleApiUrl + "getfiles";
+const QString moodleDownloadFile = moodleApiUrl + "downloadfile";
 
 #endif // URLS
 

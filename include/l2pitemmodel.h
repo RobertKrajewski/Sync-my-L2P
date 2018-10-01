@@ -57,11 +57,13 @@ protected:
     void addMoodleCoursesFromReply(QNetworkReply* reply);
     void addFeatureFromReply(QNetworkReply* reply, Structureelement *course);
     void addFilesFromReply(QNetworkReply* reply, Structureelement *course);
+    void addMoodleFilesFromReply(QNetworkReply* reply, Structureelement *course);
     QNetworkRequest createApiRequest(Structureelement* course, QString apiCommand);
     void getItemList(QStandardItem *topElement, QList <Structureelement *> &list);
     void requestCourses();
-    void requestMoodleCourses();
     void requestFeatures();
+    void requestMoodleCourses();
+    void requestMoodleFiles();
     void startNextRequests();
 
     QStandardItemModel *data = new QStandardItemModel();

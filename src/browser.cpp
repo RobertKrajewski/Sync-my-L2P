@@ -1,6 +1,7 @@
 #include "browser.h"
 #include "ui_browser.h"
 #include "message.h"
+#include "urls.h"
 
 #include "options.h"
 
@@ -190,7 +191,17 @@ void Browser::on_syncPushButton_clicked()
         // Datei existiert noch nicht
         if(downloadFile)
         {
-            QString url = QString("https://www3.elearning.rwth-aachen.de/_vti_bin/l2pservices/api.svc/v1/") %
+
+
+            auto role = currentElement->data(systemEXRole);
+            QString downloadurl = currentElement->data(urlRole).toUrl().toDisplayString(QUrl::FullyDecoded);
+            QString token = options->getMoodleAccessToken();
+
+            QString url;
+            if (role == moodle){
+                url = moodleDownloadFile % "/" % filename % "?downloadurl=" % downloadurl % "&token=" % token;
+            } else {
+                url = QString("https://www3.elearning.rwth-aachen.de/_vti_bin/l2pservices/api.svc/v1/") %
                     QString("downloadFile/") %
                     currentElement->text() %
                     QString("?accessToken=") %
@@ -199,6 +210,9 @@ void Browser::on_syncPushButton_clicked()
                     currentElement->data(cidRole).toString() %
                     QString("&downloadUrl=") %
                     currentElement->data(urlRole).toUrl().toDisplayString(QUrl::FullyDecoded);
+
+            }
+
 
             if (!loader->startNextDownload(filename,
                                            courseName,
