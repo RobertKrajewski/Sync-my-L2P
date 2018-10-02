@@ -85,7 +85,7 @@ void L2pItemModel::requestMoodleCourses()
 
     // TODO: semester generieren oder problem anders lösen
     QString aktuelles_semester = "ss18";
-    QString token = options->getMoodleAccessToken();
+    QString token = options->getAccessToken();
 
     QString tmp_url(url % "?token=" % token);
     // filter by current semester
@@ -136,7 +136,7 @@ void L2pItemModel::requestMoodleFiles()
     for(auto *course : Utils::getAllCourseItems(data))
     {
         QString request_url = moodleGetFiles %
-                "?token=" % options->getMoodleAccessToken() %
+                "?token=" % options->getAccessToken() %
                 "&courseid=" % course->data(cidRole).toString();
         QUrl url = request_url;
         QNetworkRequest request(url);

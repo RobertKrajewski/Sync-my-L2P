@@ -195,7 +195,7 @@ void Browser::on_syncPushButton_clicked()
 
             auto role = currentElement->data(systemEXRole);
             QString downloadurl = currentElement->data(urlRole).toUrl().toDisplayString(QUrl::FullyDecoded);
-            QString token = options->getMoodleAccessToken();
+            QString token = options->getAccessToken();
 
             QString url;
             if (role == moodle){

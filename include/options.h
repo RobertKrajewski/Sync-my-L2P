@@ -45,7 +45,6 @@ public:
     bool isTutorDomainCheckBoxChecked();
 
     QString getAccessToken() const;
-    QString getMoodleAccessToken() const; // TODO: this is only for the current development, because moodle is not live yet and i need an extra token
 
     int getLoginCounter();
 
