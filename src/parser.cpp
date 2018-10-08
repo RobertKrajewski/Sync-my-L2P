@@ -564,6 +564,8 @@ void Parser::parseMoodleFiles(QNetworkReply *reply, Structureelement* course, QS
     foreach(QJsonValue element, files)
     {
         QJsonObject file = element.toObject();
+        QString topicname;
+        QString modulename;
         QString filename;
         int filesize;
         int timestamp;
@@ -572,21 +574,29 @@ void Parser::parseMoodleFiles(QNetworkReply *reply, Structureelement* course, QS
 
         QJsonObject fileInformation = file["fileinformation"].toObject();
 
-        filename = file["name"].toString();
+        topicname = file["topicname"].toString();
+        modulename = file["modulename"].toString();
+        filename = file["filename"].toString();
         filesize = fileInformation["filesize"].toInt();
         timestamp = file["lastModified"].toInt();
         url = file["downloadUrl"].toString();
         url = QByteArray::fromPercentEncoding(url.toLocal8Bit());
-        urlParts = url.split('/');
 
+        // the list with the directories
+        QStringList dirs{};
+        dirs.append(topicname);
+        dirs.append(modulename);
+        // modules can contain folders. this gets the folder names, as qstringlist
+        urlParts = url.split('/');
         urlParts.removeFirst();
         urlParts.removeFirst();
         urlParts.removeFirst();
         urlParts.removeFirst();
         urlParts.removeFirst();
         urlParts.removeLast();
+        dirs += urlParts;
 
-        Structureelement *dir = Utils::getDirectoryItem(currentCourse, urlParts);
+        Structureelement *dir = Utils::getDirectoryItem(currentCourse, dirs);
 
         Structureelement* newFile = new Structureelement(filename, QUrl(url), timestamp, filesize,
                                                      currentCourse->data(cidRole).toString(),
