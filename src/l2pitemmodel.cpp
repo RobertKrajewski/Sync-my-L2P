@@ -83,8 +83,7 @@ void L2pItemModel::requestMoodleCourses()
 
     QString url = moodleGetMyEnrolledCoursesUrl;
 
-    // TODO: semester generieren oder problem anders lösen
-    QString aktuelles_semester = "ss18";
+    QString aktuelles_semester = "0";
     QString token = options->getAccessToken();
 
     QString tmp_url(url % "?token=" % token);
