@@ -199,10 +199,9 @@ void Browser::on_syncPushButton_clicked()
 
             QString url;
             if (role == moodle){
-                url = moodleDownloadFile % "/" % filename % "?downloadurl=" % downloadurl % "&token=" % token;
+                url = moodleDownloadFileUrl % "/" % filename % "?downloadurl=" % downloadurl % "&token=" % token;
             } else {
-                url = QString("https://www3.elearning.rwth-aachen.de/_vti_bin/l2pservices/api.svc/v1/") %
-                    QString("downloadFile/") %
+                url = l2pDownloadFileUrl %
                     currentElement->text() %
                     QString("?accessToken=") %
                     options->getAccessToken() %

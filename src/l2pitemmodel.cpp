@@ -81,7 +81,7 @@ void L2pItemModel::requestMoodleCourses()
 {
     QLOG_DEBUG() << tr("Sende Request für Veranstaltungen von Moodle");
 
-    QString url = moodleGetMyEnrolledCourses;
+    QString url = moodleGetMyEnrolledCoursesUrl;
 
     // TODO: semester generieren oder problem anders lösen
     QString aktuelles_semester = "ss18";
@@ -135,7 +135,7 @@ void L2pItemModel::requestMoodleFiles()
 
     for(auto *course : Utils::getAllCourseItems(data))
     {
-        QString request_url = moodleGetFiles %
+        QString request_url = moodleGetFilesUrl %
                 "?token=" % options->getAccessToken() %
                 "&courseid=" % course->data(cidRole).toString();
         QUrl url = request_url;
