@@ -89,7 +89,7 @@ void L2pItemModel::requestMoodleCourses()
     QString tmp_url(url % "?token=" % token);
     // filter by current semester
     if (options->isCurrentSemesterCheckBoxChecked())
-        tmp_url += "&semester=" % aktuelles_semester;
+        tmp_url += "&semester_offset=" % aktuelles_semester;
     QUrl request_url(tmp_url);
     QNetworkRequest request(request_url);
 
