@@ -61,11 +61,11 @@ QString Utils::getElementLocalPath(Structureelement *item, QString downloadDirec
         return path;
 }
 
-QString Utils::getElementRemotePath(Structureelement *item, QString baseUrl)
+QString Utils::getElementRemotePath(Structureelement *item, QString baseUrl, int urlOffset)
 {
     QString remoteUrl = item->data(urlRole).toString();
     // Ersten drei Zeichen entfernen, da der URL ein "|" vorangestellt ist
-    remoteUrl.remove(0,3);
+    remoteUrl.remove(0,urlOffset);
 
     remoteUrl.prepend(baseUrl);
 
