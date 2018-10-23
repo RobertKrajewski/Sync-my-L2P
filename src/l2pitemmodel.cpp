@@ -113,9 +113,14 @@ void L2pItemModel::requestFeatures()
 
     for(auto *course : Utils::getAllCourseItems(data))
     {
-        QNetworkRequest request(QUrl(viewActiveFeaturesUrl %
+        auto system = course->data(systemEXRole);
+        if (system == moodle) continue;
+
+        QString request_url = viewActiveFeaturesUrl %
                                      "?accessToken=" % options->getAccessToken() %
-                                     "&cid=" % course->data(cidRole).toString()));
+                                     "&cid=" % course->data(cidRole).toString();
+        QUrl url = request_url;
+        QNetworkRequest request(url);
 
         OpenRequest openRequest = {course,
                                    features,
@@ -134,6 +139,8 @@ void L2pItemModel::requestMoodleFiles()
 
     for(auto *course : Utils::getAllCourseItems(data))
     {
+        auto system = course->data(systemEXRole);
+        if (system == l2p) continue;
         QString request_url = moodleGetFilesUrl %
                 "?token=" % options->getAccessToken() %
                 "&courseid=" % course->data(cidRole).toString();
