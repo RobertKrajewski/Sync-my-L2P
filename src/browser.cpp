@@ -654,26 +654,49 @@ void Browser::openSourceMessage()
 
 void Browser::openFile()
 {
-    QString baseUrl = "https://www3.elearning.rwth-aachen.de";
-
     QFileInfo fileInfo(Utils::getElementLocalPath(lastRightClickItem,
                                                   options->downloadFolderLineEditText(),
                                                   true,
                                                   false));
-
-    QString fileUrl;
+    auto typeEX = lastRightClickItem->data(typeEXRole);
+    auto systemEX = lastRightClickItem->data(systemEXRole);
 
     // Überprüfung, ob Datei lokal oder im L2P geöffnet werden soll
+    QUrl url;
     if(fileInfo.exists())
     {
-        fileUrl = Utils::getElementLocalPath(lastRightClickItem, options->downloadFolderLineEditText());
+        QString fileUrl = Utils::getElementLocalPath(lastRightClickItem, options->downloadFolderLineEditText());
+        url = QUrl(fileUrl);
     }
     else
     {
-        fileUrl = Utils::getElementRemotePath(lastRightClickItem, baseUrl);
+        QString fileUrl = Utils::getElementRemotePath(lastRightClickItem, "");
+        if(typeEX == courseItem)
+        {
+            url = lastRightClickItem->data(urlRole).toUrl();
+        }
+        else if (typeEX == directoryItem)
+        {
+            return;
+        }
+        else if (systemEX == l2p)
+        {
+            // TODO: test if this works (open an not downloaded file from l2p)
+            fileUrl = Utils::getElementRemotePath(lastRightClickItem, l2pMainUrl, 4);
+            url = QUrl(fileUrl);
+        }
+        else
+        {
+            // shows the file over the api.
+            QString token = options->getAccessToken();
+            QString filename = lastRightClickItem->text();
+            QString downloadurl = lastRightClickItem->data(urlRole).toUrl().toDisplayString(QUrl::FullyDecoded);
+            fileUrl = moodleDownloadFileUrl % "/" % filename % "?downloadurl=" % downloadurl % "&token=" % token;
+            url = QUrl(fileUrl);
+        }
     }
 
-    QDesktopServices::openUrl(QUrl(fileUrl));
+    QDesktopServices::openUrl(url);
 }
 
 void Browser::on_showNewDataPushButton_clicked()
