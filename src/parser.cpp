@@ -560,6 +560,14 @@ void Parser::parseMoodleFiles(QNetworkReply *reply, Structureelement* course, QS
         return;
     }
 
+    if(object["IsError"].toBool())
+    {
+        QLOG_ERROR() << tr("Moodle-Kursinformationen enthalten einen Fehler: \n") <<
+                        "\n" <<
+                        QString(document.toJson());
+        return;
+    }
+
     QJsonArray files = object["Data"].toArray();
     foreach(QJsonValue element, files)
     {
