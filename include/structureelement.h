@@ -47,7 +47,8 @@ enum MyItemDataRole
     bodyRole            = 38,
     topicRole           = 39,
     authorRole          = 40,
-    systemEXRole        = 41,
+    typeEXRole          = 41,
+    systemEXRole        = 42,
 };
 
 enum synchroniseStatus

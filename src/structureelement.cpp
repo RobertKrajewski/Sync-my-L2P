@@ -74,6 +74,8 @@ QVariant Structureelement::data(int role) const
         return synchronised;
     case cidRole:
         return cid;
+    case typeEXRole:
+        return typeEX;
     case systemEXRole:
         return systemEX;
     case Qt::StatusTipRole:
