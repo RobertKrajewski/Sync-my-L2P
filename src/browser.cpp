@@ -547,7 +547,7 @@ void Browser::on_dataTreeView_doubleClicked(const QModelIndex &index)
         }
         else
         {
-            fileUrl = Utils::getElementRemotePath(item, "https://www3.elearning.rwth-aachen.de");
+            fileUrl = Utils::getElementRemotePath(item);
         }
 
         QDesktopServices::openUrl(QUrl(fileUrl));
@@ -670,30 +670,8 @@ void Browser::openFile()
     }
     else
     {
-        QString fileUrl = Utils::getElementRemotePath(lastRightClickItem, "");
-        if(typeEX == courseItem)
-        {
-            url = lastRightClickItem->data(urlRole).toUrl();
-        }
-        else if (typeEX == directoryItem)
-        {
-            return;
-        }
-        else if (systemEX == l2p)
-        {
-            // TODO: test if this works (open an not downloaded file from l2p)
-            fileUrl = Utils::getElementRemotePath(lastRightClickItem, l2pMainUrl, 4);
-            url = QUrl(fileUrl);
-        }
-        else
-        {
-            // shows the file over the api.
-            QString token = options->getAccessToken();
-            QString filename = lastRightClickItem->text();
-            QString downloadurl = lastRightClickItem->data(urlRole).toUrl().toDisplayString(QUrl::FullyDecoded);
-            fileUrl = moodleDownloadFileUrl % "/" % filename % "?downloadurl=" % downloadurl % "&token=" % token;
-            url = QUrl(fileUrl);
-        }
+        QString fileUrl = Utils::getElementRemotePath(lastRightClickItem);
+        url = QUrl(fileUrl);
     }
 
     QDesktopServices::openUrl(url);
@@ -730,7 +708,7 @@ void Browser::copyUrlToClipboardSlot()
     QString url;
     if(lastRightClickItem->type() == fileItem)
     {
-        url = Utils::getElementRemotePath(lastRightClickItem, "https://www3.elearning.rwth-aachen.de");
+        url = Utils::getElementRemotePath(lastRightClickItem);
     }
     else if(lastRightClickItem->type() == courseItem)
     {

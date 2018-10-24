@@ -7,6 +7,7 @@
 #include <QLinkedList>
 
 #include "utils.h"
+#include "urls.h"
 
 #include "qslog/QsLog.h"
 
@@ -61,14 +62,34 @@ QString Utils::getElementLocalPath(Structureelement *item, QString downloadDirec
         return path;
 }
 
-QString Utils::getElementRemotePath(Structureelement *item, QString baseUrl, int urlOffset)
+QString Utils::getElementRemotePath(Structureelement *item)
 {
-    QString remoteUrl = item->data(urlRole).toString();
-    // Ersten drei Zeichen entfernen, da der URL ein "|" vorangestellt ist
-    remoteUrl.remove(0,urlOffset);
 
-    remoteUrl.prepend(baseUrl);
+    QString remoteUrl;
+    auto typeEX = item->data(typeEXRole);
+    auto systemEX = item->data(systemEXRole);
 
+    if(typeEX == courseItem)
+    {
+        remoteUrl = item->data(urlRole).toString();
+    }
+    else if (typeEX == directoryItem)
+    {
+        return "";
+    }
+    else if (systemEX == l2p)
+    {
+        remoteUrl = item->data(urlRole).toString();
+        // Ersten drei Zeichen entfernen, da der URL ein "|" vorangestellt ist + ein Zeichen /
+        remoteUrl.remove(0,4);
+        remoteUrl.prepend(l2pMainUrl);
+    }
+    else
+    {
+        // shows the file over the api.
+        QString downloadurl = item->data(urlRole).toUrl().toDisplayString(QUrl::FullyDecoded);
+        remoteUrl = moodleMainUrl + downloadurl;
+    }
     return remoteUrl;
 }
 

@@ -264,10 +264,11 @@ void L2pItemModel::parseDataFromXml(QDomElement input, QStandardItem *parentItem
         int size = input.attribute("size", "0").toInt();
         QString cid = input.attribute("cid", "");
         MyItemType type = static_cast<MyItemType>(input.attribute("type", "").toInt());
+        MyItemSystem system = static_cast<MyItemSystem>(input.attribute("system", "").toInt());
         bool included = input.attribute("included", "0").toInt();
 
         // Neues
-        QStandardItem *newItem = new Structureelement(name, url, time, size, cid, type);
+        QStandardItem *newItem = new Structureelement(name, url, time, size, cid, type, system);
         newItem->setData(included, includeRole);
 
         parentItem->appendRow(newItem);
@@ -308,6 +309,7 @@ void L2pItemModel::parseDataToXml(QDomDocument &output, QStandardItem *item,
         xmlItem.setAttribute("size", item->data(sizeRole).toInt());
         xmlItem.setAttribute("cid", item->data(cidRole).toString());
         xmlItem.setAttribute("type", item->type());
+        xmlItem.setAttribute("system", item->data(systemEXRole).toInt());
         xmlItem.setAttribute("included", item->data(includeRole).toBool());
         parentItem->appendChild(xmlItem);
     }
