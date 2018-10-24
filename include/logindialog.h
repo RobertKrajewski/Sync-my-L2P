@@ -23,7 +23,10 @@ public slots:
     void run(Login *login);
 
 private slots:
-    void availabilitySlot(QNetworkReply*);
+    void checkL2PAvailability();
+    void checkMoodleAvailability();
+    void availabilityL2PSlot(QNetworkReply*);
+    void availabilityMoodleSlot(QNetworkReply*);
     void failedSlot();
     void succededSlot();
 
