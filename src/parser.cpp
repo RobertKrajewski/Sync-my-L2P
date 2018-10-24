@@ -138,7 +138,7 @@ void Parser::parseMoodleCourses(QNetworkReply *reply, QStandardItemModel *itemMo
     }
 }
 
-void Parser::parseFiles(QNetworkReply *reply, Structureelement* course, QString downloadDirectoryPath)
+void Parser::parseFiles(QNetworkReply *reply, Structureelement* course)
 {
     QString url = reply->url().toString();
 
@@ -537,7 +537,7 @@ void Parser::parseFiles(QNetworkReply *reply, Structureelement* course, QString 
     }
 }
 
-void Parser::parseMoodleFiles(QNetworkReply *reply, Structureelement* course, QString downloadDirectoryPath)
+void Parser::parseMoodleFiles(QNetworkReply *reply, Structureelement* course)
 {
     Structureelement *currentCourse = course;
 
