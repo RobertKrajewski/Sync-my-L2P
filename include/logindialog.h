@@ -7,6 +7,12 @@
 
 #include "login.h"
 
+enum Availability {
+    NOTTESTED,
+    AVAILABLE,
+    NOTAVAILABLE
+};
+
 namespace Ui {
 class LoginDialog;
 }
@@ -38,6 +44,8 @@ private:
 
     // Pointer to Class responsible for the login
     Login *login;
+    Availability l2pAvailable;
+    Availability moodleAvailable;
 };
 
 #endif // LOGINDIALOG_H

@@ -473,8 +473,7 @@ void L2pItemModel::addFilesFromReply(QNetworkReply *reply, Structureelement *cou
     // Prüfen auf Fehler
     if (!reply->error())
     {
-        Parser::parseFiles(reply, course,
-                           options->downloadFolderLineEditText());
+        Parser::parseFiles(reply, course);
 
         QLOG_DEBUG() << tr("Dateiinformationen geparst: ") << reply->url().toString();
     }
@@ -547,8 +546,7 @@ void L2pItemModel::addMoodleFilesFromReply(QNetworkReply *reply, Structureelemen
     // Prüfen auf Fehler
     if (!reply->error())
     {
-        Parser::parseMoodleFiles(reply, course,
-                           options->downloadFolderLineEditText());
+        Parser::parseMoodleFiles(reply, course);
 
         QLOG_DEBUG() << tr("Moodle-Dateiinformationen geparst: ") << reply->url().toString();
     }

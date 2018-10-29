@@ -82,7 +82,7 @@ QString Utils::getElementRemotePath(Structureelement *item)
         remoteUrl = item->data(urlRole).toString();
         // Ersten drei Zeichen entfernen, da der URL ein "|" vorangestellt ist + ein Zeichen /
         remoteUrl.remove(0,4);
-        remoteUrl.prepend(l2pMainUrl);
+        remoteUrl.prepend(l2pApiUrl);
     }
     else
     {
