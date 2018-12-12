@@ -596,13 +596,15 @@ void Parser::parseMoodleFiles(QNetworkReply *reply, Structureelement* course)
         dirs.append(modulename);
         // modules can contain folders. this gets the folder names, as qstringlist
         urlParts = url.split('/');
-        urlParts.removeFirst();
-        urlParts.removeFirst();
-        urlParts.removeFirst();
-        urlParts.removeFirst();
-        urlParts.removeFirst();
-        urlParts.removeLast();
-        dirs += urlParts;
+        if (urlParts.size() > 6) {
+            urlParts.removeFirst();
+            urlParts.removeFirst();
+            urlParts.removeFirst();
+            urlParts.removeFirst();
+            urlParts.removeFirst();
+            urlParts.removeLast();
+            dirs += urlParts;
+        }
 
         Structureelement *dir = Utils::getDirectoryItem(currentCourse, dirs);
 
