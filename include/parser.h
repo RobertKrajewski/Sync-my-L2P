@@ -18,7 +18,9 @@ class Parser : public QObject
 public:
     static QList<QString> parseFeatures(QNetworkReply *reply);
     static void parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel);
-    static void parseFiles(QNetworkReply *reply, Structureelement *course, QString downloadDirectoryPath);
+    static void parseMoodleCourses(QNetworkReply *reply, QStandardItemModel *itemModel);
+    static void parseFiles(QNetworkReply *reply, Structureelement *course);
+    static void parseMoodleFiles(QNetworkReply *reply, Structureelement *course);
 };
 
 #endif // PARSER_H

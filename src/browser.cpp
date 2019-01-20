@@ -1,6 +1,7 @@
 #include "browser.h"
 #include "ui_browser.h"
 #include "message.h"
+#include "urls.h"
 
 #include "options.h"
 
@@ -190,8 +191,17 @@ void Browser::on_syncPushButton_clicked()
         // Datei existiert noch nicht
         if(downloadFile)
         {
-            QString url = QString("https://www3.elearning.rwth-aachen.de/_vti_bin/l2pservices/api.svc/v1/") %
-                    QString("downloadFile/") %
+
+
+            auto role = currentElement->data(systemEXRole);
+            QString downloadurl = currentElement->data(urlRole).toUrl().toDisplayString(QUrl::FullyDecoded);
+            QString token = options->getAccessToken();
+
+            QString url;
+            if (role == moodle){
+                url = moodleDownloadFileUrl % "/" % filename % "?downloadurl=" % downloadurl % "&token=" % token;
+            } else {
+                url = l2pDownloadFileUrl %
                     currentElement->text() %
                     QString("?accessToken=") %
                     options->getAccessToken() %
@@ -200,10 +210,13 @@ void Browser::on_syncPushButton_clicked()
                     QString("&downloadUrl=") %
                     currentElement->data(urlRole).toUrl().toDisplayString(QUrl::FullyDecoded);
 
+            }
+
+
             if (!loader->startNextDownload(filename,
                                            courseName,
                                            directory.absoluteFilePath(filename),
-                                           QUrl(QUrl::toPercentEncoding(url, ":/?=&")),
+                                           QUrl(url),
                                            changedCounter++,
                                            currentElement->data(sizeRole).toInt(),
                                            currentElement->data(dateRole).toDateTime().toMSecsSinceEpoch()/1000))
@@ -534,7 +547,7 @@ void Browser::on_dataTreeView_doubleClicked(const QModelIndex &index)
         }
         else
         {
-            fileUrl = Utils::getElementRemotePath(item, "https://www3.elearning.rwth-aachen.de");
+            fileUrl = Utils::getElementRemotePath(item);
         }
 
         QDesktopServices::openUrl(QUrl(fileUrl));
@@ -641,26 +654,27 @@ void Browser::openSourceMessage()
 
 void Browser::openFile()
 {
-    QString baseUrl = "https://www3.elearning.rwth-aachen.de";
-
     QFileInfo fileInfo(Utils::getElementLocalPath(lastRightClickItem,
                                                   options->downloadFolderLineEditText(),
                                                   true,
                                                   false));
-
-    QString fileUrl;
+    auto typeEX = lastRightClickItem->data(typeEXRole);
+    auto systemEX = lastRightClickItem->data(systemEXRole);
 
     // Überprüfung, ob Datei lokal oder im L2P geöffnet werden soll
+    QUrl url;
     if(fileInfo.exists())
     {
-        fileUrl = Utils::getElementLocalPath(lastRightClickItem, options->downloadFolderLineEditText());
+        QString fileUrl = Utils::getElementLocalPath(lastRightClickItem, options->downloadFolderLineEditText());
+        url = QUrl(fileUrl);
     }
     else
     {
-        fileUrl = Utils::getElementRemotePath(lastRightClickItem, baseUrl);
+        QString fileUrl = Utils::getElementRemotePath(lastRightClickItem);
+        url = QUrl(fileUrl);
     }
 
-    QDesktopServices::openUrl(QUrl(fileUrl));
+    QDesktopServices::openUrl(url);
 }
 
 void Browser::on_showNewDataPushButton_clicked()
@@ -694,7 +708,7 @@ void Browser::copyUrlToClipboardSlot()
     QString url;
     if(lastRightClickItem->type() == fileItem)
     {
-        url = Utils::getElementRemotePath(lastRightClickItem, "https://www3.elearning.rwth-aachen.de");
+        url = Utils::getElementRemotePath(lastRightClickItem);
     }
     else if(lastRightClickItem->type() == courseItem)
     {

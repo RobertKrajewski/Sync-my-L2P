@@ -85,7 +85,7 @@ void Login::getUserCode()
 {
     QUrlQuery query;
     query.addQueryItem("client_id", CLIENTID);
-    query.addQueryItem("scope", "l2p2013.rwth userinfo.rwth");
+    query.addQueryItem("scope", "l2p2013.rwth userinfo.rwth moodle.rwth");
 
     QUrl url(BASEURL + "code");
 

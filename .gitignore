@@ -7,3 +7,6 @@ ui_*.h
 Makefile*
 *.exe
 *.obj
+compile_commands.json
+moc_predefs.h
+.qmake.stash

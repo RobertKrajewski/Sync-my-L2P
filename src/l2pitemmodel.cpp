@@ -47,6 +47,7 @@ void L2pItemModel::loadDataFromServer()
 
     // Request für Kurse starten
     requestCourses();
+    requestMoodleCourses();
 }
 
 /**
@@ -60,10 +61,41 @@ void L2pItemModel::requestCourses()
                   viewAllCourseInfoByCurrentSemesterUrl :
                   viewAllCourseInfoUrl;
 
-    QNetworkRequest request(QUrl(url % "?accessToken=" % options->getAccessToken()));
+    QUrl request_url(url % "?accessToken=" % options->getAccessToken());
+    QNetworkRequest request(request_url);
 
     OpenRequest openRequest = {nullptr,
                                courses,
+                               QTime::currentTime(),
+                               request};
+    requestQueue.append(openRequest);
+    numRequests++;
+
+    startNextRequests();
+}
+
+/**
+ * @brief Senden eines Requests zum Erhalt aller ausgewählten Veranstaltungen von Moodle
+ */
+void L2pItemModel::requestMoodleCourses()
+{
+    QLOG_DEBUG() << tr("Sende Request für Veranstaltungen von Moodle");
+
+    QString url = moodleGetMyEnrolledCoursesUrl;
+
+    QString aktuelles_semester = "0";
+    QString token = options->getAccessToken();
+
+    QString tmp_url(url % "?token=" % token);
+    // filter by current semester
+    if (options->isCurrentSemesterCheckBoxChecked())
+        tmp_url += "&semester_offset=" % aktuelles_semester;
+    QUrl request_url(tmp_url);
+    QNetworkRequest request(request_url);
+
+
+    OpenRequest openRequest = {nullptr,
+                               moodleCourses,
                                QTime::currentTime(),
                                request};
     requestQueue.append(openRequest);
@@ -81,9 +113,14 @@ void L2pItemModel::requestFeatures()
 
     for(auto *course : Utils::getAllCourseItems(data))
     {
-        QNetworkRequest request(QUrl(viewActiveFeaturesUrl %
+        auto system = course->data(systemEXRole);
+        if (system == moodle) continue;
+
+        QString request_url = viewActiveFeaturesUrl %
                                      "?accessToken=" % options->getAccessToken() %
-                                     "&cid=" % course->data(cidRole).toString()));
+                                     "&cid=" % course->data(cidRole).toString();
+        QUrl url = request_url;
+        QNetworkRequest request(url);
 
         OpenRequest openRequest = {course,
                                    features,
@@ -91,6 +128,33 @@ void L2pItemModel::requestFeatures()
                                    request};
         requestQueue.append(openRequest);
         numRequests++;
+    }
+}
+
+/**
+ * @brief Request für die aktiven Module aller Kurse
+ */
+void L2pItemModel::requestMoodleFiles()
+{
+
+    for(auto *course : Utils::getAllCourseItems(data))
+    {
+        auto system = course->data(systemEXRole);
+        if (system == l2p) continue;
+        QString request_url = moodleGetFilesUrl %
+                "?token=" % options->getAccessToken() %
+                "&courseid=" % course->data(cidRole).toString();
+        QUrl url = request_url;
+        QNetworkRequest request(url);
+
+        OpenRequest openRequest = {course,
+                                   moodleFiles,
+                                   QTime::currentTime(),
+                                   request};
+        requestQueue.append(openRequest);
+        numRequests++;
+
+        QLOG_DEBUG() << tr("Erstellter Moodle-Request:") << request_url;
     }
 }
 
@@ -200,10 +264,11 @@ void L2pItemModel::parseDataFromXml(QDomElement input, QStandardItem *parentItem
         int size = input.attribute("size", "0").toInt();
         QString cid = input.attribute("cid", "");
         MyItemType type = static_cast<MyItemType>(input.attribute("type", "").toInt());
+        MyItemSystem system = static_cast<MyItemSystem>(input.attribute("system", "").toInt());
         bool included = input.attribute("included", "0").toInt();
 
         // Neues
-        QStandardItem *newItem = new Structureelement(name, url, time, size, cid, type);
+        QStandardItem *newItem = new Structureelement(name, url, time, size, cid, type, system);
         newItem->setData(included, includeRole);
 
         parentItem->appendRow(newItem);
@@ -244,6 +309,7 @@ void L2pItemModel::parseDataToXml(QDomDocument &output, QStandardItem *item,
         xmlItem.setAttribute("size", item->data(sizeRole).toInt());
         xmlItem.setAttribute("cid", item->data(cidRole).toString());
         xmlItem.setAttribute("type", item->type());
+        xmlItem.setAttribute("system", item->data(systemEXRole).toInt());
         xmlItem.setAttribute("included", item->data(includeRole).toBool());
         parentItem->appendChild(xmlItem);
     }
@@ -277,6 +343,41 @@ void L2pItemModel::addCoursesFromReply(QNetworkReply *reply)
 
         // Aktive Features abrufen
         requestFeatures();
+    }
+    else
+    {
+        emit loadingFinished(true);
+    }
+}
+
+/**
+ * @brief Hinzufügen aller Moodle-Kurse aus der Antwort des Servers
+ * @param reply Netzwerkantwort mit Moodle-Kursen
+ */
+void L2pItemModel::addMoodleCoursesFromReply(QNetworkReply *reply)
+{
+    if(reply->error())
+    {
+        QLOG_ERROR() << tr("Beim Abruf der Moodle-Veranstaltungen ist ein Fehler aufgetreten") % reply->errorString() % ";\n " % reply->url().toString();
+    }
+    else
+    {
+        QLOG_INFO() << tr("Moodle-Veranstaltungen empfangen");
+        // data ist eine liste mit semestern, diese semester enthalten course
+        // reply enthält eine liste mit courses
+        // wird dann in json gecastet
+        // dann für alle course in der liste ein course (structureelement) daraus erstellt
+        // dann werden diese course zu data ins jeweilige semester hinzugefügt
+        Parser::parseMoodleCourses(reply, data);
+    }
+
+    if(data->rowCount() != 0)
+    {
+        // Veranstaltungen alphabetisch sortieren
+        data->sort(0);
+
+        // Moodle Files abrufen
+        requestMoodleFiles();
     }
     else
     {
@@ -372,10 +473,82 @@ void L2pItemModel::addFilesFromReply(QNetworkReply *reply, Structureelement *cou
     // Prüfen auf Fehler
     if (!reply->error())
     {
-        Parser::parseFiles(reply, course,
-                           options->downloadFolderLineEditText());
+        Parser::parseFiles(reply, course);
 
         QLOG_DEBUG() << tr("Dateiinformationen geparst: ") << reply->url().toString();
+    }
+    else
+    {
+        QString replyMessage(reply->readAll());
+
+        if(replyMessage.contains("secure channel"))
+        {
+            QLOG_DEBUG() << tr("SSL Fehler für: ") << reply->url().toString();
+        }
+        else
+        {
+            auto errorMessage = reply->errorString();
+            QLOG_ERROR() << tr("Beim Abruf der Veranstaltungen ist ein Fehler aufgetreten") % reply->errorString() % ";\n " % reply->url().toString() % replyMessage;
+        }
+    }
+
+    // Prüfen, ob alle Antworten bearbeitet wurden
+    if (replies.empty())
+    {
+
+        QList<Structureelement*> items;
+
+        QStandardItem* root = data->invisibleRootItem();
+        for( int i=0; i < root->rowCount(); i++)
+        {
+            getItemList(static_cast<Structureelement*>(root->child(i)), items);
+        }
+
+        if(oldData)
+        {
+            QList<Structureelement*> oldItems;
+
+            // Get old data
+            root = oldData->invisibleRootItem();
+            getItemList(root, oldItems);
+
+            foreach(Structureelement *item, items)
+            {
+                // Find an old item which fits to a new one and copy properties
+                for(auto it = oldItems.begin(); it != oldItems.end(); it++)
+                {
+                    auto *oldItem = *it;
+                    if(item->data(urlRole) == oldItem->data(urlRole) && item->text() == oldItem->text())
+                    {
+                        item->setData(oldItem->data(includeRole), includeRole);
+                        oldItems.erase(it);
+                        break;
+                    }
+                }
+
+                // Don't include item if parent is not included
+                auto* parentItem = dynamic_cast<Structureelement*>(item->parent());
+                if(parentItem && !parentItem->data(includeRole).toBool() && item->data(includeRole).toBool())
+                {
+                    item->setData(false, includeRole);
+                }
+            }
+        }
+
+        Utils::checkAllFilesIfSynchronised(items, options->downloadFolderLineEditText());
+    }
+}
+
+void L2pItemModel::addMoodleFilesFromReply(QNetworkReply *reply, Structureelement *course)
+{
+    QLOG_DEBUG() << tr("Moodle-Dateiinformationen empfangen: ") << reply->url().toString();
+
+    // Prüfen auf Fehler
+    if (!reply->error())
+    {
+        Parser::parseMoodleFiles(reply, course);
+
+        QLOG_DEBUG() << tr("Moodle-Dateiinformationen geparst: ") << reply->url().toString();
     }
     else
     {
@@ -451,7 +624,7 @@ QNetworkRequest L2pItemModel::createApiRequest(Structureelement *course,
     QString access = "?accessToken=" % options->getAccessToken();
     QString cid = "&cid=" % course->data(cidRole).toString();
 
-    QString url = apiUrl % apiCommand % access % cid;
+    QString url = l2pApiUrl % apiCommand % access % cid;
     QNetworkRequest request(QUrl(QUrl::toPercentEncoding(url, ":/?=&")));
 
     QLOG_DEBUG() << tr("Erstellter Request:") << url;
@@ -486,6 +659,11 @@ void L2pItemModel::serverDataRecievedSlot(QNetworkReply *reply)
         addCoursesFromReply(reply);
         break;
     }
+    case moodleCourses:
+    {
+        addMoodleCoursesFromReply(reply);
+        break;
+    }
     case features:
     {
         addFeatureFromReply(reply, replyInfo.item);
@@ -496,6 +674,9 @@ void L2pItemModel::serverDataRecievedSlot(QNetworkReply *reply)
         addFilesFromReply(reply, replyInfo.item);
         break;
     }
+    case moodleFiles:
+        addMoodleFilesFromReply(reply, replyInfo.item);
+        break;
     default:
     {
         QLOG_ERROR() << tr("Serverantwort wurde unbekannter Typ zugeordnet") % ":" % reply->url().toString();

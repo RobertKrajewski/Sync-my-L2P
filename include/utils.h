@@ -11,7 +11,7 @@ public:
 
     static Structureelement *getParentCourse(Structureelement *item);
     static QString getElementLocalPath(Structureelement* item, QString path, bool includeFilname = true, bool includePrefix = true);
-    static QString getElementRemotePath(Structureelement* item, QString baseUrl);
+    static QString getElementRemotePath(Structureelement* item);
     static void copyTextToClipboard(QString text);
     static void errorMessageBox(QString message, QString detailMessage);
 

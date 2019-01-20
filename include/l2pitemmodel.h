@@ -54,12 +54,16 @@ protected:
     void parseDataFromXml(QDomElement input, QStandardItem *parentItem);
     void parseDataToXml(QDomDocument &output, QStandardItem *item, QDomElement *parentItem);
     void addCoursesFromReply(QNetworkReply* reply);
+    void addMoodleCoursesFromReply(QNetworkReply* reply);
     void addFeatureFromReply(QNetworkReply* reply, Structureelement *course);
     void addFilesFromReply(QNetworkReply* reply, Structureelement *course);
+    void addMoodleFilesFromReply(QNetworkReply* reply, Structureelement *course);
     QNetworkRequest createApiRequest(Structureelement* course, QString apiCommand);
     void getItemList(QStandardItem *topElement, QList <Structureelement *> &list);
     void requestCourses();
     void requestFeatures();
+    void requestMoodleCourses();
+    void requestMoodleFiles();
     void startNextRequests();
 
     QStandardItemModel *data = new QStandardItemModel();
@@ -70,8 +74,10 @@ protected:
     enum Type
     {
         courses,
+        moodleCourses,
         features,
-        files
+        files,
+        moodleFiles
     };
 
     struct ReplyInfo

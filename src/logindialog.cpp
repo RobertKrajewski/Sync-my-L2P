@@ -2,6 +2,7 @@
 #include <QNetworkReply>
 
 #include "logindialog.h"
+#include "urls.h"
 #include "ui_logindialog.h"
 #include "qslog/QsLog.h"
 
@@ -13,6 +14,8 @@ LoginDialog::LoginDialog(QWidget *parent) :
     ui->retranslateUi(this);
 
     setWindowFlags(Qt::Dialog | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
+    this->l2pAvailable = NOTTESTED;
+    this->moodleAvailable = NOTTESTED;
 }
 
 LoginDialog::~LoginDialog()
@@ -23,6 +26,32 @@ LoginDialog::~LoginDialog()
     delete ui;
 }
 
+void LoginDialog::checkL2PAvailability()
+{
+    QUrl url(l2pApiDocs);
+    QNetworkRequest request;
+    request.setUrl(url);
+
+    QObject::connect(&manager, SIGNAL(finished(QNetworkReply*)),
+                     this, SLOT(availabilityL2PSlot(QNetworkReply*)));
+
+    QLOG_INFO() << tr("L2P Erreichbarkeitsrequest");
+    manager.get(request);
+}
+
+void LoginDialog::checkMoodleAvailability()
+{
+    QUrl url(moodleApiDocs);
+    QNetworkRequest request;
+    request.setUrl(url);
+
+    QObject::connect(&manager, SIGNAL(finished(QNetworkReply*)),
+                     this, SLOT(availabilityMoodleSlot(QNetworkReply*)));
+
+    QLOG_INFO() << tr("Moodle Erreichbarkeitsrequest");
+    manager.get(request);
+}
+
 void LoginDialog::run(Login *login)
 {
     this->login = login;
@@ -30,21 +59,16 @@ void LoginDialog::run(Login *login)
     QObject::connect(this, SIGNAL(rejected()), this->login, SLOT(stopLoginSlot()));
 
     // Überprüfe Erreichbarkeit des L2P
-    QUrl url("https://www3.elearning.rwth-aachen.de/_vti_bin/L2PServices/api.svc/v1/Documentation");
-    QNetworkRequest request;
-    request.setUrl(url);
-
-    QObject::connect(&manager, SIGNAL(finished(QNetworkReply*)),
-                     this, SLOT(availabilitySlot(QNetworkReply*)));
-
-    QLOG_INFO() << tr("Erreichbarkeitsrequest");
-    manager.get(request);
+    this->checkL2PAvailability();
+    // TODO: check if this method and its slots are right. Keep in mind, that both
+    // (availabilityL2PSlot, availabilityMoodleSlot) execute checkForAuthentification
+    this->checkMoodleAvailability();
 }
 
-void LoginDialog::availabilitySlot(QNetworkReply * reply)
+void LoginDialog::availabilityL2PSlot(QNetworkReply * reply)
 {
     QObject::disconnect(&manager, SIGNAL(finished(QNetworkReply*)),
-                        this, SLOT(availabilitySlot(QNetworkReply*)));
+                        this, SLOT(availabilityL2PSlot(QNetworkReply*)));
 
     QString response = reply->readAll();
 
@@ -54,10 +78,35 @@ void LoginDialog::availabilitySlot(QNetworkReply * reply)
         QLOG_ERROR() << tr("L2P nicht erreichbar. Genauer Fehler: ") << reply->errorString();
         QLOG_ERROR() << tr("Inhalt der Antwort: ") << response;
         ui->statusLabel->setText(tr("Fehler: L2P nicht erreichbar."));
+        this->l2pAvailable = NOTAVAILABLE;
     }
     else
     {
         QLOG_INFO() << tr("L2P erreichbar");
+        this->l2pAvailable = AVAILABLE;
+        checkForAuthentification();
+    }
+}
+
+void LoginDialog::availabilityMoodleSlot(QNetworkReply * reply)
+{
+    QObject::disconnect(&manager, SIGNAL(finished(QNetworkReply*)),
+                        this, SLOT(availabilityMoodleSlot(QNetworkReply*)));
+
+    QString response = reply->readAll();
+
+    if( reply->error() )
+    {
+        response.truncate( 1000 );
+        QLOG_ERROR() << tr("Moodle nicht erreichbar. Genauer Fehler: ") << reply->errorString();
+        QLOG_ERROR() << tr("Inhalt der Antwort: ") << response;
+        ui->statusLabel->setText(tr("Fehler: Moodle nicht erreichbar."));
+        this->moodleAvailable = NOTAVAILABLE;
+    }
+    else
+    {
+        QLOG_INFO() << tr("Moodle erreichbar");
+        this->moodleAvailable = AVAILABLE;
         checkForAuthentification();
     }
 }
@@ -77,6 +126,10 @@ void LoginDialog::succededSlot()
 
 void LoginDialog::checkForAuthentification()
 {
+    if (this->l2pAvailable == NOTTESTED || this->moodleAvailable == NOTTESTED)
+    {
+        return;
+    }
     QObject::connect(login, SIGNAL(newAccessToken(QString)), this, SLOT(succededSlot()));
     QObject::connect(login, SIGNAL(loginFailed()), this, SLOT(failedSlot()));
 

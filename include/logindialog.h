@@ -7,6 +7,12 @@
 
 #include "login.h"
 
+enum Availability {
+    NOTTESTED,
+    AVAILABLE,
+    NOTAVAILABLE
+};
+
 namespace Ui {
 class LoginDialog;
 }
@@ -23,7 +29,10 @@ public slots:
     void run(Login *login);
 
 private slots:
-    void availabilitySlot(QNetworkReply*);
+    void checkL2PAvailability();
+    void checkMoodleAvailability();
+    void availabilityL2PSlot(QNetworkReply*);
+    void availabilityMoodleSlot(QNetworkReply*);
     void failedSlot();
     void succededSlot();
 
@@ -35,6 +44,8 @@ private:
 
     // Pointer to Class responsible for the login
     Login *login;
+    Availability l2pAvailable;
+    Availability moodleAvailable;
 };
 
 #endif // LOGINDIALOG_H

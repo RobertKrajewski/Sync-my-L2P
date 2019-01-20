@@ -89,7 +89,56 @@ void Parser::parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
     }
 }
 
-void Parser::parseFiles(QNetworkReply *reply, Structureelement* course, QString downloadDirectoryPath)
+void Parser::parseMoodleCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
+{
+    // Empfangene Nachricht auslesen und als JSON interpretieren
+    QByteArray response(reply->readAll());
+    QJsonDocument document = QJsonDocument::fromJson(response);
+    QJsonObject object = document.object();
+
+    if(object.isEmpty())
+    {
+        QLOG_WARN() << tr("Moodle-Kursinformationen leer bzw. nicht lesbar.");
+        return;
+    }
+
+    if(object["StatusCode"].toInt() != 0)
+    {
+        QLOG_ERROR() << tr("Status der Moodle-Kursinformationen nicht ok: ") <<
+                        QString(document.toJson());
+        return;
+    }
+
+    // Array mit allen einzelnen Vorlesungen/Veranstaltungen
+    QJsonArray courses = object["Data"].toArray();
+
+    // Für jede Veranstaltung ein neues Strukturelement anlegen
+    foreach(QJsonValue element, courses)
+    {
+        QJsonObject course = element.toObject();
+
+        QString title = course["courseTitle"].toString();
+        QString cid = QString::number(course["id"].toInt());
+        QJsonObject category = course["category"].toObject();
+        QString semester = category["idnumber"].toString();
+        QString url = course["url"].toString();
+
+        // Erstellen eines RegExps  für unzulässige Buchstaben im Veranstaltungsnamen
+        QString escapePattern = "(:|<|>|/|\\\\|\\||\\*|\\^|\\?|\\\")";
+        QRegExp escapeRegExp(escapePattern, Qt::CaseSensitive);
+        title = title.replace(escapeRegExp, "").trimmed();
+        // Titellänge limitieren um Probleme bei Dateisystemen zu verhindern
+        title.truncate(100);
+
+        Structureelement *newCourse = new Structureelement(title, QUrl(url), 0, 0, cid, courseItem, moodle);
+
+        Utils::getSemesterItem(itemModel, semester)->appendRow(newCourse);
+
+        QLOG_DEBUG() << tr("Moodle-Veranstaltung") << title << "(" << cid << tr(") hinzugefügt.");
+    }
+}
+
+void Parser::parseFiles(QNetworkReply *reply, Structureelement* course)
 {
     QString url = reply->url().toString();
 
@@ -485,5 +534,85 @@ void Parser::parseFiles(QNetworkReply *reply, Structureelement* course, QString 
             // Element hinzufügen
             dir->appendRow(newFile);
         }
+    }
+}
+
+void Parser::parseMoodleFiles(QNetworkReply *reply, Structureelement* course)
+{
+    Structureelement *currentCourse = course;
+
+    QByteArray response = reply->readAll();
+
+    QJsonDocument document = QJsonDocument::fromJson(response);
+    QJsonObject object = document.object();
+
+    if(object.isEmpty())
+    {
+        QLOG_DEBUG() << tr("Moodle-Kursinformationen leer bzw. nicht lesbar.");
+        return;
+    }
+
+    if(object["StatusCode"].toInt() != 0)
+    {
+        QLOG_ERROR() << tr("Status der Moodle-Kursinformationen nicht ok: \n") <<
+                        "\n" <<
+                        QString(document.toJson());
+        return;
+    }
+
+    if(object["IsError"].toBool())
+    {
+        QLOG_ERROR() << tr("Moodle-Kursinformationen enthalten einen Fehler: \n") <<
+                        "\n" <<
+                        QString(document.toJson());
+        return;
+    }
+
+    QJsonArray files = object["Data"].toArray();
+    foreach(QJsonValue element, files)
+    {
+        QJsonObject file = element.toObject();
+        QString topicname;
+        QString modulename;
+        QString filename;
+        int filesize;
+        int timestamp;
+        QString url;
+        QStringList urlParts;
+
+        QJsonObject fileInformation = file["fileinformation"].toObject();
+
+        topicname = file["topicname"].toString();
+        modulename = file["modulename"].toString();
+        filename = file["filename"].toString();
+        filesize = fileInformation["filesize"].toInt();
+        timestamp = file["lastModified"].toInt();
+        url = file["downloadUrl"].toString();
+        url = QByteArray::fromPercentEncoding(url.toLocal8Bit());
+
+        // the list with the directories
+        QStringList dirs{};
+        dirs.append(topicname);
+        dirs.append(modulename);
+        // modules can contain folders. this gets the folder names, as qstringlist
+        urlParts = url.split('/');
+        if (urlParts.size() > 6) {
+            urlParts.removeFirst();
+            urlParts.removeFirst();
+            urlParts.removeFirst();
+            urlParts.removeFirst();
+            urlParts.removeFirst();
+            urlParts.removeLast();
+            dirs += urlParts;
+        }
+
+        Structureelement *dir = Utils::getDirectoryItem(currentCourse, dirs);
+
+        Structureelement* newFile = new Structureelement(filename, QUrl(url), timestamp, filesize,
+                                                     currentCourse->data(cidRole).toString(),
+                                                     fileItem, moodle);
+
+        // Element hinzufügen
+        dir->appendRow(newFile);
     }
 }
