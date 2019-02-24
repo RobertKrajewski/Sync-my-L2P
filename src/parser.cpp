@@ -41,6 +41,17 @@ QList<QString> Parser::parseFeatures(QNetworkReply *reply)
     return activeFeatures;
 }
 
+QString Parser::escapeString(QString untrimmedStr)
+{
+    // Remove problematic characters for file systems that are allowed in the l2p
+    QString escapePattern = "(:|<|>|/|\\\\|\\||\\*|\\^|\\?|\\\")";
+    QRegExp escapeRegExp(escapePattern, Qt::CaseSensitive);
+    QString trimmedStr = untrimmedStr.replace(escapeRegExp, "").trimmed();
+    // Limit length as sometimes super long titles are used
+    trimmedStr.truncate(100);
+    return trimmedStr;
+}
+
 void Parser::parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
 {
     // Empfangene Nachricht auslesen und als JSON interpretieren
@@ -74,12 +85,7 @@ void Parser::parseCourses(QNetworkReply *reply, QStandardItemModel *itemModel)
         QString semester = course["semester"].toString();
         QString url = course["url"].toString();
 
-        // Erstellen eines RegExps  für unzulässige Buchstaben im Veranstaltungsnamen
-        QString escapePattern = "(:|<|>|/|\\\\|\\||\\*|\\^|\\?|\\\")";
-        QRegExp escapeRegExp(escapePattern, Qt::CaseSensitive);
-        title = title.replace(escapeRegExp, "").trimmed();
-        // Titellänge limitieren um Probleme bei Dateisystemen zu verhindern
-        title.truncate(100);
+        title = escapeString(title);
 
         Structureelement *newCourse = new Structureelement(title, QUrl(url), 0, 0, cid, courseItem);
 
@@ -124,11 +130,7 @@ void Parser::parseMoodleCourses(QNetworkReply *reply, QStandardItemModel *itemMo
         QString url = course["url"].toString();
 
         // Erstellen eines RegExps  für unzulässige Buchstaben im Veranstaltungsnamen
-        QString escapePattern = "(:|<|>|/|\\\\|\\||\\*|\\^|\\?|\\\")";
-        QRegExp escapeRegExp(escapePattern, Qt::CaseSensitive);
-        title = title.replace(escapeRegExp, "").trimmed();
-        // Titellänge limitieren um Probleme bei Dateisystemen zu verhindern
-        title.truncate(100);
+        title = escapeString(title);
 
         Structureelement *newCourse = new Structureelement(title, QUrl(url), 0, 0, cid, courseItem, moodle);
 
@@ -582,8 +584,8 @@ void Parser::parseMoodleFiles(QNetworkReply *reply, Structureelement* course)
 
         QJsonObject fileInformation = file["fileinformation"].toObject();
 
-        topicname = file["topicname"].toString();
-        modulename = file["modulename"].toString();
+        topicname = escapeString(file["topicname"].toString());
+        modulename = escapeString(file["modulename"].toString());
         filename = file["filename"].toString();
         filesize = fileInformation["filesize"].toInt();
         timestamp = file["lastModified"].toInt();
