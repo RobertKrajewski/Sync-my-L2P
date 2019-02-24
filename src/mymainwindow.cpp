@@ -139,6 +139,7 @@ void MyMainWindow::checkForUpdate()
 
     QNetworkAccessManager manager;
     QNetworkRequest request( QUrl("http://syncmyl2p.de/images/version.txt"));
+    request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
     QEventLoop newLoop;
     QNetworkReply *reply = manager.get(request);
 
@@ -156,6 +157,7 @@ void MyMainWindow::checkForUpdate()
         return;
     }
     QString replyMessage(reply->readAll());
+    QLOG_DEBUG() << tr("Aktuelle Version laut Server:") << replyMessage;
     if( replyMessage.toInt() > currentVersion )
     {
         // Aufhübschen der Versionsnummer
