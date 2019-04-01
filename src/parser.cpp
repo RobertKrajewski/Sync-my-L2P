@@ -575,16 +575,18 @@ void Parser::parseMoodleFiles(QNetworkReply *reply, Structureelement* course)
         QString topicname;
         QString modulename;
         QString filename;
+        QString sourceDirectory;
         int filesize;
         int timestamp;
         QString url;
-        QStringList urlParts;
+        QStringList dirParts;
 
         QJsonObject fileInformation = file["fileinformation"].toObject();
 
         topicname = file["topicname"].toString();
         modulename = file["modulename"].toString();
         filename = file["filename"].toString();
+        sourceDirectory = file["sourceDirectory"].toString();
         filesize = fileInformation["filesize"].toInt();
         timestamp = file["lastModified"].toInt();
         url = file["downloadUrl"].toString();
@@ -595,15 +597,11 @@ void Parser::parseMoodleFiles(QNetworkReply *reply, Structureelement* course)
         dirs.append(topicname);
         dirs.append(modulename);
         // modules can contain folders. this gets the folder names, as qstringlist
-        urlParts = url.split('/');
-        if (urlParts.size() > 6) {
-            urlParts.removeFirst();
-            urlParts.removeFirst();
-            urlParts.removeFirst();
-            urlParts.removeFirst();
-            urlParts.removeFirst();
-            urlParts.removeLast();
-            dirs += urlParts;
+        dirParts = sourceDirectory.split('/');
+        if (dirParts.size() > 1) {
+            dirParts.removeFirst();
+            dirParts.removeLast();
+            dirs += dirParts;
         }
 
         Structureelement *dir = Utils::getDirectoryItem(currentCourse, dirs);
