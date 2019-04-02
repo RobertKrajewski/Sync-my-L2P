@@ -46,8 +46,10 @@ FileDownloader::~FileDownloader()
 
 int FileDownloader::startNextDownload(QString fileName, QString courseName, QString filePath, QUrl fileUrl, int itemNummer, int itemSize, int time)
 {
+    QLOG_DEBUG() << tr("Starte Download von") << fileUrl.url();
+
     // Anpassen der Labels
-    ui->progressLabel->setText(QString("Datei %1/%2").arg(itemNummer).arg(itemNumber));
+    ui->progressLabel->setText(QString("Datei %1/%2").arg(itemNummer+1).arg(itemNumber));
     ui->veranstaltungLabel->setText(courseName);
     ui->dateinameLabel->setText(fileName);
     ui->progressBar->setFormat( "0 Byte / " % QString::number(correctSize(itemSize),'f',2) % " " % correctUnit(itemSize));
@@ -86,6 +88,8 @@ void FileDownloader::downloadProgressSlot(qint64 bytesReceived, qint64 bytesTota
     (void) bytesTotal;
 
     // Aktualisieren der Progressbar anhand der Größe der empfangenen Bytes
+    if (bytesTotal == -1)
+        bytesTotal = ui->progressBar->maximum();
 
     ui->progressBar->setFormat( QString::number(correctSize(bytesReceived),'f',2) %
                                 " " % correctUnit( bytesReceived ) % " / " %

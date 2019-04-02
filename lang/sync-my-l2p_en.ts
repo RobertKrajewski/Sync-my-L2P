@@ -4,7 +4,7 @@
 <context>
     <name>LoginDialog</name>
     <message>
-    <source>Fehler: L2P nicht erreichbar. Genauer Fehler: </source>
+        <source>Fehler: L2P nicht erreichbar. Genauer Fehler: </source>
         <translation>Error: L²P not accessible. Exact Error: </translation>
     </message>
     <message>
@@ -15,7 +15,7 @@
     <message>
         <location filename="../logindialog.ui" line="30"/>
         <source>Überprüfe Erreichbarkeit des L2P...</source>
-        <translation>Check connection to L2P…</translation>
+        <translation>Checking connection to L2P…</translation>
     </message>
     <message>
         <location filename="../logindialog.cpp" line="41"/>
@@ -25,7 +25,7 @@
     <message>
         <location filename="../logindialog.cpp" line="47"/>
         <source>Erreichbarkeit festgestellt</source>
-        <translation>Accessibility ascertained.  </translation>
+        <translation>Accessibility ascertained</translation>
     </message>
     <message>
         <location filename="../logindialog.cpp" line="56"/>
@@ -50,7 +50,7 @@
     <message>
         <location filename="../logindialog.cpp" line="74"/>
         <source>Login erfolgreich abgeschlossen!</source>
-        <translation>Login successful completed.</translation>
+        <translation>Login successfully completed!</translation>
     </message>
     <message>
         <location filename="../logindialog.cpp" line="87"/>
@@ -66,11 +66,11 @@
 <context>
     <name>Options</name>
     <message>
-    <source>E-Mail-Anhänge</source>
+        <source>E-Mail-Anhänge</source>
         <translation>Email attachments</translation>
     </message>
     <message>
-    <source>Ankündigungs-Anhänge</source>
+        <source>Ankündigungs-Anhänge</source>
         <translation>Announcement attachments</translation>
     </message>
     <message>
@@ -85,8 +85,8 @@
     <message>
         <location filename="../options.ui" line="26"/>
         <location filename="../options.cpp" line="268"/>
+        <source>Status: ausgeloggt</source>
         <extracomment>This is a login status message on the option tab.</extracomment>
-<source>Status: ausgeloggt</source>
         <translation>Status: logged off</translation>
     </message>
     <message>
@@ -96,20 +96,20 @@
     </message>
     <message>
         <location filename="../options.ui" line="64"/>
+        <source>Löschen</source>
         <extracomment>This is the button.</extracomment>
-<source>Löschen</source>
         <translation>Delete</translation>
     </message>
     <message>
         <location filename="../options.ui" line="71"/>
+        <source>Einloggen</source>
         <extracomment>This is a button.</extracomment>
-<source>Einloggen</source>
         <translation>Login</translation>
     </message>
     <message>
         <location filename="../options.ui" line="90"/>
+        <source>Download</source>
         <extracomment>This is a button.</extracomment>
-<source>Download</source>
         <translation>Download</translation>
     </message>
     <message>
@@ -119,8 +119,8 @@
     </message>
     <message>
         <location filename="../options.ui" line="106"/>
+        <source>Durchsuchen</source>
         <extracomment>This is a button.</extracomment>
-<source>Durchsuchen</source>
         <translation>Browse</translation>
     </message>
     <message>
@@ -189,8 +189,8 @@
         <translation>Minimize to tray</translation>
     </message>
     <message>
-    <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wenn im L2P eine neue Version einer Datei vorhanden ist, wird die alte Version auf der Festplatte überschrieben.&lt;/p&gt;&lt;p&gt;&lt;span style=" font-weight:600;"&gt;ACHTUNG:&lt;/span&gt; Beim Überschreiben gehen eigene Änderungen an den Dateien (Kommentare, etc.) verloren.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If a new version of the file is available in L²P, the old version on the hard drive will be overwritten..&lt;/p&gt;&lt;p&gt;&lt;span style=" font-weight:600;"&gt;ATTENTION:&lt;/span&gt; By Overwriting files, your own changes (comments, etc.) will be lost.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wenn im L2P eine neue Version einer Datei vorhanden ist, wird die alte Version auf der Festplatte überschrieben.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;ACHTUNG:&lt;/span&gt; Beim Überschreiben gehen eigene Änderungen an den Dateien (Kommentare, etc.) verloren.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If a new version of the file is available in L²P, the old version on the hard drive will be overwritten..&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;ATTENTION:&lt;/span&gt; By Overwriting files, your own changes (comments, etc.) will be lost.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../options.ui" line="244"/>
@@ -200,7 +200,7 @@
     <message>
         <location filename="../options.ui" line="259"/>
         <source>Sprache:</source>
-        <translation>Language</translation>
+        <translation>Language:</translation>
     </message>
     <message>
         <location filename="../options.ui" line="281"/>
@@ -209,8 +209,8 @@
     </message>
     <message>
         <location filename="../options.ui" line="294"/>
-        <extracomment>This is the text of the button, which shows the "About Sync-my-L2P" widget..</extracomment>
-<source>Über Sync-my-L2P</source>
+        <source>Über Sync-my-L2P</source>
+        <extracomment>This is the text of the button, which shows the &quot;About Sync-my-L2P&quot; widget..</extracomment>
         <translation>About Sync-my-L2P</translation>
     </message>
     <message>
@@ -225,14 +225,14 @@
     </message>
     <message>
         <location filename="../options.cpp" line="285"/>
+        <source>Status: Login erfolgreich</source>
         <extracomment>This is a login status message on the option tab.</extracomment>
-<source>Status: Login erfolgreich</source>
         <translation>Status: login was succesfull</translation>
     </message>
     <message>
         <location filename="../options.cpp" line="299"/>
+        <source>Status: Login fehlgeschlagen</source>
         <extracomment>This is a login status message on the option tab.</extracomment>
-<source>Status: Login fehlgeschlagen</source>
         <translation>Status: login failed</translation>
     </message>
 </context>
@@ -272,20 +272,20 @@
     </message>
     <message>
         <location filename="../browser.ui" line="86"/>
+        <source>Neue Dateien anzeigen</source>
         <extracomment>This is a button.</extracomment>
-<source>Neue Dateien anzeigen</source>
         <translation>Show new files</translation>
     </message>
     <message>
         <location filename="../browser.ui" line="96"/>
+        <source>Alle expandieren</source>
         <extracomment>This is a button.</extracomment>
-<source>Alle expandieren</source>
         <translation>Expand all</translation>
     </message>
     <message>
         <location filename="../browser.ui" line="106"/>
+        <source>Alle kontrahieren</source>
         <extracomment>This is a button.</extracomment>
-<source>Alle kontrahieren</source>
         <translation>Contract all</translation>
     </message>
     <message>
@@ -296,7 +296,7 @@
     <message>
         <location filename="../browser.ui" line="132"/>
         <source> MB</source>
-        <translation>MB</translation>
+        <translation> MB</translation>
     </message>
     <message>
         <location filename="../browser.ui" line="135"/>
@@ -311,12 +311,12 @@
     <message>
         <location filename="../browser.ui" line="167"/>
         <source>&apos;ab&apos; dd.MM.yyyy</source>
-        <translation>'from' dd.MM.yyyy</translation>
+        <translation>&apos;from&apos; dd.MM.yyyy</translation>
     </message>
     <message>
         <location filename="../browser.ui" line="193"/>
         <source>&apos;bis&apos; dd.MM.yyyy</source>
-        <translation>'to' dd.MM.yyyy</translation>
+        <translation>&apos;to&apos; dd.MM.yyyy</translation>
     </message>
     <message>
         <location filename="../browser.ui" line="219"/>
@@ -335,8 +335,8 @@
     </message>
     <message>
         <location filename="../browser.ui" line="250"/>
+        <source>Suchen</source>
         <extracomment>This is a button.</extracomment>
-<source>Suchen</source>
         <translation>Search</translation>
     </message>
     <message>
@@ -346,14 +346,14 @@
     </message>
     <message>
         <location filename="../browser.ui" line="295"/>
+        <source>Auswahl hinzufügen</source>
         <extracomment>This is a button.</extracomment>
-<source>Auswahl hinzufügen</source>
         <translation>Add selection</translation>
     </message>
     <message>
         <location filename="../browser.ui" line="305"/>
+        <source>Auswahl entfernen</source>
         <extracomment>This is a button.</extracomment>
-<source>Auswahl entfernen</source>
         <translation>Remove selection</translation>
     </message>
     <message>
@@ -363,27 +363,27 @@
     </message>
     <message>
         <location filename="../browser.ui" line="331"/>
+        <source>Download</source>
         <extracomment>This is a button.</extracomment>
-<source>Download</source>
         <translation>Download</translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="116"/>
+        <source>Kann keine Daten von Festplatte laden</source>
         <extracomment>This is a error message.</extracomment>
-<source>Kann keine Daten von Festplatte laden</source>
-        <translation>Can't load data from harddrive</translation>
+        <translation>Can&apos;t load data from harddrive</translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="124"/>
+        <source>Keine Dateiliste auf der Festplatte gefunden.</source>
         <extracomment>This is a error message.</extracomment>
-<source>Keine Dateiliste auf der Festplatte gefunden.</source>
         <translation>No data list found on harddrive.</translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="132"/>
+        <source>Kann Daten von Festplatte nicht parsen: </source>
         <extracomment>This is a error message.</extracomment>
-<source>Kann Daten von Festplatte nicht parsen: </source>
-        <translation>Can't parse from harddrive: </translation>
+        <translation>Can&apos;t parse from harddrive: </translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="211"/>
@@ -397,9 +397,9 @@
     </message>
     <message>
         <location filename="../browser.cpp" line="231"/>
+        <source>Beim Abruf der Veranstaltungen ist ein Fehler aufgetreten</source>
         <extracomment>This is a error message.</extracomment>
-<source>Beim Abruf der Veranstaltungen ist ein Fehler aufgetreten</source>
-        <translation>There was an error while loading courses.</translation>
+        <translation>There was an error while loading courses</translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="378"/>
@@ -418,9 +418,9 @@
     </message>
     <message>
         <location filename="../browser.cpp" line="401"/>
+        <source>Beim Abruf des Inhalts einer Veranstaltung ist ein Fehler aufgetreten</source>
         <extracomment>This is a error message.</extracomment>
-<source>Beim Abruf des Inhalts einer Veranstaltung ist ein Fehler aufgetreten</source>
-        <translation>There was an error while loading up a the contents of a course.</translation>
+        <translation>There was an error while loading up a the contents of a course</translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="415"/>
@@ -430,24 +430,24 @@
     <message>
         <location filename="../browser.cpp" line="416"/>
         <source>Es können einige Dateien fehlen. Dieser Fehler wird nicht durch Sync-my-L2P verschuldet und ist bekannt. Klicke erneut auf Aktualisieren bis dieser Fehler nicht mehr auftaucht.</source>
-        <translation>Some files could be missing. This is a known issue and it's not caused by Sync-my-L2P. Please click on "Update" until this message does not occurred anymore.</translation>
+        <translation>Some files could be missing. This is a known issue and it&apos;s not caused by Sync-my-L2P. Please click on &quot;Update&quot; until this message does not occurred anymore.</translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="487"/>
+        <source>Downloadverzeichnis fehlt!</source>
         <extracomment>This is a error message.</extracomment>
-<source>Downloadverzeichnis fehlt!</source>
         <translation>Download directory is missing!</translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="487"/>
+        <source>Download unmöglich, da kein Zielverzeichnis angegeben wurde.</source>
         <extracomment>This is a error message.</extracomment>
-<source>Download unmöglich, da kein Zielverzeichnis angegeben wurde.</source>
         <translation>Download impossible because no target directory is specified.</translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="488"/>
+        <source>Kann nicht synchronisieren, da kein Downloadverzeichnis angegeben wurde</source>
         <extracomment>This is a error message.</extracomment>
-<source>Kann nicht synchronisieren, da kein Downloadverzeichnis angegeben wurde</source>
         <translation>Can not syncronize, because no download directory was found.</translation>
     </message>
     <message>
@@ -457,20 +457,20 @@
     </message>
     <message>
         <location filename="../browser.cpp" line="553"/>
+        <source>Verzeichnis nicht erstellbar!</source>
         <extracomment>This is a error message.</extracomment>
-<source>Verzeichnis nicht erstellbar!</source>
-        <translation>Directory not createable.</translation>
+        <translation>Directory not createable!</translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="553"/>
+        <source>Kann folgendes Verzeichnis nicht erstellen: </source>
         <extracomment>This is a error message.</extracomment>
-<source>Kann folgendes Verzeichnis nicht erstellen: </source>
         <translation>Can not create the following directory: </translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="554"/>
+        <source>Verzeichnis nicht erstellbar: </source>
         <extracomment>This is a error message.</extracomment>
-<source>Verzeichnis nicht erstellbar: </source>
         <translation>Directory not setable: </translation>
     </message>
     <message>
@@ -488,7 +488,7 @@
     <message>
         <location filename="../browser.cpp" line="913"/>
         <source>Itemrequest an API: </source>
-        <translation>Item request to the API</translation>
+        <translation>Item request to the API: </translation>
     </message>
     <message>
         <location filename="../browser.cpp" line="993"/>
@@ -548,14 +548,14 @@
     <name>FileDownloader</name>
     <message>
         <location filename="../filedownloader.cpp" line="65"/>
+        <source>Fehler beim Öffnen mit Schreibberechtigung.</source>
         <extracomment>This is a error message.</extracomment>
-<source>Fehler beim Öffnen mit Schreibberechtigung.</source>
         <translation>Error while opening with writing permission.</translation>
     </message>
     <message>
         <location filename="../filedownloader.cpp" line="101"/>
+        <source>Fehler beim Schreiben der Datei</source>
         <extracomment>This is a error message.</extracomment>
-<source>Fehler beim Schreiben der Datei</source>
         <translation>Error while writing file</translation>
     </message>
     <message>
@@ -584,22 +584,22 @@
         <translation>Log range:</translation>
     </message>
     <message>
-    <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=" font-weight:600;"&gt;Standard&lt;/span&gt;: Alle wichtigen Ereignisse werden geloggt.&lt;/p&gt;&lt;p&gt;&lt;span style=" font-weight:600;"&gt;Erweitert&lt;/span&gt;: Neben den wichtigen Ereignissen werden auch solche geloggt, die zur Fehlerbehebung dienen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Standard&lt;/span&gt;: Alle wichtigen Ereignisse werden geloggt.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Erweitert&lt;/span&gt;: Neben den wichtigen Ereignissen werden auch solche geloggt, die zur Fehlerbehebung dienen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <extracomment>This is a tooltip.</extracomment>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=" font-weight:600;"&gt;Standard&lt;/span&gt;: Every important event will be logged.&lt;/p&gt;
-&lt;p&gt;&lt;span style=" font-weight:600;"&gt;Extended&lt;/span&gt;: Besides the important events, informations for troubleshooting will be logged too.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Standard&lt;/span&gt;: Every important event will be logged.&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Extended&lt;/span&gt;: Besides the important events, informations for troubleshooting will be logged too.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../logger.ui" line="74"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Kopiert den gesamten Text in die Zwischenablage.&lt;/p&gt;&lt;p&gt;Um einzelne Elemente zu kopieren, müssen diese ausgewählt und mit der plattformtypischen Tastenkombination (Windows: Strg + C) kopiert werden&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <extracomment>This is a tooltip.</extracomment>
-<source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Kopiert den gesamten Text in die Zwischenablage.&lt;/p&gt;&lt;p&gt;Um einzelne Elemente zu kopieren, müssen diese ausgewählt und mit der plattformtypischen Tastenkombination (Windows: Strg + C) kopiert werden&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy the whole text to clipboard.
 &lt;/p&gt;&lt;p&gt;To copy a single element, please mark the text and use your platform typical key combination (Windows: Ctrl + C).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../logger.ui" line="77"/>
+        <source>Kopieren</source>
         <extracomment>This is a button.</extracomment>
-<source>Kopieren</source>
         <translation>Copy</translation>
     </message>
     <message>
@@ -625,12 +625,12 @@
         <translation>Advanced</translation>
     </message>
     <message>
-    <source>Setze Logging auf "Standard".</source>
-        <translation>Set logging to "Standard"</translation>
+        <source>Setze Logging auf &quot;Standard&quot;.</source>
+        <translation>Set logging to &quot;Standard&quot;.</translation>
     </message>
     <message>
-    <source>Setze Logging auf "Erweitert".</source>
-        <translation>Set logging to "Advanced"</translation>
+        <source>Setze Logging auf &quot;Erweitert&quot;.</source>
+        <translation>Set logging to &quot;Extended&quot;.</translation>
     </message>
     <message>
         <location filename="../logger.cpp" line="93"/>
@@ -645,7 +645,7 @@
     <message>
         <location filename="../logger.cpp" line="97"/>
         <source>Ausgewählter Speicherort für das Logfile: </source>
-        <translation>Save log file to </translation>
+        <translation>Save log file to: </translation>
     </message>
     <message>
         <location filename="../logger.cpp" line="102"/>
@@ -668,7 +668,7 @@
     <message>
         <location filename="../login.cpp" line="97"/>
         <source>Stoppe Login</source>
-        <translation>Stop login </translation>
+        <translation>Stop login</translation>
     </message>
     <message>
         <location filename="../login.cpp" line="110"/>
@@ -693,7 +693,7 @@
     <message>
         <location filename="../login.cpp" line="194"/>
         <source>Zugriff durch Refreshtoken erneuert.</source>
-        <translation>Access renewed through Refreshtoken</translation>
+        <translation>Access renewed using refresh token.</translation>
     </message>
     <message>
         <location filename="../login.cpp" line="201"/>
@@ -721,31 +721,31 @@
     </message>
     <message>
         <location filename="../mymainwindow.ui" line="45"/>
+        <source>Dateibrowser</source>
         <extracomment>Name of a tab.</extracomment>
-<source>Dateibrowser</source>
         <translation>Filebrowser</translation>
     </message>
     <message>
         <location filename="../mymainwindow.ui" line="54"/>
+        <source>Einstellungen</source>
         <extracomment>Name of a tab.</extracomment>
-<source>Einstellungen</source>
         <translation>Options</translation>
     </message>
     <message>
         <location filename="../mymainwindow.ui" line="66"/>
+        <source>Log</source>
         <extracomment>Name of a tab.</extracomment>
-<source>Log</source>
         <translation>Log</translation>
     </message>
     <message>
         <location filename="../mymainwindow.ui" line="71"/>
+        <source>Anleitung</source>
         <extracomment>Name of a tab.</extracomment>
-<source>Anleitung</source>
         <translation>Manual</translation>
     </message>
     <message>
-    <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=" font-size:10pt; font-weight:600;"&gt;Willkommen bei Sync-my-L²P!&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=" font-size:10pt;"&gt;In diesem Tab findet sich eine kurze Anleitung für Erstbenutzer dieses Programms.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=" font-size:10pt; font-weight:600;"&gt;Schnellstart&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=" font-size:10pt;"&gt;Wenn du sofort loslegen willst, führe einfach folgende drei Schritte durch:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=" font-size:10pt; text-decoration: underline;"&gt;1. Einloggen&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=" font-size:10pt;"&gt;Klicke im Tab &amp;quot;Einstellungen&amp;quot; auf den Knopf auf den Knopf &amp;quot;Einloggen&amp;quot;. Kurz darauf wird sich dein Browser einloggen und du wirst aufgefordert, dich mit deiner Tim-Kennung zu authentifizieren. Danach musst du Sync-my-L²P authorisieren, damit das Programm auf deine Daten im L²P zugreifen kann. Sobald du auch dies erledigt hast, kannst du den Browser schließen und zum Programm zurückkehren.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=" font-size:10pt; text-decoration: underline;"&gt;2. Daten aktualisieren und auswählen&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=" font-size:10pt;"&gt;Nach dem erfolgreichen Login werden automatisch die Daten aller deiner Kurse im L²P abgerufen. Dies kann einen Moment dauern. Sobald die Aktualisierung fertig ist, kannst du die abgerufenen Daten ansehen und einzelne Dateien/Verzeichnisse/Kurse/Semester von dem Download ausschließen. Auch kannst du Filter für Größe und Änderungsdatum setzen.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=" font-size:10pt; text-decoration: underline;"&gt;3. Download&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=" font-size:10pt;"&gt;Um nun deine Dateien runterzuladen musst du noch ein Downloadverzeichnis setzen. Hierfür klickst du im Tab &amp;quot;Einstellungen&amp;quot; auf den Knopf &amp;quot;Durchsuchen&amp;quot; und wählst ein Ordner aus. Nun musst du nur noch im Tab &amp;quot;Dateibrowser&amp;quot; auf den Knopf &amp;quot;downloaden&amp;quot; drücken und Sync-my-L²P lädt alle ausgewählten Dateien für dich herrunter.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=" font-size:10pt; font-weight:600;"&gt;Tips und Tricks&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=" font-size:10pt;"&gt;Die &lt;/span&gt;&lt;span style=" font-size:10pt; text-decoration: underline;"&gt;Farbe der Dateien&lt;/span&gt;&lt;span style=" font-size:10pt;"&gt; gibt dir Auskunft über den aktuellen Status der Dateien. Rot bedeutet &amp;quot;nicht downloaden&amp;quot;, Schwarz sind neue, nicht runtergeladene Dateien und Grün wird für bereits auf deiner Festplatte vorhandene Dateien benutzt.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=" font-size:10pt;"&gt;Du kannst durch einen &lt;/span&gt;&lt;span style=" font-size:10pt; text-decoration: underline;"&gt;Doppelklick&lt;/span&gt;&lt;span style=" font-size:10pt;"&gt; auf Dateien diese einfach öffnen.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=" font-size:10pt;"&gt;Im Tab &lt;/span&gt;&lt;span style=" font-size:10pt; text-decoration: underline;"&gt;Einstellungen&lt;/span&gt;&lt;span style=" font-size:10pt;"&gt; finden sich einige Optionen, mit denen du Sync-my-L²P noch komfortabler machen kannst.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=" font-size:10pt; font-weight:600;"&gt;Welcome to Synch-my-L²P!!&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=" font-size:10pt;"&gt;You will find a short manual for first time users of this program in this tab.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=" font-size:10pt; font-weight:600;"&gt;Quickstart&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=" font-size:10pt;"&gt;If you want to start immediately, complete the following three steps:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=" font-size:10pt; text-decoration: underline;"&gt;1. Login&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=" font-size:10pt;"&gt;Click in the tab&amp;quot;Settings&amp;quot; on the &amp;quot;Login&amp;quot; button. Shortly after your browser will open and you will be prompted to authenticate yourself with with your "Tim-Kennung". You then need to authorize Synch-my-L²P to let it access your data from L²P. After you have done that, you can close your browser and return to the program. .&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=" font-size:10pt; text-decoration: underline;"&gt;2. Refresh and select data&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=" font-size:10pt;"&gt;After a successful Login all of your courses data will be structured automatically. This may take a while. When the refresh is down, you can look at the the data and exclude certain files/directories/courses/terms from download. You can also set filters for size and age.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=" font-size:10pt; text-decoration: underline;"&gt;3. Download&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=" font-size:10pt;"&gt;To download your files, you need to set a download directory. To do so you click in the tab &amp;quot;Settings&amp;quot; the button &amp;quot;Search&amp;quot; and select a folder. Click then in the Tab &amp;quot;File browser&amp;quot; the button &amp;quot;download&amp;quot; and Synch-my-L²P downloads all selected filed. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=" font-size:10pt; font-weight:600;"&gt;Tips and Hints&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=" font-size:10pt;"&gt;&lt;/span&gt;&lt;span style=" font-size:10pt; text-decoration: underline;"&gt;File colour&lt;/span&gt;&lt;span style=" font-size:10pt;"&gt; gives you info about the files status. Red means &amp;quot;don't download&amp;quot;, black is for new, not yet downloaded files and green is for already on your hard drive existing files.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=" font-size:10pt;"&gt;You can open files by &lt;/span&gt;&lt;span style=" font-size:10pt; text-decoration: underline;"&gt;double clicking&lt;/span&gt;&lt;span style=" font-size:10pt;"&gt; them.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=" font-size:10pt;"&gt;Under the Tab &lt;/span&gt;&lt;span style=" font-size:10pt; text-decoration: underline;"&gt;Settings&lt;/span&gt;&lt;span style=" font-size:10pt;"&gt; you can find some options to make Sync-my-L²P even more comfortable for you.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Willkommen bei Sync-my-L²P!&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;In diesem Tab findet sich eine kurze Anleitung für Erstbenutzer dieses Programms.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Schnellstart&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Wenn du sofort loslegen willst, führe einfach folgende drei Schritte durch:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline;&quot;&gt;1. Einloggen&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Klicke im Tab &amp;quot;Einstellungen&amp;quot; auf den Knopf auf den Knopf &amp;quot;Einloggen&amp;quot;. Kurz darauf wird sich dein Browser einloggen und du wirst aufgefordert, dich mit deiner Tim-Kennung zu authentifizieren. Danach musst du Sync-my-L²P authorisieren, damit das Programm auf deine Daten im L²P zugreifen kann. Sobald du auch dies erledigt hast, kannst du den Browser schließen und zum Programm zurückkehren.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline;&quot;&gt;2. Daten aktualisieren und auswählen&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Nach dem erfolgreichen Login werden automatisch die Daten aller deiner Kurse im L²P abgerufen. Dies kann einen Moment dauern. Sobald die Aktualisierung fertig ist, kannst du die abgerufenen Daten ansehen und einzelne Dateien/Verzeichnisse/Kurse/Semester von dem Download ausschließen. Auch kannst du Filter für Größe und Änderungsdatum setzen.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline;&quot;&gt;3. Download&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Um nun deine Dateien runterzuladen musst du noch ein Downloadverzeichnis setzen. Hierfür klickst du im Tab &amp;quot;Einstellungen&amp;quot; auf den Knopf &amp;quot;Durchsuchen&amp;quot; und wählst ein Ordner aus. Nun musst du nur noch im Tab &amp;quot;Dateibrowser&amp;quot; auf den Knopf &amp;quot;downloaden&amp;quot; drücken und Sync-my-L²P lädt alle ausgewählten Dateien für dich herrunter.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Tips und Tricks&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Die &lt;/span&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline;&quot;&gt;Farbe der Dateien&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; gibt dir Auskunft über den aktuellen Status der Dateien. Rot bedeutet &amp;quot;nicht downloaden&amp;quot;, Schwarz sind neue, nicht runtergeladene Dateien und Grün wird für bereits auf deiner Festplatte vorhandene Dateien benutzt.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Du kannst durch einen &lt;/span&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline;&quot;&gt;Doppelklick&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; auf Dateien diese einfach öffnen.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Im Tab &lt;/span&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline;&quot;&gt;Einstellungen&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; finden sich einige Optionen, mit denen du Sync-my-L²P noch komfortabler machen kannst.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Welcome to Synch-my-L²P!!&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;You will find a short manual for first time users of this program in this tab.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Quickstart&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;If you want to start immediately, complete the following three steps:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline;&quot;&gt;1. Login&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Click in the tab&amp;quot;Settings&amp;quot; on the &amp;quot;Login&amp;quot; button. Shortly after your browser will open and you will be prompted to authenticate yourself with with your &quot;Tim-Kennung&quot;. You then need to authorize Synch-my-L²P to let it access your data from L²P. After you have done that, you can close your browser and return to the program. .&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline;&quot;&gt;2. Refresh and select data&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;After a successful Login all of your courses data will be structured automatically. This may take a while. When the refresh is down, you can look at the the data and exclude certain files/directories/courses/terms from download. You can also set filters for size and age.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline;&quot;&gt;3. Download&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;To download your files, you need to set a download directory. To do so you click in the tab &amp;quot;Settings&amp;quot; the button &amp;quot;Search&amp;quot; and select a folder. Click then in the Tab &amp;quot;File browser&amp;quot; the button &amp;quot;download&amp;quot; and Synch-my-L²P downloads all selected filed. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Tips and Hints&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;&lt;/span&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline;&quot;&gt;File colour&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; gives you info about the files status. Red means &amp;quot;don&apos;t download&amp;quot;, black is for new, not yet downloaded files and green is for already on your hard drive existing files.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;You can open files by &lt;/span&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline;&quot;&gt;double clicking&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; them.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Under the Tab &lt;/span&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline;&quot;&gt;Settings&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; you can find some options to make Sync-my-L²P even more comfortable for you.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../mymainwindow.cpp" line="158"/>
@@ -792,8 +792,8 @@ You can deactivate this message in the options tab.</translation>
     <message>
         <location filename="../parser.cpp" line="19"/>
         <location filename="../parser.cpp" line="104"/>
+        <source>Kursinformationen leer bzw. nicht lesbar.</source>
         <extracomment>This is a error message.</extracomment>
-<source>Kursinformationen leer bzw. nicht lesbar.</source>
         <translation>Course information empty or not readable.</translation>
     </message>
     <message>
@@ -804,7 +804,7 @@ You can deactivate this message in the options tab.</translation>
     <message>
         <location filename="../parser.cpp" line="54"/>
         <source>Veranstaltung </source>
-        <translation>Course</translation>
+        <translation>Course </translation>
     </message>
     <message>
         <location filename="../parser.cpp" line="54"/>
@@ -813,9 +813,9 @@ You can deactivate this message in the options tab.</translation>
     </message>
     <message>
         <location filename="../parser.cpp" line="91"/>
+        <source>Antwort auf unbekannten Request erhalten: </source>
         <extracomment>This is a error message.</extracomment>
-<source>Antwort auf unbekannten Request erhalten: </source>
-        <translation>Received answer to unknown request:</translation>
+        <translation>Received answer to unknown request: </translation>
     </message>
     <message>
         <location filename="../parser.cpp" line="115"/>
@@ -828,8 +828,8 @@ You can deactivate this message in the options tab.</translation>
     <name>Utils</name>
     <message>
         <location filename="../utils.cpp" line="118"/>
+        <source>Unbekanntes Element auf der Ebene der Veranstaltungen: </source>
         <extracomment>This is a error message.</extracomment>
-<source>Unbekanntes Element auf der Ebene der Veranstaltungen: </source>
         <translation>Unknown element on the courses layer: </translation>
     </message>
 </context>

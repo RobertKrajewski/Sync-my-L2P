@@ -21,6 +21,7 @@ public:
     static void parseMoodleCourses(QNetworkReply *reply, QStandardItemModel *itemModel);
     static void parseFiles(QNetworkReply *reply, Structureelement *course);
     static void parseMoodleFiles(QNetworkReply *reply, Structureelement *course);
+    static QString escapeString(QString title);
 };
 
 #endif // PARSER_H

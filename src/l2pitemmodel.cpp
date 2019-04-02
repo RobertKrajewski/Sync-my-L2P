@@ -344,10 +344,6 @@ void L2pItemModel::addCoursesFromReply(QNetworkReply *reply)
         // Aktive Features abrufen
         requestFeatures();
     }
-    else
-    {
-        emit loadingFinished(true);
-    }
 }
 
 /**
@@ -378,10 +374,6 @@ void L2pItemModel::addMoodleCoursesFromReply(QNetworkReply *reply)
 
         // Moodle Files abrufen
         requestMoodleFiles();
-    }
-    else
-    {
-        emit loadingFinished(true);
     }
 }
 
