@@ -590,7 +590,6 @@ void Parser::parseMoodleFiles(QNetworkReply *reply, Structureelement* course)
         filesize = fileInformation["filesize"].toInt();
         timestamp = file["lastModified"].toInt();
         url = file["downloadUrl"].toString();
-        url = QByteArray::fromPercentEncoding(url.toLocal8Bit());
 
         // the list with the directories
         QStringList dirs{};
