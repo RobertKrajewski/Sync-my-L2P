@@ -166,10 +166,15 @@ void MyMainWindow::checkForUpdate()
         replyMessage.insert(2, ".");
 
         // Anzeige für den Benutzer
-        QMessageBox::information(this,
-                                 tr("Neue Version verfügbar!") + " (v" + replyMessage +")",
-                                 tr("Auf der offiziellen Webseite ist eine neue Version verfügbar!\n"
-                                    "Diese Nachricht kannst du in den Optionen deaktiveren."));
+        auto button = QMessageBox::question(this,
+                                            tr("Neue Version verfügbar!") + " (v" + replyMessage +")",
+                                            tr("Auf der offiziellen Webseite ist eine neue Version verfügbar!\n"
+                                               "Diese Nachricht kannst du in den Optionen deaktivieren.\n"
+                                               "Jetzt https://www.syncmyl2p.de/ aufrufen?"));
+        if (button == QMessageBox::Yes)
+        {
+            QDesktopServices::openUrl(QUrl("https://www.syncmyl2p.de/"));
+        }
     }
     else
     {
