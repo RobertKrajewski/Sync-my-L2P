@@ -41,7 +41,10 @@ QString Utils::getElementLocalPath(Structureelement *item, QString downloadDirec
         Structureelement* parent = item;
         while ((parent = (Structureelement*) parent->parent()) != 0)
         {
-            path.push_front(parent->text() % "/");
+            auto element_text = parent->text();
+            if(element_text.length() > 75)
+                element_text = element_text.left(75);
+            path.push_front(element_text % "/");
         }
 
         // Downloadverzeichnis
