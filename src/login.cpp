@@ -6,6 +6,7 @@
 #include "clientId.h"
 #include "qslog/QsLog.h"
 #include "login.h"
+#include "utils.h"
 
 #define BASEURL QString("https://oauth.campus.rwth-aachen.de/oauth2waitress/oauth2.svc/")
 
@@ -140,6 +141,17 @@ void Login::refreshAccess()
     postRequest(query, url);
 }
 
+void Login::getTokenInfo()
+{
+    QUrlQuery query;
+    query.addQueryItem("client_id", CLIENTID);
+    query.addQueryItem("access_token", accessToken);
+
+    QUrl url(BASEURL + "tokeninfo");
+
+    postRequest(query, url);
+}
+
 void Login::finishedSlot(QNetworkReply *reply)
 {
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
@@ -190,19 +202,36 @@ void Login::finishedSlot(QNetworkReply *reply)
         else if(!object["access_token"].toString().isEmpty())
         {
             // Zugriff erneuert
-
             QLOG_DEBUG() << tr("Zugriff durch Refreshtoken erneuert.");
             accessToken = object["access_token"].toString();
 
             QTimer::singleShot(object["expires_in"].toInt() * 1000, this, SLOT(refreshAccess()));
+            QLOG_DEBUG() << tr("Neuer accesstoken: ") << accessToken;
 
-            stopLoginTimer.stop();
-            emit newAccessToken(accessToken);
-            QLOG_DEBUG() << tr("Accesstoken: ") << accessToken;
+            // Check if necessary scopes are given
+            getTokenInfo();
+        }
+        else if(!object["scope"].toString().isEmpty())
+        {
+            auto scopes = object["scope"].toString();
+            QLOG_DEBUG() << tr("Zugriff auf folgende Scopes: ") << scopes;
+            if(scopes.contains("moodle.rwth"))
+            {
+                stopLoginTimer.stop();
+                emit newAccessToken(accessToken);
+            }
+            else
+            {
+                Utils::errorMessageBox(tr("Authorisierung für Moodle fehlt!"),
+                                       tr("Du hast Sync-my-L2P noch nicht die Berechtigung erteilt, "
+                                          "auf Moodle zuzugreifen. Bitte logge dich neu ein."));
+                deleteAccess();
+                getAccess();
+            }
         }
         else
         {
-            QLOG_ERROR() << tr("Status der Antwort ok, aber Antworttyp nicht bekannt.\n")<< object;
+            QLOG_ERROR() << tr("Status der Antwort ok, aber Antworttyp nicht bekannt.\n") << object;
 
             stopLoginSlot();
         }

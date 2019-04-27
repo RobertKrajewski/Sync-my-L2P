@@ -27,6 +27,7 @@ public slots:
     void getAccess();
     void stopLoginSlot();
     void deleteAccess();
+    void getTokenInfo();
 
 private:
     void postRequest(QUrlQuery &query, QUrl url);
