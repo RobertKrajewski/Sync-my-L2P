@@ -138,10 +138,11 @@ void MyMainWindow::checkForUpdate()
     int currentVersion = 20400;
 
     QNetworkAccessManager manager;
-    QNetworkRequest request( QUrl("http://syncmyl2p.de/images/version.txt"));
+    QNetworkRequest request(QUrl("https://www.syncmyl2p.de/version.txt"));
     request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
     QEventLoop newLoop;
     QNetworkReply *reply = manager.get(request);
+    reply->ignoreSslErrors();
 
     // Wait for reply
     QObject::connect( reply, SIGNAL(finished()), &newLoop, SLOT(quit()));
