@@ -89,7 +89,7 @@
       <item>
        <widget class="QLabel" name="version_lable">
         <property name="text">
-         <string notr="true">Version: 2.4.0</string>
+         <string notr="true">Version: 2.4.1</string>
         </property>
        </widget>
       </item>
@@ -150,7 +150,7 @@
       <item>
        <widget class="QLabel" name="homepage_link">
         <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offizielle Webseite: &lt;br/&gt;&lt;a href=&quot;http://www.SyncMyL2P.de&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;http://www.SyncMyL2P.de&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offizielle Webseite: &lt;br/&gt;&lt;a href=&quot;https://www.SyncMyL2P.de&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://www.SyncMyL2P.de&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="openExternalLinks">
          <bool>true</bool>
