@@ -7,6 +7,7 @@
 
 #include <QThread>
 #include <QTextCodec>
+#include <QSysInfo>
 
 #include <QStandardPaths>
 #include <QEventLoop>
@@ -154,6 +155,7 @@ void Browser::on_syncPushButton_clicked()
 
     QItemSelection newSelection;
     ui->dataTreeView->collapseAll();
+    bool hasShownLongPathError = false;
 
     foreach(Structureelement *currentElement, elementList)
     {
@@ -170,6 +172,18 @@ void Browser::on_syncPushButton_clicked()
 
         QString directoryPath = Utils::getElementLocalPath(currentElement, downloadPath, false, false);
         QDir directory(directoryPath);
+
+        // prevent creation of paths with a length of more than 260 characters
+        if((directoryPath.length() + currentElement->text().length()) > 260 && QSysInfo::productType() == "windows")
+        {
+            if(!hasShownLongPathError)
+            {
+                Utils::errorMessageBox(tr("Pfad zu lang!"), tr("Pfad zur Datei enthält mehr als 260 Zeichen und kann daher nicht erstellt werden. "
+                                                              "Bitte ändere den Downloadverzeichnis auf einen Pfad mit weniger Zeichen! Datei wird übersprungen."));
+                hasShownLongPathError = true;
+            }
+            continue;
+        }
 
         // Ordner ggf. erstellen
         if(!directory.mkpath(directoryPath))
