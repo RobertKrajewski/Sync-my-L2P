@@ -13,9 +13,9 @@
 Login::Login(QWidget *parent)
     : stopLogin(false), settingsLoaded(false), QObject((QObject*)parent)
 {
-    // Automatisch Abbruch des Logins nach 60 Sekunden
+    // Automatisch Abbruch des Logins nach 120 Sekunden
     stopLoginTimer.setSingleShot(true);
-    stopLoginTimer.setInterval(60 * 1000);
+    stopLoginTimer.setInterval(120 * 1000);
     QObject::connect(&stopLoginTimer, SIGNAL(timeout()), this, SLOT(stopLoginSlot()));
 
     QObject::connect( &manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(finishedSlot(QNetworkReply*)) );
@@ -40,7 +40,7 @@ void Login::init()
 
 void Login::getAccess()
 {
-    // Nach 60 Sekunden abbrechen
+    // Nach 120 Sekunden abbrechen
     stopLogin = false;
 
     stopLoginTimer.stop();
