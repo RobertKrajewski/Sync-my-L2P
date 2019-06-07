@@ -43,7 +43,7 @@ QString Utils::getElementLocalPath(Structureelement *item, QString downloadDirec
         {
             auto element_text = parent->text();
             if(element_text.length() > 75)
-                element_text = element_text.left(75);
+                element_text = element_text.left(75).trimmed();
             path.push_front(element_text % "/");
         }
 
