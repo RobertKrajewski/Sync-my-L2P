@@ -62,8 +62,8 @@ TRANSLATIONS = lang/sync-my-l2p_de.ts \
                lang/sync-my-l2p_sq.ts
 
 RESOURCES += \
-    icons\icons.qrc \
-    lang\translation.qrc
+    icons/icons.qrc \
+    lang/translation.qrc
 
 RC_FILE = icon.rc
 
