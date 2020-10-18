@@ -11,7 +11,7 @@
 #define BASEURL QString("https://oauth.campus.rwth-aachen.de/oauth2waitress/oauth2.svc/")
 
 Login::Login(QWidget *parent)
-    : stopLogin(false), settingsLoaded(false), QObject((QObject*)parent)
+    :  QObject((QObject*)parent), stopLogin(false), settingsLoaded(false)
 {
     // Automatisch Abbruch des Logins nach 120 Sekunden
     stopLoginTimer.setSingleShot(true);

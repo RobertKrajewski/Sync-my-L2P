@@ -30,7 +30,7 @@ Structureelement *Utils::getParentCourse(Structureelement *item)
         currentItem = dynamic_cast<Structureelement*>(currentItem->parent());
     }
 
-    return NULL;
+    return nullptr;
 }
 
 QString Utils::getElementLocalPath(Structureelement *item, QString downloadDirectoryPath, bool includeFilname, bool includePrefix)

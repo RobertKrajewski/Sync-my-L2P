@@ -13,7 +13,7 @@ class Login: public QObject
     Q_OBJECT
 
 public:
-    explicit Login(QWidget *parent = 0);
+    explicit Login(QWidget *parent = nullptr);
 
     bool isRefreshTokenAvailable() { return !refreshToken.isEmpty(); }
     void init();

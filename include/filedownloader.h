@@ -49,7 +49,7 @@ class FileDownloader : public QDialog
 
 public:
     explicit FileDownloader(int itemNumber,
-                             QWidget *parent= 0);
+                             QWidget *parent= nullptr);
     ~FileDownloader();
     int startNextDownload(QString, QString, QString, QUrl, int, int, int time);
 

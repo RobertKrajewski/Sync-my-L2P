@@ -215,7 +215,7 @@ void L2pItemModel::loadDataFromFile()
 void L2pItemModel::saveDataToFile()
 {
     QDomDocument domDoc;
-    parseDataToXml(domDoc, data->invisibleRootItem(), NULL);
+    parseDataToXml(domDoc, data->invisibleRootItem(), nullptr);
 
 #if QT_VERSION >= 0x050400
     QString dataPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);

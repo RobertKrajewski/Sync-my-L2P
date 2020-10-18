@@ -329,7 +329,7 @@ void Browser::on_removeSelectionPushButton_clicked()
     // Holen der ausgewählten Dateien
     QModelIndexList selectedElementsIndexList = proxy->mapSelectionToSource(ui->dataTreeView->selectionModel()->selection()).indexes();
     // Iteration über alle Elemente
-    Structureelement *parentElement = 0;
+    Structureelement *parentElement = nullptr;
     QModelIndexList::Iterator iteratorEnd = selectedElementsIndexList.end();
 
     for (QModelIndexList::Iterator iterator = selectedElementsIndexList.begin();
@@ -349,7 +349,7 @@ void Browser::on_removeSelectionPushButton_clicked()
 
         // Hinweis: Nur wenn selectedElement ein Toplevel-Item ist, kann parentElement invisibleRootItem sein
         // ist selectedElement ein tieferes Item, ist der oberste Parent 0x00
-        while ((parentElement != 0) && (parentElement != l2pItemModel->getData()->invisibleRootItem()))
+        while ((parentElement != nullptr) && (parentElement != l2pItemModel->getData()->invisibleRootItem()))
         {
             bool siblingsExcluded = true;
 
@@ -398,7 +398,7 @@ void Browser::on_addSelectionPushButton_clicked()
 
     // Variablen zur Speicherung von Pointern aus Performancegründen vor
     // der Schleife
-    Structureelement *element = 0;
+    Structureelement *element = nullptr;
     QModelIndexList::Iterator iteratorEnd = selectedElementsIndexList.end();
 
     for (QModelIndexList::Iterator iterator = selectedElementsIndexList.begin();
@@ -411,7 +411,7 @@ void Browser::on_addSelectionPushButton_clicked()
         // Einbinden aller übergeordneter Ordner
         Structureelement *parent = element;
 
-        while ((parent = (Structureelement *) parent->parent()) != 0)
+        while ((parent = (Structureelement *) parent->parent()) != nullptr)
         {
             // Annahme: Wenn ein übergeordnetes Element eingebunden ist, dann sind es auch alle darüber
             if (parent->data(includeRole).toBool())
@@ -593,7 +593,7 @@ void Browser::on_dataTreeView_customContextMenuRequested(const QPoint &pos)
 
     // Überprüfung, ob überhaupt auf ein Element geklickt wurde (oder
     // ins Leere)
-    if (RightClickedItem == 0)
+    if (RightClickedItem == nullptr)
     {
         return;
     }

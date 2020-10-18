@@ -27,7 +27,7 @@ class MySortFilterProxyModel : public QSortFilterProxyModel
     Q_OBJECT
 
 public:
-     MySortFilterProxyModel(QObject *parent = 0);
+     MySortFilterProxyModel(QObject *parent = nullptr);
 
 public slots:
      QDate filterMinimumDate() const { return minDate; }

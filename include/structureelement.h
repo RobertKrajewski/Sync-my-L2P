@@ -33,7 +33,7 @@ enum MyItemType
     courseItem      = 1001,
     directoryItem   = 1002,
     fileItem        = 1003,
-    messageItem     = 1004,
+    messageItem     = 1004
 };
 
 enum MyItemDataRole
@@ -48,7 +48,7 @@ enum MyItemDataRole
     topicRole           = 39,
     authorRole          = 40,
     typeEXRole          = 41,
-    systemEXRole        = 42,
+    systemEXRole        = 42
 };
 
 enum synchroniseStatus

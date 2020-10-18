@@ -13,7 +13,7 @@ class AutoCloseDialog : public QDialog
     Q_OBJECT
     
 public:
-    explicit AutoCloseDialog(QWidget *parent = 0);
+    explicit AutoCloseDialog(QWidget *parent = nullptr);
     ~AutoCloseDialog();
     
 private:

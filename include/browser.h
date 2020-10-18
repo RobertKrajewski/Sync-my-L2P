@@ -49,7 +49,7 @@ class Browser : public QWidget
     Q_OBJECT
     
 public:
-    explicit Browser(QWidget *parent = 0);
+    explicit Browser(QWidget *parent = nullptr);
     ~Browser();
     void init(Options *options);
     void loadSettings();

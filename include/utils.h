@@ -24,7 +24,7 @@ public:
 
     static void checkAllFilesIfSynchronised(QList<Structureelement *> items, QString downloadDirectory);
 private:
-    explicit Utils(QObject *parent = 0);
+    explicit Utils(QObject *parent = nullptr);
 
 };
 

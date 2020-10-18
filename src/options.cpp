@@ -9,8 +9,8 @@
 
 Options::Options(QWidget *parent) :
     QWidget(parent),
-    login(this),
-    ui(new Ui::Options)
+    ui(new Ui::Options),
+    login(this)
 {
     ui->setupUi(this);
     loginCounter = 0;

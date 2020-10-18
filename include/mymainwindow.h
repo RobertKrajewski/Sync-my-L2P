@@ -35,7 +35,7 @@ class MyMainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MyMainWindow(QWidget *parent = 0);
+    explicit MyMainWindow(QWidget *parent = nullptr);
     void closeEvent(QCloseEvent * event);
 
 private slots:

@@ -208,8 +208,8 @@ void Parser::parseFiles(QNetworkReply *reply, Structureelement* course)
     {
         QJsonObject file = element.toObject();
         QString filename;
-        int filesize;
-        int timestamp;
+        int filesize = 0;
+        int timestamp = 0;
         QString url;
         QStringList urlParts;
 

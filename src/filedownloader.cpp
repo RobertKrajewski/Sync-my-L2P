@@ -22,12 +22,11 @@
 #include "qslog/QsLog.h"
 
 FileDownloader::FileDownloader(int itemNumber,
-                                 QWidget *parent) :
+                               QWidget *parent) :
     QDialog(parent, Qt::FramelessWindowHint),
     ui(new Ui::DateiDownloader),
-    originalModifiedDate(originalModifiedDate),
-    itemNumber(itemNumber),
-    manager(new QNetworkAccessManager(this))
+    manager(new QNetworkAccessManager(this)),
+    itemNumber(itemNumber)
 {
     ui->setupUi(this);
     ui->retranslateUi(this);
