@@ -2,31 +2,37 @@
   <img src="http://syncmyl2p.de/images/light-logo.png"/>
 </p>
 
-Sync-my-L2P ist ein Programm, das von Studenten der RWTH Aachen für den komfortablen Download aller zur Verfügung gestellten Dateien in ihrem Lernportal "L²P" geschaffen wurde. Sie ermöglicht dir, sehr einfach die Daten aus deinen virtuellen Lernräumen mit deiner Festplatte zu spiegeln, so dass diese auch ohne Internet zur Verfügung stehen.
+Sync-my-L2P is a program created by students of the RWTH Aachen University for the comfortable download of all available files in RWTH Moodle (formerly L²P). It allows you to easily mirror all files from the learning rooms to your hard disk, so that they are available without internet.
 
-Download
-----------------
-Sync-my-L2P steht vorgefertigt auf der [offiziellen Webseite](http://www.syncmyl2p.de) oder [hier](https://github.com/Sync-my-L2P/Sync-my-L2P/releases/tag/v2.2.0) für mehrere Plattformen bereit. 
+**Please note: After more than 9 years, I resign as maintainer. However, a team at the RWTH ITC and Moodle will continue to maintain and improve Sync-my-L2P. The new repository will be: https://github.com/rwthmoodle/Sync-my-L2P**
 
+# Download and Installation
 
-Kompilieren
-----------------
+You can download Sync-my-L2P either from the [official Website](http://www.syncmyl2p.de) oder [here](https://github.com/Sync-my-L2P/Sync-my-L2P/releases/tag/latest) for Windows, Linux and macOS. While on Windows an installer is provided, on macOS a .dmg or homebrew package, and on Linux an AppImage is distributed.
 
-Für das Kompilieren benötigt man folgende Bibliotheken: QT (5.4 oder höher), OpenSSL.
-Am einfachsten ist es, die .pro Datei in Qt Creator zu laden und dort zu kompilieren. Über die Konsole kann stattdessen auch qmake (mit entsprechenden Argumenten) und dann der bevorzugte C++ Compiler ausgeführt werden.
+## Installation on Windows
+Just use the provided installer. 
 
-Zur Erstellung von Linuxpaketen gibt es ein separates Repository: https://github.com/justin-time/Sync-my-L2P-Linux
-An dieser Stelle vielen Dank an Stefan!
+## Installation on Linux Distributions (tested on Ubuntu 18.04)
+Make the AppImage executable and open it with a double click.
 
-Achtung: Damit das Programm eine Verbindung mit dem L2P herstellen kann, ist eine ClientID notwendig. Seitens der RWTH ist es verboten, diese zu veröffentlichen.
+## Installation on OSX (.dmg)
+Open the .dmg and drag&drop Sync-my-L2P to your apps.
 
-Installation auf OSX (Cask)
-----------------
-Users with home-brew installed can now install Sync-my-L2p with the following commands:
+## Installation on OSX (Cask)
+Users with home-brew installed can now install Sync-my-L2P with the following commands:
 `brew tap caskroom/cask` followed by `brew cask install sync-my-l2p`. Updating the program will work with the command `brew update` to update the program formula, followed by `brew upgrade` to upgrade the program itself.
 
+# Compile
+For compilation we recommend C++11, Qt (5.11 or higher) and OpenSSL 1.1.1.
+The easiest way is to load the .pro file into Qt Creator and compile Sync-my-L2P there. From the console you can also run qmake (with appropriate arguments) instead and then the preferred C++ compiler.
 
-Fehler gefunden?
-----------------
+Note: A ClientID is required for the program to connect to the API of RWTH Moodle. The RWTH does not allow the publication of such a client ID. However, an individual ClientID can easily be requested.
 
-Solltest du einen Fehler gefunden haben, füge diesen bitte dem Issue-Tracker hinzu.
+# Distribute
+For distributing Sync-my-L2P on Linux, two options are available:
+1. Create an AppImage using the `run.sh` script provided in the `linux` subdirectory.
+2. Create an deb package: https://github.com/justin-time/Sync-my-L2P-Linux
+
+# Crashes? Feedback? Questions?
+https://github.com/RobertKrajewski/Sync-my-L2P/issues
