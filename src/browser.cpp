@@ -20,6 +20,11 @@ Browser::Browser(QWidget *parent) :
 {
     ui->setupUi(this);
 
+#if defined(Q_OS_MACOS)
+    // Remove minimum size of download button on macOS as it also changes the default font color
+    ui->syncPushButton->setMinimumHeight(0);
+#endif
+
     // Hinzufügen der Daten zur Baumansicht
     l2pItemModel = new L2pItemModel();
     proxy = l2pItemModel->getProxy();
