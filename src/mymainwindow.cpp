@@ -135,7 +135,7 @@ void MyMainWindow::removeOldSettings()
 
 void MyMainWindow::checkForUpdate()
 {
-    int currentVersion = 20401;
+    int currentVersion = 20402;
 
     QNetworkAccessManager manager;
     QNetworkRequest request(QUrl("https://www.syncmyl2p.de/version.txt"));
