@@ -4,6 +4,7 @@
 
 Sync-my-L2P is a program created by students of the RWTH Aachen University for the comfortable download of all available files in RWTH Moodle (formerly L²P). It allows you to easily mirror all files from the learning rooms to your hard disk, so that they are available without internet.
 
+# ARCHIVED
 **Please note: After more than 9 years, I resign as maintainer. However, a team at the RWTH ITC and Moodle will continue to maintain and improve Sync-my-L2P. The new repository will be: https://github.com/rwthmoodle/Sync-my-L2P**
 
 # Download and Installation
